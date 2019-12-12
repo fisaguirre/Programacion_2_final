@@ -1,6 +1,7 @@
 package edu.um.ar.programacion2.ventas.model;
 
 import java.sql.Date;
+import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class Ventas {
 	private Float monto;
 	
 	@Column(name = "fecha")
-	private Date fecha;
+	private Instant fecha;
 	
 	@Column(name = "tokentarjeta")
 	private String tokentarjeta;
@@ -73,11 +74,13 @@ public class Ventas {
 		this.monto = monto;
 	}
 
-	public Date getFecha() {
+	
+
+	public Instant getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(Instant fecha) {
 		this.fecha = fecha;
 	}
 
@@ -89,7 +92,7 @@ public class Ventas {
 		this.tokentarjeta = tokentarjeta;
 	}
 
-	public Ventas(Long id, String nombre, String descripcion, Float monto, Date fecha, String tokentarjeta) {
+	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, String tokentarjeta) {
 		super();
 		this.id = id;
 		this.nombre = nombre;

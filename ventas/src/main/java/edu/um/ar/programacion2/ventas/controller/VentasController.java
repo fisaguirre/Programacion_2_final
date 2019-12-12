@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,53 +20,62 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import edu.um.ar.programacion2.ventas.model.Ventas;
 import edu.um.ar.programacion2.ventas.service.VentasService;
-/*
-@RestController @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/api/v1")
-public class VentasController {
- 
-    @Autowired
-    private VentasService ventasService;
+import org.springframework.http.HttpHeaders;
 
-    @GetMapping("/ventas")
-	public ResponseEntity<List<Ventas>> findAll( ) {
-		return new ResponseEntity<List<Ventas>>(ventasService.findAll(), HttpStatus.OK);
-	}   
-}
-*/
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @RestController 
+@RequestMapping("/ventas")
 public class VentasController {
 	@Autowired
     private VentasService ventasService;
- 
-    @RequestMapping(value = "/ventas", method = RequestMethod.GET)
-    public ResponseEntity<List<Ventas>> findAll() 
-    {
-    	return new ResponseEntity<List<Ventas>>(ventasService.findAll(), HttpStatus.OK);
+	
+	@GetMapping("/")
+    public ResponseEntity<List<Ventas>> getAllVentas(Pageable pageable) {
+		/*
+        Page<Ventas> page = ventasService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        */
+        return new ResponseEntity<List<Ventas>>(ventasService.findAll(), HttpStatus.OK);
     }
-   
-    @RequestMapping(value = "/ventas/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Optional<Ventas>> getVentasById(@PathVariable("id") Long id) 
-    {
-    	//Optional<Ventas> venta;
-    	//return new ResponseEntity<Ventas>(venta.get(id), HttpStatus.OK);
-    	//return new ResponseEntity<Ventas>(ventasService.findById(id), HttpStatus.OK);
-    	return ResponseEntity.ok(ventasService.findById(id));
+	/**
+     * {@code GET  /ventas/:id} : get the "id" ventas.
+     *
+     * @param id the id of the ventas to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ventas, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Ventas>> getVentas(@PathVariable Long id) {
+        //log.debug("REST request to get Ventas : {}", id);
+        Optional<Ventas> ventas = ventasService.findById(id);
+        //return ResponseUtil.wrapOrNotFound(ventas);
+        return ResponseEntity.ok(ventas);
     }
-    /*
-    @GetMapping(value = "{productId}") // /products/{productId} -> /products/1
-	public ResponseEntity<Product> getProductById(@PathVariable("productId") Long id) {
-		Optional<Product> product = this.productDAO.findById(id);
-		if(product.isPresent()) {
-			return ResponseEntity.ok(product.get());
-		} else {
-			return ResponseEntity.noContent().build();
-		}
-	}
-	*/
+/*
+    @PostMapping("/ventas")
+    public ResponseEntity<Ventas> createVentas(@Valid @RequestBody Ventas ventas) throws URISyntaxException {
+        log.debug("REST request to save Ventas : {}", ventas);
+        if (ventas.getId() != null) {
+            throw new BadRequestAlertException("A new ventas cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Ventas result = ventasService.save(ventas);
+        return ResponseEntity.created(new URI("/api/ventas/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+    */
     @PostMapping
 	public ResponseEntity<Ventas> createVentas(@RequestBody Ventas venta) {
 		// newProduct has same properties but also has ID

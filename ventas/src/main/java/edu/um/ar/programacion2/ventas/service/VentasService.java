@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.um.ar.programacion2.ventas.model.Ventas;
 import edu.um.ar.programacion2.ventas.repository.VentasRepository;
@@ -18,23 +22,32 @@ public class VentasService {
  
     @Autowired
     private VentasRepository ventasRepository;
- /*
-    public Ventas get(long id) {
-        return ventasRepository.findOne(id);
+ 
+    /**
+     * Get all the ventas.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<Ventas> findAll(Pageable pageable) {
+        //log.debug("Request to get all Ventas");
+        return ventasRepository.findAll(pageable);
     }
-    */
+    
     public List<Ventas> findAll() {
 		return ventasRepository.findAll();
 	}
-    
+    /**
+     * Get one ventas by id.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    @Transactional(readOnly = true)
     public Optional<Ventas> findById(Long id) {
-    	return ventasRepository.findById(id);
-    	/*Optional<Ventas> venta = ventasRepository.findById(id);
-    	if(venta.isPresent()) {
-			return venta;
-		} 
-    	//return ventasRepository.findById(id);
-		return venta;*/
+        //log.debug("Request to get Ventas : {}", id);
+        return ventasRepository.findById(id);
     }
     
     public Ventas createVentas(Ventas venta) {
