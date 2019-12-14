@@ -2,10 +2,18 @@ package edu.um.ar.programacion2.ventas.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -13,6 +21,8 @@ import lombok.Data;
 @Entity
 @Table(name = "tarjetacredito")
 public class TarjetaCredito {
+	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -32,12 +42,23 @@ public class TarjetaCredito {
 
 	@Column(name = "montomaximo")
 	private Float montomaximo;
-	
-	@Column(name = "idcliente")
-	private Integer idcliente;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "cliente_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Cliente cliente;
 
 	@Column(name = "token")
 	private String token;
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
 
 	public Long getId() {
 		return id;
@@ -87,14 +108,6 @@ public class TarjetaCredito {
 		this.montomaximo = montomaximo;
 	}
 
-	public Integer getIdcliente() {
-		return idcliente;
-	}
-
-	public void setIdcliente(Integer idcliente) {
-		this.idcliente = idcliente;
-	}
-
 	public String getToken() {
 		return token;
 	}
@@ -103,16 +116,16 @@ public class TarjetaCredito {
 		this.token = token;
 	}
 
-	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
-			Float montomaximo, Integer idcliente, String token) {
+	public TarjetaCredito(Cliente cliente, Long id, String tipo, Integer numero, Integer codseguridad,
+			Integer vencimiento, Float montomaximo, String token) {
 		super();
+		this.cliente = cliente;
 		this.id = id;
 		this.tipo = tipo;
 		this.numero = numero;
 		this.codseguridad = codseguridad;
 		this.vencimiento = vencimiento;
 		this.montomaximo = montomaximo;
-		this.idcliente = idcliente;
 		this.token = token;
 	}
 
@@ -120,5 +133,5 @@ public class TarjetaCredito {
 		super();
 	}
 
-	
 }
+

@@ -5,10 +5,18 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -32,10 +40,13 @@ public class Ventas {
 
 	@Column(name = "fecha")
 	private Instant fecha;
-
-	@Column(name = "idcliente")
-	private Integer idcliente;
-
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "cliente_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Cliente cliente;
+	
 	@Column(name = "tokentarjeta")
 	private String tokentarjeta;
 
@@ -82,14 +93,6 @@ public class Ventas {
 		this.fecha = fecha;
 	}
 
-	public Integer getIdcliente() {
-		return idcliente;
-	}
-
-	public void setIdcliente(Integer idcliente) {
-		this.idcliente = idcliente;
-	}
-
 	public String getTokentarjeta() {
 		return tokentarjeta;
 	}
@@ -98,16 +101,15 @@ public class Ventas {
 		this.tokentarjeta = tokentarjeta;
 	}
 
-	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, Integer idcliente,
-			String tokentarjeta) {
+	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, String tokentarjeta) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.monto = monto;
 		this.fecha = fecha;
-		this.idcliente = idcliente;
 		this.tokentarjeta = tokentarjeta;
 	}
+
 
 }

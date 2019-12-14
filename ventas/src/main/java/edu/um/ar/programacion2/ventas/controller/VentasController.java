@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.galleryservice.model.Gallery;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -92,25 +91,7 @@ public class VentasController {
 		//Ventas newVentas = this.productDAO.save(product);
 		//return ResponseEntity.ok(newVentas);
 	}
-    @PostMapping
-	public ResponseEntity<Ventas> createVentas(@RequestBody Ventas venta) {
-		// newProduct has same properties but also has ID
-    	return ResponseEntity.ok(ventasService.createVentas(venta));
-		//Ventas newVentas = this.productDAO.save(product);
-		//return ResponseEntity.ok(newVentas);
-	}
-    @RequestMapping("/{id}")
-	public Gallery getGallery(@PathVariable final int id) {
-		// create gallery object
-		Gallery gallery = new Gallery();
-		gallery.setId(id);
-		
-		// get list of available images 
-		List<Object> images = restTemplate.getForObject("http://image.service/images/", List.class);
-		gallery.setImages(images);
-	
-		return gallery;
-	}
+    
     @DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<Ventas> deleteVentas(@PathVariable("idToDelete") Long id) {
     	return ResponseEntity.ok(ventasService.deleteVentas(id));
