@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.example.galleryservice.model.Gallery;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,19 +39,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@RestController @CrossOrigin(origins = "http://localhost:8081")
+@RestController
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/ventas")
 public class VentasController {
 	@Autowired
-    private VentasService ventasService;
+	private RestTemplate restTemplate;
+	
+	@Autowired
+	private VentasService ventasService;
 	
 	@GetMapping("/")
-    public ResponseEntity<List<Ventas>> getAllVentas(Pageable pageable) {
+	public ResponseEntity<List<Ventas>> getAllVentas(Pageable pageable) {
 		/*
-        Page<Ventas> page = ventasService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-        */
+		 * Page<Ventas> page = ventasService.findAll(pageable); HttpHeaders headers =
+		 * PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.
+		 * fromCurrentRequest(), page); return
+		 * ResponseEntity.ok().headers(headers).body(page.getContent());
+		 */
         return new ResponseEntity<List<Ventas>>(ventasService.findAll(), HttpStatus.OK);
     }
 	/**
@@ -83,7 +92,25 @@ public class VentasController {
 		//Ventas newVentas = this.productDAO.save(product);
 		//return ResponseEntity.ok(newVentas);
 	}
-    
+    @PostMapping
+	public ResponseEntity<Ventas> createVentas(@RequestBody Ventas venta) {
+		// newProduct has same properties but also has ID
+    	return ResponseEntity.ok(ventasService.createVentas(venta));
+		//Ventas newVentas = this.productDAO.save(product);
+		//return ResponseEntity.ok(newVentas);
+	}
+    @RequestMapping("/{id}")
+	public Gallery getGallery(@PathVariable final int id) {
+		// create gallery object
+		Gallery gallery = new Gallery();
+		gallery.setId(id);
+		
+		// get list of available images 
+		List<Object> images = restTemplate.getForObject("http://image.service/images/", List.class);
+		gallery.setImages(images);
+	
+		return gallery;
+	}
     @DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<Ventas> deleteVentas(@PathVariable("idToDelete") Long id) {
     	return ResponseEntity.ok(ventasService.deleteVentas(id));

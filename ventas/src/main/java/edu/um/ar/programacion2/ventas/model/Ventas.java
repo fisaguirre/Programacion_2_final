@@ -33,6 +33,9 @@ public class Ventas {
 	@Column(name = "fecha")
 	private Instant fecha;
 
+	@Column(name = "idcliente")
+	private Integer idcliente;
+
 	@Column(name = "tokentarjeta")
 	private String tokentarjeta;
 
@@ -79,6 +82,14 @@ public class Ventas {
 		this.fecha = fecha;
 	}
 
+	public Integer getIdcliente() {
+		return idcliente;
+	}
+
+	public void setIdcliente(Integer idcliente) {
+		this.idcliente = idcliente;
+	}
+
 	public String getTokentarjeta() {
 		return tokentarjeta;
 	}
@@ -87,13 +98,15 @@ public class Ventas {
 		this.tokentarjeta = tokentarjeta;
 	}
 
-	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, String tokentarjeta) {
+	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, Integer idcliente,
+			String tokentarjeta) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.monto = monto;
 		this.fecha = fecha;
+		this.idcliente = idcliente;
 		this.tokentarjeta = tokentarjeta;
 	}
 

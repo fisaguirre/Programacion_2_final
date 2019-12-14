@@ -1,4 +1,4 @@
-package edu.um.ar.programacion2.tarjetacredito.model;
+package edu.um.ar.programacion2.ventas.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +32,7 @@ public class TarjetaCredito {
 
 	@Column(name = "montomaximo")
 	private Float montomaximo;
-
+	
 	@Column(name = "idcliente")
 	private Integer idcliente;
 
@@ -120,4 +120,5 @@ public class TarjetaCredito {
 		super();
 	}
 
+	
 }
