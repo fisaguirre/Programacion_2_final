@@ -35,7 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@RestController 
+@RestController @CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/ventas")
 public class VentasController {
 	@Autowired

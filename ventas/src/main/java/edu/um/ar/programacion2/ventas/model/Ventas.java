@@ -20,25 +20,22 @@ public class Ventas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	
+
 	@Column(name = "nombre", nullable = false)
 	private String nombre;
-	
+
 	@Column(name = "descripcion")
 	private String descripcion;
-	
+
 	@Column(name = "monto")
 	private Float monto;
-	
+
 	@Column(name = "fecha")
 	private Instant fecha;
-	
+
 	@Column(name = "tokentarjeta")
 	private String tokentarjeta;
 
-	/**
-	 * 
-	 */
 	public Ventas() {
 	}
 
@@ -74,8 +71,6 @@ public class Ventas {
 		this.monto = monto;
 	}
 
-	
-
 	public Instant getFecha() {
 		return fecha;
 	}
@@ -101,6 +96,5 @@ public class Ventas {
 		this.fecha = fecha;
 		this.tokentarjeta = tokentarjeta;
 	}
-
 
 }
