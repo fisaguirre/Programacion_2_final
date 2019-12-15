@@ -54,6 +54,7 @@ public class TarjetaCreditoController {
 
 	@GetMapping("/")
 	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
+		System.out.println("hola gente");
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
@@ -69,16 +70,24 @@ public class TarjetaCreditoController {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
 		return ResponseEntity.ok(tarjetaObj);
 	}
-
-	@PostMapping
+/*
+	@PostMapping("/po/")
 	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetacredito));
 	}
+*/
+	@PostMapping("/agregar/")
+	public ResponseEntity<TarjetaCreditoObjeto> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
+		TarjetaCreditoObjeto thing = tarjetacreditoService.createTarjetaCredito(tarjetaObj);
+		return ResponseEntity.ok(thing);
+	}
 
-	@DeleteMapping(value = "{idToDelete}")
+	//@DeleteMapping(value = "{idToDelete}")
+	@DeleteMapping("/{idToDelete}")
 	public ResponseEntity<TarjetaCredito> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
 		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(id));
 	}
+	
 /*
 	@PutMapping
 	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {

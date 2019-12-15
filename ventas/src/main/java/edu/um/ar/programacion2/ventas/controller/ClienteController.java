@@ -61,8 +61,9 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
     
-    @PostMapping
+    @PostMapping("/po/")
 	public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
+    	System.out.println("hola cliente");
     	return ResponseEntity.ok(clienteService.createCliente(cliente));
 	}
     
