@@ -44,8 +44,6 @@ public class TarjetaCredito {
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
-	//@OnDelete(action = OnDeleteAction.CASCADE)
-	//@JsonIgnore
 	private Cliente cliente_id;
 	/*
 	 * @ManyToOne
@@ -68,7 +66,6 @@ public class TarjetaCredito {
 		this.cliente_id = cliente_id;
 		this.token = token;
 	}
-
 
 	public Long getId() {
 		return id;
