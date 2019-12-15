@@ -43,10 +43,16 @@ import org.springframework.data.domain.Pageable;
 public class TarjetaCreditoController {
 	@Autowired
 	private TarjetaCreditoService tarjetacreditoService;
-
+/*
 	@GetMapping("/")
 	public ResponseEntity<List<TarjetaCredito>> getAllTarjetaCredito(Pageable pageable) {
 		return new ResponseEntity<List<TarjetaCredito>>(tarjetacreditoService.findAll(), HttpStatus.OK);
+	}
+	*/
+	@GetMapping("/")
+	public ResponseEntity<List<TarjetaCredito>> getAllTarjetaCredito() {
+		return new ResponseEntity<List<TarjetaCredito>>(tarjetacreditoService.findAll(), HttpStatus.OK);
+		//return tarjetacreditoService.findAll();
 	}
 
 	/**

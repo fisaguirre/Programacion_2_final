@@ -47,11 +47,13 @@ public class Ventas {
 	@JsonIgnore
 	private Cliente cliente;
 	
+	/*
+	@ManyToOne
+	@JoinColumn(name = "owner")
+	private Cliente owner;
+	*/
 	@Column(name = "tokentarjeta")
 	private String tokentarjeta;
-
-	public Ventas() {
-	}
 
 	public Long getId() {
 		return id;
@@ -93,6 +95,14 @@ public class Ventas {
 		this.fecha = fecha;
 	}
 
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	public String getTokentarjeta() {
 		return tokentarjeta;
 	}
@@ -101,15 +111,22 @@ public class Ventas {
 		this.tokentarjeta = tokentarjeta;
 	}
 
-	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, String tokentarjeta) {
+	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, Cliente cliente,
+			String tokentarjeta) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.monto = monto;
 		this.fecha = fecha;
+		this.cliente = cliente;
 		this.tokentarjeta = tokentarjeta;
 	}
+
+	public Ventas() {
+		super();
+	}
+
 
 
 }

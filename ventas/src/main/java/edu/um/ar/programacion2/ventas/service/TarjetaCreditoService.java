@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,16 +25,32 @@ public class TarjetaCreditoService {
  
     @Autowired
     private TarjetaCreditoRepository tarjetacreditoRepository;
- 
+    
+    @Autowired
+	private ClienteService clienteService;
+ /*
     @Transactional(readOnly = true)
     public Page<TarjetaCredito> findAll(Pageable pageable) {
         //log.debug("Request to get all Ventas");
         return tarjetacreditoRepository.findAll(pageable);
     }
-    
+    */
     public List<TarjetaCredito> findAll() {
 		return tarjetacreditoRepository.findAll();
-	}
+    }
+    /*
+    
+    public ResponseEntity<List<TarjetaCredito>> findAll() {
+		//return tarjetacreditoRepository.findAll();
+    	
+    	List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept","/");
+		return ResponseEntity.ok().headers(headers).body(list);
+
+		//return list;
+    }
+    */
     /**
      * Get one ventas by id.
      *
