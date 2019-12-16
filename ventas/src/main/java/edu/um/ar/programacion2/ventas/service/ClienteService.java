@@ -54,6 +54,10 @@ public class ClienteService {
     public Cliente createCliente(Cliente cliente) {
     	return clienteRepository.save(cliente);
     }
+    
+    public boolean exist(Long id) {
+    	return clienteRepository.existsById(id);
+    }
     	
 	public Cliente deleteCliente(Long id) {
 		clienteRepository.deleteById(id);

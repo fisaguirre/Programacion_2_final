@@ -83,8 +83,7 @@ public class VentasController {
 	}
     */
     @PostMapping("/agregar/")
-	public ResponseEntity<VentasObjeto> createVentas(@RequestBody VentasObjeto ventaObj) {
-    	System.out.println("holassasasasa");
+	public ResponseEntity<ResponseEntity> createVentas(@RequestBody VentasObjeto ventaObj) {
     	return ResponseEntity.ok(ventasService.createVentas(ventaObj));
 	}
     
