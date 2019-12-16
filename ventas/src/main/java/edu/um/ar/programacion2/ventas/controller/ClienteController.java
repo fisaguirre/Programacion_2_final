@@ -62,11 +62,15 @@ public class ClienteController {
     }
     
     @PostMapping("/po/")
-	public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
-    	System.out.println("hola cliente");
+	public ResponseEntity<ResponseEntity> createCliente(@RequestBody Cliente cliente) {
     	return ResponseEntity.ok(clienteService.createCliente(cliente));
 	}
     
+    @GetMapping("/token/{nombre}/{apellido}")
+	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable String nombre, @PathVariable String apellido) {
+		return ResponseEntity.ok(clienteService.getClienteByNombreApellido(nombre,apellido));
+	}
+
     @DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<Cliente> deleteCliente(@PathVariable("idToDelete") Long id) {
     	return ResponseEntity.ok(clienteService.deleteCliente(id));

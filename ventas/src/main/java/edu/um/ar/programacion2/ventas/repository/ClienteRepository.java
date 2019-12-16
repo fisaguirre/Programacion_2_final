@@ -13,5 +13,7 @@ import edu.um.ar.programacion2.ventas.model.Ventas;
 @Repository
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-
+	//List<Cliente> findByNombreAndApellido(List<String> nombre, List<String> apellido);
+	Cliente findByNombreAndApellido(String nombre, String apellido);
+	boolean existsByNombreAndApellido(String nombre, String apellido);
 }

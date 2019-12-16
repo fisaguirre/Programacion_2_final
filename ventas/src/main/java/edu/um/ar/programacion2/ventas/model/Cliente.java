@@ -25,7 +25,7 @@ public class Cliente {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre")
 	private String nombre;
 
 	@Column(name = "apellido")
