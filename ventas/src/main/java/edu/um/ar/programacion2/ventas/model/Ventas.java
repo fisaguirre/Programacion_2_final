@@ -28,32 +28,22 @@ public class Ventas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-
-	@Column(name = "nombre", nullable = false)
-	private String nombre;
-
+/*
 	@Column(name = "descripcion")
 	private String descripcion;
-
+*/
 	@Column(name = "monto")
 	private Float monto;
-
+/*
 	@Column(name = "fecha")
 	private Instant fecha;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+*/
+	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnore
 	private Cliente cliente;
 	
-	/*
-	@ManyToOne
-	@JoinColumn(name = "owner")
-	private Cliente owner;
-	*/
 	@Column(name = "tokentarjeta")
-	private String tokentarjeta;
+	private Long tokentarjeta;
 
 	public Long getId() {
 		return id;
@@ -62,15 +52,7 @@ public class Ventas {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
+/*
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -78,7 +60,7 @@ public class Ventas {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
+*/
 	public Float getMonto() {
 		return monto;
 	}
@@ -86,7 +68,7 @@ public class Ventas {
 	public void setMonto(Float monto) {
 		this.monto = monto;
 	}
-
+/*
 	public Instant getFecha() {
 		return fecha;
 	}
@@ -94,7 +76,7 @@ public class Ventas {
 	public void setFecha(Instant fecha) {
 		this.fecha = fecha;
 	}
-
+*/
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -103,22 +85,28 @@ public class Ventas {
 		this.cliente = cliente;
 	}
 
-	public String getTokentarjeta() {
+	public Long getTokentarjeta() {
 		return tokentarjeta;
 	}
 
-	public void setTokentarjeta(String tokentarjeta) {
+	public void setTokentarjeta(Long tokentarjeta) {
 		this.tokentarjeta = tokentarjeta;
 	}
 
-	public Ventas(Long id, String nombre, String descripcion, Float monto, Instant fecha, Cliente cliente,
-			String tokentarjeta) {
+	public Ventas(Long id, Float monto, Cliente cliente,
+			Long tokentarjeta) {
 		super();
 		this.id = id;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
+		//this.descripcion = descripcion;
 		this.monto = monto;
-		this.fecha = fecha;
+		//this.fecha = fecha;
+		this.cliente = cliente;
+		this.tokentarjeta = tokentarjeta;
+	}
+
+	public Ventas(Float monto, Cliente cliente, Long tokentarjeta) {
+		super();
+		this.monto = monto;
 		this.cliente = cliente;
 		this.tokentarjeta = tokentarjeta;
 	}

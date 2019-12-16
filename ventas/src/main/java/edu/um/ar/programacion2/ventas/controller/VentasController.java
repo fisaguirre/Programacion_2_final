@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.um.ar.programacion2.ventas.model.Ventas;
+import edu.um.ar.programacion2.ventas.objeto.VentasObjeto;
 import edu.um.ar.programacion2.ventas.service.VentasService;
+import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
 import org.springframework.http.HttpHeaders;
 
 import org.springframework.data.domain.Page;
@@ -42,8 +44,8 @@ import org.springframework.data.domain.Pageable;
 @CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/ventas")
 public class VentasController {
-	@Autowired
-	private RestTemplate restTemplate;
+	//@Autowired
+	//private RestTemplate restTemplate;
 	
 	@Autowired
 	private VentasService ventasService;
@@ -71,25 +73,19 @@ public class VentasController {
         //return ResponseUtil.wrapOrNotFound(ventas);
         return ResponseEntity.ok(ventas);
     }
-/*
-    @PostMapping("/ventas")
-    public ResponseEntity<Ventas> createVentas(@Valid @RequestBody Ventas ventas) throws URISyntaxException {
-        log.debug("REST request to save Ventas : {}", ventas);
-        if (ventas.getId() != null) {
-            throw new BadRequestAlertException("A new ventas cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        Ventas result = ventasService.save(ventas);
-        return ResponseEntity.created(new URI("/api/ventas/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
-    */
-    @PostMapping
+    /*
+    @PostMapping("/agregar")
 	public ResponseEntity<Ventas> createVentas(@RequestBody Ventas venta) {
 		// newProduct has same properties but also has ID
     	return ResponseEntity.ok(ventasService.createVentas(venta));
 		//Ventas newVentas = this.productDAO.save(product);
 		//return ResponseEntity.ok(newVentas);
+	}
+    */
+    @PostMapping("/agregar/")
+	public ResponseEntity<VentasObjeto> createVentas(@RequestBody VentasObjeto ventaObj) {
+    	System.out.println("holassasasasa");
+    	return ResponseEntity.ok(ventasService.createVentas(ventaObj));
 	}
     
     @DeleteMapping(value = "{idToDelete}")
@@ -99,10 +95,11 @@ public class VentasController {
 		//this.productDAO.deleteById(id);
 		//return ResponseEntity.ok(null);
 	}
-    
+    /*
     @PutMapping
 	public ResponseEntity<Ventas> updateVentas(@RequestBody Ventas venta) {
     	return new ResponseEntity(ventasService.updateVentas(venta), HttpStatus.OK);
 	}
+*/
 }
  

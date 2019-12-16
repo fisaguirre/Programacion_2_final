@@ -15,7 +15,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.um.ar.programacion2.ventas.model.Cliente;
 import lombok.Data;
 
 @Data
