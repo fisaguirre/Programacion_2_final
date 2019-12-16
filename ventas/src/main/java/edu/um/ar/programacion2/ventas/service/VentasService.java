@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,10 +60,15 @@ public class VentasService {
 		boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
 		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
 				"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), TarjetaCreditoObjeto.class);
+		//HttpHeaders header = restTemplate.headForHeaders("http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta());
+		
+		if(responseEntity.getBody().getMontomaximo()==null) {
+			return new ResponseEntity<>("La tarjeta no esta registrada!", HttpStatus.BAD_REQUEST);
+		}
 		if (!exist_cliente) {
 			return new ResponseEntity<>("El cliente no existe!", HttpStatus.BAD_REQUEST);
 		}
-		if (responseEntity == null) {
+		if (responseEntity.getBody() == null) {
 			return new ResponseEntity<>("la tarjeta no existe!", HttpStatus.BAD_REQUEST);
 		}
 		if (responseEntity.getBody().getCliente_id() != ventasObj.getCliente_id()) {
