@@ -84,7 +84,7 @@ public class VentasController {
     */
     @PostMapping("/agregar/")
 	public ResponseEntity<ResponseEntity> createVentas(@RequestBody VentasObjeto ventaObj) {
-    	return ResponseEntity.ok(ventasService.createVentas(ventaObj));
+    	return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
 	}
     
     @DeleteMapping(value = "{idToDelete}")

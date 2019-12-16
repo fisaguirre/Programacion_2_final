@@ -70,6 +70,11 @@ public class TarjetaCreditoController {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
 		return ResponseEntity.ok(tarjetaObj);
 	}
+	
+	@GetMapping("/token/{numero}")
+	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable Integer numero) {
+		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoId(numero));
+	}
 /*
 	@PostMapping("/po/")
 	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
@@ -77,9 +82,10 @@ public class TarjetaCreditoController {
 	}
 */
 	@PostMapping("/agregar/")
-	public ResponseEntity<TarjetaCreditoObjeto> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
-		TarjetaCreditoObjeto thing = tarjetacreditoService.createTarjetaCredito(tarjetaObj);
-		return ResponseEntity.ok(thing);
+	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
+		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
+		//TarjetaCreditoObjeto thing = tarjetacreditoService.createTarjetaCredito(tarjetaObj);
+		//return ResponseEntity.ok(thing);
 	}
 
 	//@DeleteMapping(value = "{idToDelete}")

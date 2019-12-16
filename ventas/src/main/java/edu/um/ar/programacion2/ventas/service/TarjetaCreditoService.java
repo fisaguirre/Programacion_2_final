@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,9 +44,7 @@ public class TarjetaCreditoService {
 		}
 		return tarjetaList;
 	}
-	
     /*
-    
     public ResponseEntity<List<TarjetaCredito>> findAll() {
 		//return tarjetacreditoRepository.findAll();
     	
@@ -53,7 +52,6 @@ public class TarjetaCreditoService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept","/");
 		return ResponseEntity.ok().headers(headers).body(list);
-
 		//return list;
     }
     */
@@ -82,7 +80,7 @@ public class TarjetaCreditoService {
 	}
 	*/
 
-	public TarjetaCreditoObjeto createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente = optionalCliente.get();
@@ -98,9 +96,9 @@ public class TarjetaCreditoService {
 					tarjeta_creada.getVencimiento(), tarjeta_creada.getMontomaximo(), tarjeta_creada.getToken(),
 					tarjeta_creada.getCliente_id().getId());
 
-			return tarjetaCredObj;
+			//return tarjetaCredObj;
+			return new ResponseEntity<>("La tarjeta se creo exitosamente-- Su ID es: "+tarjeta_creada.getId(), HttpStatus.OK);
 		}
-
 		return null;
 	}
 	
@@ -109,6 +107,20 @@ public class TarjetaCreditoService {
     	return tarjetacreditoRepository.save(tarjetacredito);
     }
 */
+	
+	public ResponseEntity getTarjetaCreditoId(Integer numero) {
+		if(!verify_numero(numero)) {
+			return new ResponseEntity<>("0", HttpStatus.OK);
+		}
+		TarjetaCredito tarjeta = tarjetacreditoRepository.findByNumero(numero);
+		return new ResponseEntity<>("ID: "+tarjeta.getId(), HttpStatus.OK);
+	}
+	
+	public boolean verify_numero(Integer numero) {
+		boolean verificar_tarjeta = tarjetacreditoRepository.existsByNumero(numero);
+		return verificar_tarjeta;
+	}
+	
 	public TarjetaCredito deleteTarjetaCredito(Long id) {
 		tarjetacreditoRepository.deleteById(id);
 		return null;
