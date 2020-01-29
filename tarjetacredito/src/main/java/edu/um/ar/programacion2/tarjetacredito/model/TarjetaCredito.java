@@ -67,7 +67,17 @@ public class TarjetaCredito {
 	}
 
 
-
+	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
+			Float montomaximo, Cliente cliente_id, String token) {
+		super();
+		this.tipo = tipo;
+		this.numero = numero;
+		this.codseguridad = codseguridad;
+		this.vencimiento = vencimiento;
+		this.montomaximo = montomaximo;
+		this.cliente_id = cliente_id;
+		this.token = token;
+	}
 
 	public Long getId() {
 		return id;

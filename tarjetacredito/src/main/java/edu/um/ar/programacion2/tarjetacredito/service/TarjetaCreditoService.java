@@ -8,12 +8,14 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.um.ar.programacion2.tarjetacredito.model.Cliente;
 import edu.um.ar.programacion2.tarjetacredito.model.TarjetaCredito;
 import edu.um.ar.programacion2.tarjetacredito.objeto.TarjetaCreditoObjeto;
 import edu.um.ar.programacion2.tarjetacredito.repository.TarjetaCreditoRepository;
@@ -23,13 +25,10 @@ public class TarjetaCreditoService {
  
     @Autowired
     private TarjetaCreditoRepository tarjetacreditoRepository;
- /*
-    @Transactional(readOnly = true)
-    public Page<TarjetaCredito> findAll(Pageable pageable) {
-        //log.debug("Request to get all Ventas");
-        return tarjetacreditoRepository.findAll(pageable);
-    }
-    */
+    
+    @Autowired
+	private ClienteService clienteService;
+ 
     public List<TarjetaCreditoObjeto> findAll() {
 		List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
 		List<TarjetaCreditoObjeto> tarjetaList = new ArrayList<TarjetaCreditoObjeto>();
@@ -41,13 +40,7 @@ public class TarjetaCreditoService {
 		}
 		return tarjetaList;
 	}
-    /*
-    @Transactional(readOnly = true)
-    public Optional<TarjetaCredito> findById(Long id) {
-        //log.debug("Request to get Ventas : {}", id);
-        return tarjetacreditoRepository.findById(id);
-    }
-*/
+   
 	public TarjetaCreditoObjeto findById(Long id) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findById(id);
 		TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto();
@@ -64,38 +57,41 @@ public class TarjetaCreditoService {
 		}
 		return tarjetaObj;
 	}
+    public boolean tarjeta_existente(Long id) {
+    	return tarjetacreditoRepository.existsById(id);
+    }
     
-    public TarjetaCredito createTarjetaCredito(TarjetaCredito tarjetacredito) {
-    	return tarjetacreditoRepository.save(tarjetacredito);
-    }
-    	/*
-    	if(ventasRepository.save(venta) != null) {
-    		return true;
-    	}
-    	return false;
-    }
-    */
-	public TarjetaCredito deleteTarjetaCredito(Long id) {
-		tarjetacreditoRepository.deleteById(id);
-		return null;
-		//return ventasRepository.deleteById(id);
-	}
-/*
-	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(TarjetaCredito tarjetacredito) {
-		Optional<TarjetaCredito> optionalTarjetaCredito = this.findById(tarjetacredito.getId());
-		if(optionalTarjetaCredito.isPresent()) {
-			TarjetaCredito updateTarjetaCredito = optionalTarjetaCredito.get();
-			updateTarjetaCredito.setTipo(tarjetacredito.getTipo());
-			updateTarjetaCredito.setNumero(tarjetacredito.getNumero());
-			updateTarjetaCredito.setCodseguridad(tarjetacredito.getCodseguridad());
-			updateTarjetaCredito.setVencimiento(tarjetacredito.getVencimiento());
-			updateTarjetaCredito.setMontomaximo(tarjetacredito.getMontomaximo());
-			updateTarjetaCredito.setToken(tarjetacredito.getToken());
-			return ResponseEntity.ok(this.tarjetacreditoRepository.save(updateTarjetaCredito));
-		}else {
-			return ResponseEntity.notFound().build();			
+    public ResponseEntity<TarjetaCreditoObjeto> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+    	System.out.println("emntra funcions");
+    	System.out.println("el cliente id es: "+tarjetaObj.getCliente_id());
+		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
+		System.out.println("Despues de buscar cliente");
+		if (optionalCliente.isPresent()) {
+			System.out.println("se encontro cliente");
+			Cliente cliente = optionalCliente.get();
+			Cliente cliente_encontrado = new Cliente(cliente.getId(), cliente.getNombre(), cliente.getApellido());
+			System.out.println("encontramos cliente con: ");
+			System.out.println(cliente_encontrado.getNombre());
+			System.out.println(cliente_encontrado.getApellido());
+			System.out.println(cliente_encontrado.getId());
+
+			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaObj.getTipo(), tarjetaObj.getNumero(),
+					tarjetaObj.getCodseguridad(), tarjetaObj.getVencimiento(), tarjetaObj.getMontomaximo(),
+					cliente_encontrado, tarjetaObj.getToken());
+			System.out.println("ANTES DE CREARSE TARJETA");
+			TarjetaCredito tarjeta_creada = tarjetacreditoRepository.save(tarjetaCredito);
+			System.out.println("dESPUES DE CREARSE TARJETA");
+
+			TarjetaCreditoObjeto tarjetaCredObj = new TarjetaCreditoObjeto(tarjeta_creada.getId(),
+					tarjeta_creada.getTipo(), tarjeta_creada.getNumero(), tarjeta_creada.getCodseguridad(),
+					tarjeta_creada.getVencimiento(), tarjeta_creada.getMontomaximo(), tarjeta_creada.getToken(),
+					tarjeta_creada.getCliente_id().getId());
+
+			//return tarjetaCredObj;
+			return new ResponseEntity<TarjetaCreditoObjeto>(HttpStatus.OK);
 		}
+		return null;
 	}
-*/
+    
  
 }

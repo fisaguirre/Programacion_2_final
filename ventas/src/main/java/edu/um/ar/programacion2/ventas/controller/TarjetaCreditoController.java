@@ -54,10 +54,10 @@ public class TarjetaCreditoController {
 
 	@GetMapping("/")
 	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
-		System.out.println("hola gente");
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
+	
 /*
 	@GetMapping("/{id}")
 	public ResponseEntity<Optional<TarjetaCredito>> getTarjetaCredito(@PathVariable Long id) {
@@ -65,12 +65,20 @@ public class TarjetaCreditoController {
 		return ResponseEntity.ok(tarjetacredito);
 	}
 	*/
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
+		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.fById(id);
+		return ResponseEntity.ok(tarjetaObj);
+	}
+	
+	/*
 	@GetMapping("/{id}")
 	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
 		return ResponseEntity.ok(tarjetaObj);
 	}
-	
+	*/
 	@GetMapping("/token/{numero}")
 	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable Integer numero) {
 		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoId(numero));
@@ -82,7 +90,7 @@ public class TarjetaCreditoController {
 	}
 */
 	@PostMapping("/agregar/")
-	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
+	public ResponseEntity<TarjetaCreditoObjeto> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
 		//TarjetaCreditoObjeto thing = tarjetacreditoService.createTarjetaCredito(tarjetaObj);
 		//return ResponseEntity.ok(thing);

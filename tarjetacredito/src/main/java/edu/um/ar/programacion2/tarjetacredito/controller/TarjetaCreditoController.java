@@ -65,16 +65,33 @@ public class TarjetaCreditoController {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
 		return ResponseEntity.ok(tarjetaObj);
 	}
-
+    
+    @GetMapping("/verify/{id}")
+	public boolean tarjeta_existente(@PathVariable Long id) {
+		return tarjetacreditoService.tarjeta_existente(id);
+	}
+    
+    @PostMapping("/add")
+	public ResponseEntity<ResponseEntity<TarjetaCreditoObjeto>> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+    	System.out.println("holaaaaaaaaaaa");
+    	System.out.println("Asdas");
+    	System.out.println("estamos en controller y el id es: "+tarjetaCreditoObjeto.getCliente_id());
+    	System.out.println("y su token es: "+tarjetaCreditoObjeto.getToken());
+    	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto));
+	}
+    
+/*
     @PostMapping
 	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
     	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetacredito));
 	}
-    
+  */  
+    /*
     @DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<TarjetaCredito> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
     	return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(id));
 	}
+	*/
     /*
     @PutMapping
 	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {

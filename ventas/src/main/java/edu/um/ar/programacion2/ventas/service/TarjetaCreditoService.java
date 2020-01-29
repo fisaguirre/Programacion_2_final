@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
@@ -55,7 +56,7 @@ public class TarjetaCreditoService {
 		//return list;
     }
     */
-
+	
 	public TarjetaCreditoObjeto findById(Long id) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findById(id);
 		// TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto();
@@ -79,7 +80,7 @@ public class TarjetaCreditoService {
 		//return tarjetacreditoRepository.save(tarjetacredito);
 	}
 	*/
-
+/*
 	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
@@ -99,6 +100,44 @@ public class TarjetaCreditoService {
 			//return tarjetaCredObj;
 			return new ResponseEntity<>("La tarjeta se creo exitosamente-- Su ID es: "+tarjeta_creada.getId(), HttpStatus.OK);
 		}
+		return null;
+	}
+	*/
+	public TarjetaCreditoObjeto fById(Long id) {
+		//boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
+		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
+				"http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoObjeto.class);
+		System.out.println("el token de esta tarjeta es: "+responseEntity.getBody().getToken());
+		System.out.println("el monto de la tarjeta es: "+responseEntity.getBody().getMontomaximo());
+		//System.out.println(responseEntity.getStatusCodeValue());
+		return responseEntity.getBody();
+	}
+	
+	public TarjetaCreditoObjeto createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+		System.out.println("primerooooooo");
+		/*ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
+				"http://localhost:8200/tarjetacredito", TarjetaCreditoObjeto.class);		
+				*/
+		System.out.println("segundooo");
+		System.out.println("nuestro di del cliente es: "+tarjetaObj.getCliente_id());
+		List<TarjetaCreditoObjeto> tarjetas = new ArrayList<>();
+		tarjetas.add(tarjetaObj);
+		System.out.println("en array el id es: "+tarjetas.get(0).getCliente_id());
+		
+		/*
+		TarjetaCreditoObjeto responseEntity = new RestTemplate().postForObject(
+				"http://localhost:8200/tarjetacredito/add", tarjetas, TarjetaCreditoObjeto.class);
+		*/
+		
+		TarjetaCreditoObjeto responseEntity = new RestTemplate().postForObject(
+				"http://localhost:8200/tarjetacredito/add", tarjetaObj, TarjetaCreditoObjeto.class);
+		//parece que restTemplate serializa el objeto java a objeto JSON para el otro servicio(al menos con peticion
+		//tipo post)
+		
+		
+		//responseEntity.getStatusCode();
+		//HttpStatus a = responseEntity.getStatusCode();
+		//return new ResponseEntity<>(responseEntity.getStatusCode());
 		return null;
 	}
 	
