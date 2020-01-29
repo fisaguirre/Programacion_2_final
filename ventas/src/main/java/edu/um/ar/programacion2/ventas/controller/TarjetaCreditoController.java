@@ -89,11 +89,10 @@ public class TarjetaCreditoController {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetacredito));
 	}
 */
+
 	@PostMapping("/agregar/")
-	public ResponseEntity<TarjetaCreditoObjeto> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
+	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
-		//TarjetaCreditoObjeto thing = tarjetacreditoService.createTarjetaCredito(tarjetaObj);
-		//return ResponseEntity.ok(thing);
 	}
 
 	//@DeleteMapping(value = "{idToDelete}")
