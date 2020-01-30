@@ -105,9 +105,7 @@ public class TarjetaCreditoService {
 
 			Date fecha = this.TodayDate();
 			
-			System.out.println("antes del if el token es: "+token);
 			if(fecha.equals(tarjeta_encontrada.getVencimiento()) || fecha.before(tarjeta_encontrada.getVencimiento()) ) {
-				System.out.println("la tarjeta no esta expirada");
 				return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
 			}else {
 				return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);

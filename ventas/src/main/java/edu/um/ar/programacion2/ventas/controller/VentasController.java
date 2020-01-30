@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -44,64 +43,40 @@ import org.springframework.data.domain.Pageable;
 @CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/venta")
 public class VentasController {
-	//@Autowired
-	//private RestTemplate restTemplate;
-	
+
 	@Autowired
 	private VentasService ventasService;
-	
-	@GetMapping("/")
+
+	@GetMapping("")
 	public ResponseEntity<List<Ventas>> getAllVentas(Pageable pageable) {
-		/*
-		 * Page<Ventas> page = ventasService.findAll(pageable); HttpHeaders headers =
-		 * PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.
-		 * fromCurrentRequest(), page); return
-		 * ResponseEntity.ok().headers(headers).body(page.getContent());
-		 */
-        return new ResponseEntity<List<Ventas>>(ventasService.findAll(), HttpStatus.OK);
-    }
-	/**
-     * {@code GET  /ventas/:id} : get the "id" ventas.
-     *
-     * @param id the id of the ventas to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ventas, or with status {@code 404 (Not Found)}.
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Ventas>> getVentas(@PathVariable Long id) {
-        //log.debug("REST request to get Ventas : {}", id);
-        Optional<Ventas> ventas = ventasService.findById(id);
-        //return ResponseUtil.wrapOrNotFound(ventas);
-        return ResponseEntity.ok(ventas);
-    }
-    /*
-    @PostMapping("/agregar")
-	public ResponseEntity<Ventas> createVentas(@RequestBody Ventas venta) {
-		// newProduct has same properties but also has ID
-    	return ResponseEntity.ok(ventasService.createVentas(venta));
-		//Ventas newVentas = this.productDAO.save(product);
-		//return ResponseEntity.ok(newVentas);
+		ResponseEntity<List<Ventas>> registrosVentas;
+		registrosVentas = ventasService.findAll();
+		return new ResponseEntity<List<Ventas>>(registrosVentas.getBody(), registrosVentas.getStatusCode());
 	}
-    */
-    @PostMapping("")
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Optional<Ventas>> getVentas(@PathVariable Long id) {
+		// log.debug("REST request to get Ventas : {}", id);
+		Optional<Ventas> ventas = ventasService.findById(id);
+		// return ResponseUtil.wrapOrNotFound(ventas);
+		return ResponseEntity.ok(ventas);
+	}
+
+	@PostMapping("")
 	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasObjeto ventaObj) {
-    	System.out.println("aca el token es: "+ventaObj.getToken());
-    	System.out.println("el monto es: "+ventaObj.getMonto());
-    	System.out.println("cliente id es: "+ventaObj.getCliente_id());
-    	return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
+		return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
 	}
-    
-    @DeleteMapping(value = "{idToDelete}")
+
+	@DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<Ventas> deleteVentas(@PathVariable("idToDelete") Long id) {
-    	return ResponseEntity.ok(ventasService.deleteVentas(id));
+		return ResponseEntity.ok(ventasService.deleteVentas(id));
 		// newProduct has same properties but also has ID
-		//this.productDAO.deleteById(id);
-		//return ResponseEntity.ok(null);
+		// this.productDAO.deleteById(id);
+		// return ResponseEntity.ok(null);
 	}
-    /*
-    @PutMapping
-	public ResponseEntity<Ventas> updateVentas(@RequestBody Ventas venta) {
-    	return new ResponseEntity(ventasService.updateVentas(venta), HttpStatus.OK);
-	}
-*/
+	/*
+	 * @PutMapping public ResponseEntity<Ventas> updateVentas(@RequestBody Ventas
+	 * venta) { return new ResponseEntity(ventasService.updateVentas(venta),
+	 * HttpStatus.OK); }
+	 */
 }
- 

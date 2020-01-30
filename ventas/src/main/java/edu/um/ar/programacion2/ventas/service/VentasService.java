@@ -37,15 +37,16 @@ public class VentasService {
     
 	@Autowired
     private VentasRepository ventasRepository;
- 
+ /*
     @Transactional(readOnly = true)
     public Page<Ventas> findAll(Pageable pageable) {
         //log.debug("Request to get all Ventas");
         return ventasRepository.findAll(pageable);
     }
-    
-    public List<Ventas> findAll() {
-		return ventasRepository.findAll();
+    */
+	
+    public ResponseEntity<List<Ventas>> findAll() {
+		return new ResponseEntity<List<Ventas>>(ventasRepository.findAll(),HttpStatus.OK);
 	}
     
     @Transactional(readOnly = true)
@@ -55,12 +56,11 @@ public class VentasService {
     }
     
 	public ResponseEntity<String> chequear_registros(VentasObjeto ventasObj) {
-		ResponseEntity<String> responseEntity, responseEntity_2;
+		ResponseEntity<String> existsTarjeta, verificarMontoTarjeta;
 		boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
 		if (exist_cliente) {
-			System.out.println("el token de aca es: "+ventasObj.getToken());
 			try {
-				responseEntity = new RestTemplate().getForEntity(
+				existsTarjeta = new RestTemplate().getForEntity(
 						"http://localhost:8200/tarjetacredito/" + ventasObj.getToken(), String.class);
 			} catch (HttpClientErrorException error1) {
 				return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
@@ -68,14 +68,14 @@ public class VentasService {
 				return new ResponseEntity<String>(error2.getMessage(), HttpStatus.FORBIDDEN);
 			}
 			try {
-				responseEntity_2 = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/"
+				verificarMontoTarjeta = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/"
 						+ ventasObj.getMonto() + "/" + ventasObj.getToken(), String.class);
 			} catch (HttpClientErrorException error1) {
 				return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 			} catch (RestClientException error2) {
 				return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 			}
-			if (responseEntity_2.getStatusCodeValue() == 200) {
+			if (verificarMontoTarjeta.getStatusCodeValue() == 200) {
 				System.out.println("Cliente y tarjetas salieron bien");
 			}
 		}else {
