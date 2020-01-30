@@ -5,7 +5,7 @@ public class VentasObjeto {
 	private Long id;
 	private Float monto;
 	private Long cliente_id;
-	private Long tokenTarjeta;
+	private String token;
 
 	
 	public Long getId() {
@@ -32,20 +32,20 @@ public class VentasObjeto {
 		this.cliente_id = cliente_id;
 	}
 
-	public Long getTokenTarjeta() {
-		return tokenTarjeta;
+	public String getToken() {
+		return token;
 	}
 
-	public void setTokenTarjeta(Long tokenTarjeta) {
-		this.tokenTarjeta = tokenTarjeta;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
-	public VentasObjeto(Long id, Float monto, Long cliente_id, Long tokenTarjeta) {
+	public VentasObjeto(Long id, Float monto, Long cliente_id, String token) {
 		super();
 		this.id = id;
 		this.monto = monto;
 		this.cliente_id = cliente_id;
-		this.tokenTarjeta = tokenTarjeta;
+		this.token = token;
 	}
 
 	public VentasObjeto() {

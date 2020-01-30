@@ -1,6 +1,7 @@
 package edu.um.ar.programacion2.tarjetacredito.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -90,25 +91,28 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.OK);
 	}
 
-	
+	public Date TodayDate() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date date = new Date();
+		//dateFormat.format(date);
+		return date;
+	}
 	
 	public ResponseEntity<String> verificarTarjeta(String token) {
 		if (existsTarjetaByToken(token)) {
 			Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
 			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-	        Date date = new Date();
-	        System.out.println(dateFormat.format(date));
-	        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
-	        //String d=df.format(date);
 
-	        if (tarjeta_encontrada.getVencimiento() > date) {
-				return new ResponseEntity<String>("Verificacion valida, se puede continuar con la venta",
-						HttpStatus.OK);
-			} else {
+			Date fecha = this.TodayDate();
+			
+			System.out.println("antes del if el token es: "+token);
+			if(fecha.equals(tarjeta_encontrada.getVencimiento()) || fecha.before(tarjeta_encontrada.getVencimiento()) ) {
+				System.out.println("la tarjeta no esta expirada");
+				return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
+			}else {
 				return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
 			}
+			
 		}
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}

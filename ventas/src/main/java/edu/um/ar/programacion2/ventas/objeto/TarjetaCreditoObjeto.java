@@ -6,7 +6,7 @@ public class TarjetaCreditoObjeto {
 
 	private Long id;
 	private String tipo;
-	private Integer numero;
+	private Long numero;
 	private Integer codseguridad;
 	private Date vencimiento;
 	private Float montomaximo;
@@ -29,11 +29,11 @@ public class TarjetaCreditoObjeto {
 		this.tipo = tipo;
 	}
 
-	public Integer getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Integer numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 
@@ -77,7 +77,7 @@ public class TarjetaCreditoObjeto {
 		this.cliente_id = cliente_id;
 	}
 	
-	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
+	public TarjetaCreditoObjeto(Long id, String tipo, Long numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Long cliente_id) {
 		super();
 		this.id = id;

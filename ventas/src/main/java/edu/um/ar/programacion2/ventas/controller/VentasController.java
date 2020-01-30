@@ -84,6 +84,9 @@ public class VentasController {
     */
     @PostMapping("")
 	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasObjeto ventaObj) {
+    	System.out.println("aca el token es: "+ventaObj.getToken());
+    	System.out.println("el monto es: "+ventaObj.getMonto());
+    	System.out.println("cliente id es: "+ventaObj.getCliente_id());
     	return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
 	}
     

@@ -90,7 +90,7 @@ public class TarjetaCreditoService {
 		//boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
 		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
 				"http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoObjeto.class);
-		//System.out.println(responseEntity.getStatusCodeValue());
+				//System.out.println(responseEntity.getStatusCodeValue());
 		return responseEntity.getBody();
 	}
 
