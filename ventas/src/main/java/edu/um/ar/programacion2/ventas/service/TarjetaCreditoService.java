@@ -15,7 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
@@ -122,13 +126,36 @@ public class TarjetaCreditoService {
 		return responseEntity.getBody();
 	}
 
-	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
-		ResponseEntity<String> responseEntity = new RestTemplate()
-				.postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj, String.class);
+	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+		ResponseEntity<String> responseEntity;
+		try {
+			/*
+			 * ResponseEntity<String> responseEntity = new RestTemplate()
+			 * .postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
+			 * String.class);
+			 */
+			responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
+					String.class);
+		} catch (HttpClientErrorException error1) {
+			/*
+			 * return "Http code is not 2XX. The server responded: " + k1.getStatusCode() +
+			 * " Cause: "+ k1.getResponseBodyAsString();
+			 */
+			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+		} catch (RestClientException error2) {
+			//return "The server didn't respond: " + k.getMessage();
+			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		/*
+		 * ResponseEntity<String> responseEntity = new RestTemplate()
+		 * .postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
+		 * String.class);
+		 */
 		// parece que restTemplate serializa el objeto java a objeto JSON para el otro
 		// servicio(al menos con peticion
 		// tipo post)
 		return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
+
 	}
 	
 	public ResponseEntity getTarjetaCreditoId(Integer numero) {

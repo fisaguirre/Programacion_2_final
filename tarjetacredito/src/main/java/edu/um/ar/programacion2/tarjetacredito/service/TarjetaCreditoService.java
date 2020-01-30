@@ -87,7 +87,7 @@ public class TarjetaCreditoService {
 
 			return new ResponseEntity<String>(token, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<String>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
 	}
 
 	public String convertirSHA256(String password) {
