@@ -1,5 +1,7 @@
 package edu.um.ar.programacion2.ventas.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,9 +39,13 @@ public class TarjetaCredito {
 
 	@Column(name = "codseguridad")
 	private Integer codseguridad;
-
+/*
 	@Column(name = "vencimiento")
 	private Integer vencimiento;
+	*/
+	@Column(name = "vencimiento")
+	//@Temporal(TemporalType.DATE)
+	private Date vencimiento;
 
 	@Column(name = "montomaximo")
 	private Float montomaximo;
@@ -54,7 +62,7 @@ public class TarjetaCredito {
 	private String token;
 
 
-	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
+	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Cliente cliente_id, String token) {
 		super();
 		this.id = id;
@@ -67,7 +75,7 @@ public class TarjetaCredito {
 		this.token = token;
 	}
 	
-	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
+	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Cliente cliente_id, String token) {
 		super();
 		this.tipo = tipo;
@@ -119,12 +127,12 @@ public class TarjetaCredito {
 	}
 
 
-	public Integer getVencimiento() {
+	public Date getVencimiento() {
 		return vencimiento;
 	}
 
 
-	public void setVencimiento(Integer vencimiento) {
+	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
 

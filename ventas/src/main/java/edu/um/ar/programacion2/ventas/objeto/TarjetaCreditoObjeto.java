@@ -1,12 +1,14 @@
 package edu.um.ar.programacion2.ventas.objeto;
 
+import java.sql.Date;
+
 public class TarjetaCreditoObjeto {
 
 	private Long id;
 	private String tipo;
 	private Integer numero;
 	private Integer codseguridad;
-	private Integer vencimiento;
+	private Date vencimiento;
 	private Float montomaximo;
 	//private String token;
 	private Long cliente_id;
@@ -43,11 +45,11 @@ public class TarjetaCreditoObjeto {
 		this.codseguridad = codseguridad;
 	}
 
-	public Integer getVencimiento() {
+	public Date getVencimiento() {
 		return vencimiento;
 	}
 
-	public void setVencimiento(Integer vencimiento) {
+	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
 
@@ -75,7 +77,7 @@ public class TarjetaCreditoObjeto {
 		this.cliente_id = cliente_id;
 	}
 	
-	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
+	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Long cliente_id) {
 		super();
 		this.id = id;

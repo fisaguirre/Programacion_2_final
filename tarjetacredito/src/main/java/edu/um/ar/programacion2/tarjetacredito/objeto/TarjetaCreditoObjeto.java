@@ -1,14 +1,16 @@
 package edu.um.ar.programacion2.tarjetacredito.objeto;
 
+import java.sql.Date;
+
 public class TarjetaCreditoObjeto {
 
 	private Long id;
 	private String tipo;
 	private Integer numero;
 	private Integer codseguridad;
-	private Integer vencimiento;
+	private Date vencimiento;
 	private Float montomaximo;
-	//private String token;
+	// private String token;
 	private Long cliente_id;
 
 	public Long getId() {
@@ -43,11 +45,11 @@ public class TarjetaCreditoObjeto {
 		this.codseguridad = codseguridad;
 	}
 
-	public Integer getVencimiento() {
+	public Date getVencimiento() {
 		return vencimiento;
 	}
 
-	public void setVencimiento(Integer vencimiento) {
+	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
 
@@ -58,15 +60,12 @@ public class TarjetaCreditoObjeto {
 	public void setMontomaximo(Float montomaximo) {
 		this.montomaximo = montomaximo;
 	}
-/*
-	public String getToken() {
-		return token;
-	}
 
-	public void setToken(String token) {
-		this.token = token;
-	}
-*/
+	/*
+	 * public String getToken() { return token; }
+	 * 
+	 * public void setToken(String token) { this.token = token; }
+	 */
 	public Long getCliente_id() {
 		return cliente_id;
 	}
@@ -75,7 +74,7 @@ public class TarjetaCreditoObjeto {
 		this.cliente_id = cliente_id;
 	}
 
-	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
+	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Long cliente_id) {
 		super();
 		this.id = id;
@@ -86,21 +85,15 @@ public class TarjetaCreditoObjeto {
 		this.montomaximo = montomaximo;
 		this.cliente_id = cliente_id;
 	}
-/*
-	public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
-			Float montomaximo, String token, Long cliente_id) {
-		super();
-		this.id = id;
-		this.tipo = tipo;
-		this.numero = numero;
-		this.codseguridad = codseguridad;
-		this.vencimiento = vencimiento;
-		this.montomaximo = montomaximo;
-		this.token = token;
-		this.cliente_id = cliente_id;
-	}
-*/
-	
+	/*
+	 * public TarjetaCreditoObjeto(Long id, String tipo, Integer numero, Integer
+	 * codseguridad, Integer vencimiento, Float montomaximo, String token, Long
+	 * cliente_id) { super(); this.id = id; this.tipo = tipo; this.numero = numero;
+	 * this.codseguridad = codseguridad; this.vencimiento = vencimiento;
+	 * this.montomaximo = montomaximo; this.token = token; this.cliente_id =
+	 * cliente_id; }
+	 */
+
 	public TarjetaCreditoObjeto() {
 		super();
 	}

@@ -75,6 +75,7 @@ public class TarjetaCreditoController {
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarTarjeta(token);
     	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}
+    
     @GetMapping("/{monto}/{token}")
 	public ResponseEntity<String> verificarMontoTarjeta(@PathVariable Float monto,@PathVariable String token) {
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto,token);

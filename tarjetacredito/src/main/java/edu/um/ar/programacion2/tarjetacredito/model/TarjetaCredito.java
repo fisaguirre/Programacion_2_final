@@ -1,5 +1,7 @@
 package edu.um.ar.programacion2.tarjetacredito.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +23,6 @@ import lombok.Data;
 @Entity
 @Table(name = "tarjetacredito")
 public class TarjetaCredito {
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,11 +39,11 @@ public class TarjetaCredito {
 	private Integer codseguridad;
 
 	@Column(name = "vencimiento")
-	private Integer vencimiento;
+	private Date vencimiento;
 
 	@Column(name = "montomaximo")
 	private Float montomaximo;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
 	private Cliente cliente_id;
@@ -50,11 +51,8 @@ public class TarjetaCredito {
 	@Column(name = "token")
 	private String token;
 
-	
-
-
-	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
-			Float montomaximo, edu.um.ar.programacion2.tarjetacredito.model.Cliente cliente_id, String token) {
+	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
+			Float montomaximo, Cliente cliente_id, String token) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -66,9 +64,8 @@ public class TarjetaCredito {
 		this.token = token;
 	}
 
-
-	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Integer vencimiento,
-			Float montomaximo, Cliente cliente_id, String token) {
+	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Date vencimiento, Float montomaximo,
+			Cliente cliente_id, String token) {
 		super();
 		this.tipo = tipo;
 		this.numero = numero;
@@ -83,118 +80,68 @@ public class TarjetaCredito {
 		return id;
 	}
 
-
-
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
-
 
 	public String getTipo() {
 		return tipo;
 	}
 
-
-
-
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-
-
-
 
 	public Integer getNumero() {
 		return numero;
 	}
 
-
-
-
 	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
-
-
-
 
 	public Integer getCodseguridad() {
 		return codseguridad;
 	}
 
-
-
-
 	public void setCodseguridad(Integer codseguridad) {
 		this.codseguridad = codseguridad;
 	}
 
-
-
-
-	public Integer getVencimiento() {
+	public Date getVencimiento() {
 		return vencimiento;
 	}
 
-
-
-
-	public void setVencimiento(Integer vencimiento) {
+	public void setVencimiento(Date vencimiento) {
 		this.vencimiento = vencimiento;
 	}
-
-
-
 
 	public Float getMontomaximo() {
 		return montomaximo;
 	}
 
-
-
-
 	public void setMontomaximo(Float montomaximo) {
 		this.montomaximo = montomaximo;
 	}
-
-
-
 
 	public Cliente getCliente_id() {
 		return cliente_id;
 	}
 
-
-
-
 	public void setCliente_id(Cliente cliente_id) {
 		this.cliente_id = cliente_id;
 	}
-
-
-
 
 	public String getToken() {
 		return token;
 	}
 
-
-
-
 	public void setToken(String token) {
 		this.token = token;
 	}
-
-
-
 
 	public TarjetaCredito() {
 		super();
 	}
 
-
 }
-

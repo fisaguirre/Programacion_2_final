@@ -1,11 +1,15 @@
 package edu.um.ar.programacion2.tarjetacredito.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,8 +96,14 @@ public class TarjetaCreditoService {
 		if (existsTarjetaByToken(token)) {
 			Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
 			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
-			Integer as = 5;
-			if (tarjeta_encontrada.getVencimiento() >= as) {
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+	        Date date = new Date();
+	        System.out.println(dateFormat.format(date));
+	        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+	        //String d=df.format(date);
+
+	        if (tarjeta_encontrada.getVencimiento() > date) {
 				return new ResponseEntity<String>("Verificacion valida, se puede continuar con la venta",
 						HttpStatus.OK);
 			} else {

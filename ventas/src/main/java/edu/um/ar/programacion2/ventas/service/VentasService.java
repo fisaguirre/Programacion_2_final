@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,84 +53,72 @@ public class VentasService {
         //log.debug("Request to get Ventas : {}", id);
         return ventasRepository.findById(id);
     }
-    public ResponseEntity createVenta(VentasObjeto ventasObj) {
-    	Boolean cliente_existente = clienteService.exist(ventasObj.getCliente_id());
-    	if(cliente_existente) {
-    		
-    	}
-		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
-		//VentasObjeto ventaReturn = new VentasObjeto();
-		if (optionalCliente.isPresent()) {
-			Cliente cliente_encontrado = optionalCliente.get();
-			Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente_encontrado, ventasObj.getTokenTarjeta());
-			ventasRepository.save(nueva_venta);
-			/*
-			Ventas venta_creada = ventasRepository.save(nueva_venta);
-			ventaReturn.setId(venta_creada.getId());
-			ventaReturn.setCliente_id(venta_creada.getCliente().getId());
-			ventaReturn.setMonto(venta_creada.getMonto());
-			ventaReturn.setTokenTarjeta(venta_creada.getTokentarjeta());
-			*/
-		}
-		//return ventaReturn;
-		return new ResponseEntity<>("Se creo la venta exitosamente!", HttpStatus.OK);
-
-	}
-    /*
     
-	public ResponseEntity createVenta(VentasObjeto ventasObj) {
-		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
-		//VentasObjeto ventaReturn = new VentasObjeto();
-		if (optionalCliente.isPresent()) {
-			Cliente cliente_encontrado = optionalCliente.get();
-			Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente_encontrado, ventasObj.getTokenTarjeta());
-			ventasRepository.save(nueva_venta);
-			
-			
-			Ventas venta_creada = ventasRepository.save(nueva_venta);
-			ventaReturn.setId(venta_creada.getId());
-			ventaReturn.setCliente_id(venta_creada.getCliente().getId());
-			ventaReturn.setMonto(venta_creada.getMonto());
-			ventaReturn.setTokenTarjeta(venta_creada.getTokentarjeta());
-			
-		}
-		//return ventaReturn;
-		return new ResponseEntity<>("Se creo la venta exitosamente!", HttpStatus.OK);
-
-	}
-*/
 	public ResponseEntity chequear_registros(VentasObjeto ventasObj) {
-    	boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
-		/*
-    	ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
-				"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), TarjetaCreditoObjeto.class);
-		*/
-		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
-				"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), TarjetaCreditoObjeto.class);
-		//HttpHeaders header = restTemplate.headForHeaders("http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta());
-		
-		if(responseEntity.getBody().getMontomaximo()==null) {
-			return new ResponseEntity<>("La tarjeta no esta registrada!", HttpStatus.BAD_REQUEST);
-		}
-		if (!exist_cliente) {
-			return new ResponseEntity<>("El cliente no existe!", HttpStatus.BAD_REQUEST);
-		}
-		if (responseEntity.getBody() == null) {
-			return new ResponseEntity<>("la tarjeta no existe!", HttpStatus.BAD_REQUEST);
-		}
-		if (responseEntity.getBody().getCliente_id() != ventasObj.getCliente_id()) {
-			return new ResponseEntity<>("La tarjeta no le pertenece al cliente!", HttpStatus.BAD_REQUEST);
-		}
-		if (ventasObj.getMonto() > 5000) {
-			if (responseEntity.getBody().getMontomaximo() < 5000) {
-				return new ResponseEntity<>("monto insuficiente!", HttpStatus.BAD_REQUEST);
+		ResponseEntity<String> responseEntity, responseEntity_2;
+		boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
+		if (exist_cliente) {
+			try {
+				responseEntity = new RestTemplate().getForEntity(
+						"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), String.class);
+			} catch (HttpClientErrorException error1) {
+				return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+			} catch (RestClientException error2) {
+				return new ResponseEntity<String>(error2.getMessage(), HttpStatus.FORBIDDEN);
+			}
+			try {
+				responseEntity_2 = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/"
+						+ ventasObj.getTokenTarjeta() + "/" + ventasObj.getMonto(), String.class);
+			} catch (HttpClientErrorException error1) {
+				return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+			} catch (RestClientException error2) {
+				return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
+			}
+			if (responseEntity_2.getStatusCodeValue() == 200) {
+				System.out.println("Cliente y tarjetas salieron bien");
 			}
 		}
 		return this.createVenta(ventasObj);
-		//return responseEntity;
+	}
+
+	/*
+	
+	public ResponseEntity chequear_registros(VentasObjeto ventasObj) {
+		
+		boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
+		if (exist_cliente) {
+			ResponseEntity<String> responseEntity = new RestTemplate()
+					.getForEntity("http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), String.class);
+			if (responseEntity.getStatusCodeValue() == 200) {
+				ResponseEntity<String> responseEntity_2 = new RestTemplate()
+						.getForEntity("http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta() + "/"
+								+ ventasObj.getMonto(), String.class);
+				if(responseEntity_2.getStatusCodeValue()==200) {
+					System.out.println("Cliente y tarjetas salieron bien");
+				}
+			}else {
+				return new ResponseEntity<String>(responseEntity_2.get)
+			}
+		}
+		
+		if (responseEntity.getBody().getCliente_id() != ventasObj.getCliente_id()) {
+			return new ResponseEntity<>("La tarjeta no le pertenece al cliente!", HttpStatus.BAD_REQUEST);
+		}
+		
+		return this.createVenta(ventasObj);
     }
-	
-	
+*/
+	 
+	public ResponseEntity<String> createVenta(VentasObjeto ventasObj) {
+		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
+		if (optionalCliente.isPresent()) {
+			Cliente cliente_encontrado = optionalCliente.get();
+			Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente_encontrado, ventasObj.getTokenTarjeta());
+			ventasRepository.save(nueva_venta);
+			return new ResponseEntity<String>("La venta ha sido exitosa",HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("La venta no ha sido exitosa", HttpStatus.BAD_REQUEST);
+	}
 
     public Ventas deleteVentas(Long id) {
 		ventasRepository.deleteById(id);
