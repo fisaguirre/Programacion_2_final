@@ -40,7 +40,12 @@ public class TarjetaCreditoService {
 		for (TarjetaCredito tarjeta : list) {
 			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
+					tarjeta.getCliente_id().getId());
+			/*
+			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
+					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
 					tarjeta.getToken(), tarjeta.getCliente_id().getId());
+					*/
 			tarjetaList.add(tarjetaObj);
 		}
 		return tarjetaList;
@@ -65,7 +70,13 @@ public class TarjetaCreditoService {
 			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta_encontrada.getId(),
 					tarjeta_encontrada.getTipo(), tarjeta_encontrada.getNumero(), tarjeta_encontrada.getCodseguridad(),
 					tarjeta_encontrada.getVencimiento(), tarjeta_encontrada.getMontomaximo(),
+					tarjeta_encontrada.getCliente_id().getId());
+			/*
+			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta_encontrada.getId(),
+					tarjeta_encontrada.getTipo(), tarjeta_encontrada.getNumero(), tarjeta_encontrada.getCodseguridad(),
+					tarjeta_encontrada.getVencimiento(), tarjeta_encontrada.getMontomaximo(),
 					tarjeta_encontrada.getToken(), tarjeta_encontrada.getCliente_id().getId());
+					*/
 			return tarjetaObj;
 		}
 		return null;
@@ -107,38 +118,18 @@ public class TarjetaCreditoService {
 		//boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
 		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
 				"http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoObjeto.class);
-		System.out.println("el token de esta tarjeta es: "+responseEntity.getBody().getToken());
-		System.out.println("el monto de la tarjeta es: "+responseEntity.getBody().getMontomaximo());
 		//System.out.println(responseEntity.getStatusCodeValue());
 		return responseEntity.getBody();
 	}
-	
+
 	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
-		/*
-		List<TarjetaCreditoObjeto> tarjetas = new ArrayList<>();
-		tarjetas.add(tarjetaObj);
-*/		
-		/*
-		TarjetaCreditoObjeto responseEntity = new RestTemplate().postForObject(
-				"http://localhost:8200/tarjetacredito/add", tarjetas, TarjetaCreditoObjeto.class);
-		*/
-		/*
-		TarjetaCreditoObjeto responseEntity = new RestTemplate().postForObject(
-				"http://localhost:8200/tarjetacredito/add", tarjetaObj, TarjetaCreditoObjeto.class);
-				*/
-		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().postForEntity(
-				"http://localhost:8200/tarjetacredito/add", tarjetaObj, TarjetaCreditoObjeto.class);
-		//parece que restTemplate serializa el objeto java a objeto JSON para el otro servicio(al menos con peticion
-		//tipo post)
-				
-		return new ResponseEntity<>(responseEntity.getStatusCode());
+		ResponseEntity<String> responseEntity = new RestTemplate()
+				.postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj, String.class);
+		// parece que restTemplate serializa el objeto java a objeto JSON para el otro
+		// servicio(al menos con peticion
+		// tipo post)
+		return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
 	}
-	
-/*
-	public TarjetaCredito createTarjetaCredito(TarjetaCredito tarjetacredito) {
-    	return tarjetacreditoRepository.save(tarjetacredito);
-    }
-*/
 	
 	public ResponseEntity getTarjetaCreditoId(Integer numero) {
 		if(!verify_numero(numero)) {

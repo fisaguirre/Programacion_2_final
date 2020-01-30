@@ -3,8 +3,9 @@ package edu.um.ar.programacion2.tarjetacredito.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-
+import java.util.Random;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,12 @@ public class TarjetaCreditoService {
 		for (TarjetaCredito tarjeta : list) {
 			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
+					tarjeta.getCliente_id().getId());
+			/*
+			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
+					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
 					tarjeta.getToken(), tarjeta.getCliente_id().getId());
+					*/
 			tarjetaList.add(tarjetaObj);
 		}
 		return tarjetaList;
@@ -52,7 +58,7 @@ public class TarjetaCreditoService {
 			tarjetaObj.setCodseguridad(tar.getCodseguridad());
 			tarjetaObj.setVencimiento(tar.getVencimiento());
 			tarjetaObj.setMontomaximo(tar.getMontomaximo());
-			tarjetaObj.setToken(tar.getToken());
+			//tarjetaObj.setToken(tar.getToken());
 			tarjetaObj.setCliente_id(tar.getCliente_id().getId());
 		}
 		return tarjetaObj;
@@ -60,38 +66,47 @@ public class TarjetaCreditoService {
     public boolean tarjeta_existente(Long id) {
     	return tarjetacreditoRepository.existsById(id);
     }
-    
-    public ResponseEntity<TarjetaCreditoObjeto> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
-    	System.out.println("emntra funcions");
-    	System.out.println("el cliente id es: "+tarjetaObj.getCliente_id());
+
+	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
-		System.out.println("Despues de buscar cliente");
 		if (optionalCliente.isPresent()) {
-			System.out.println("se encontro cliente");
 			Cliente cliente = optionalCliente.get();
 			Cliente cliente_encontrado = new Cliente(cliente.getId(), cliente.getNombre(), cliente.getApellido());
-			System.out.println("encontramos cliente con: ");
-			System.out.println(cliente_encontrado.getNombre());
-			System.out.println(cliente_encontrado.getApellido());
-			System.out.println(cliente_encontrado.getId());
+
+			String token = this.convertirSHA256(cliente_encontrado.getNombre());
 
 			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaObj.getTipo(), tarjetaObj.getNumero(),
 					tarjetaObj.getCodseguridad(), tarjetaObj.getVencimiento(), tarjetaObj.getMontomaximo(),
-					cliente_encontrado, tarjetaObj.getToken());
-			System.out.println("ANTES DE CREARSE TARJETA");
+					cliente_encontrado, token);
 			TarjetaCredito tarjeta_creada = tarjetacreditoRepository.save(tarjetaCredito);
-			System.out.println("dESPUES DE CREARSE TARJETA");
 
 			TarjetaCreditoObjeto tarjetaCredObj = new TarjetaCreditoObjeto(tarjeta_creada.getId(),
 					tarjeta_creada.getTipo(), tarjeta_creada.getNumero(), tarjeta_creada.getCodseguridad(),
-					tarjeta_creada.getVencimiento(), tarjeta_creada.getMontomaximo(), tarjeta_creada.getToken(),
+					tarjeta_creada.getVencimiento(), tarjeta_creada.getMontomaximo(),
 					tarjeta_creada.getCliente_id().getId());
 
-			//return tarjetaCredObj;
-			return new ResponseEntity<TarjetaCreditoObjeto>(HttpStatus.OK);
+			return new ResponseEntity<String>(token, HttpStatus.OK);
 		}
 		return null;
 	}
-    
- 
+
+	public String convertirSHA256(String password) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		byte[] hash = md.digest(password.getBytes());
+		StringBuffer sb = new StringBuffer();
+
+		for (byte b : hash) {
+			sb.append(String.format("%02x", b));
+		}
+
+		return sb.toString();
+	}
+
 }

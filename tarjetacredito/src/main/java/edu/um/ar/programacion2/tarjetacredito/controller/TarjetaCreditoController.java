@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
@@ -70,14 +74,16 @@ public class TarjetaCreditoController {
 	public boolean tarjeta_existente(@PathVariable Long id) {
 		return tarjetacreditoService.tarjeta_existente(id);
 	}
-    
+    /*
     @PostMapping("/add")
 	public ResponseEntity<ResponseEntity<TarjetaCreditoObjeto>> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
-    	System.out.println("holaaaaaaaaaaa");
-    	System.out.println("Asdas");
-    	System.out.println("estamos en controller y el id es: "+tarjetaCreditoObjeto.getCliente_id());
-    	System.out.println("y su token es: "+tarjetaCreditoObjeto.getToken());
     	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto));
+	}
+    */
+    @PostMapping("/add")
+	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+    	ResponseEntity<String> token = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto);    	
+    	return new ResponseEntity(token.getBody(), token.getStatusCode());
 	}
     
 /*
