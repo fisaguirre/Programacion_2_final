@@ -23,14 +23,14 @@ import edu.um.ar.programacion2.tarjetacredito.repository.TarjetaCreditoRepositor
 
 @Service
 public class TarjetaCreditoService {
- 
-    @Autowired
-    private TarjetaCreditoRepository tarjetacreditoRepository;
-    
-    @Autowired
+
+	@Autowired
+	private TarjetaCreditoRepository tarjetacreditoRepository;
+
+	@Autowired
 	private ClienteService clienteService;
- 
-    public List<TarjetaCreditoObjeto> findAll() {
+
+	public List<TarjetaCreditoObjeto> findAll() {
 		List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
 		List<TarjetaCreditoObjeto> tarjetaList = new ArrayList<TarjetaCreditoObjeto>();
 		for (TarjetaCredito tarjeta : list) {
@@ -38,15 +38,25 @@ public class TarjetaCreditoService {
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
 					tarjeta.getCliente_id().getId());
 			/*
-			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
-					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
-					tarjeta.getToken(), tarjeta.getCliente_id().getId());
-					*/
+			 * TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(),
+			 * tarjeta.getTipo(), tarjeta.getNumero(), tarjeta.getCodseguridad(),
+			 * tarjeta.getVencimiento(), tarjeta.getMontomaximo(), tarjeta.getToken(),
+			 * tarjeta.getCliente_id().getId());
+			 */
 			tarjetaList.add(tarjetaObj);
 		}
 		return tarjetaList;
 	}
-   
+
+	public ResponseEntity<String> findTokenByNumero(Integer numero) {
+		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
+		if (optionalTarjeta.isPresent()) {
+			TarjetaCredito tar = optionalTarjeta.get();
+			return new ResponseEntity<String>(tar.getToken(), HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("0", HttpStatus.BAD_REQUEST);
+	}
+
 	public TarjetaCreditoObjeto findById(Long id) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findById(id);
 		TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto();
@@ -58,16 +68,21 @@ public class TarjetaCreditoService {
 			tarjetaObj.setCodseguridad(tar.getCodseguridad());
 			tarjetaObj.setVencimiento(tar.getVencimiento());
 			tarjetaObj.setMontomaximo(tar.getMontomaximo());
-			//tarjetaObj.setToken(tar.getToken());
+			// tarjetaObj.setToken(tar.getToken());
 			tarjetaObj.setCliente_id(tar.getCliente_id().getId());
 		}
 		return tarjetaObj;
 	}
-    public boolean tarjeta_existente(Long id) {
-    	return tarjetacreditoRepository.existsById(id);
-    }
+
+	public boolean tarjeta_existente(Long id) {
+		return tarjetacreditoRepository.existsById(id);
+	}
 
 	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+		if (this.tarjetaExistenteByNumero(tarjetaObj.getNumero())) {
+			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
+		}
+		
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente = optionalCliente.get();
@@ -88,6 +103,10 @@ public class TarjetaCreditoService {
 			return new ResponseEntity<String>(token, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
+	}
+	
+	public boolean tarjetaExistenteByNumero(Integer numero) {
+		return tarjetacreditoRepository.existsByNumero(numero);
 	}
 
 	public String convertirSHA256(String password) {

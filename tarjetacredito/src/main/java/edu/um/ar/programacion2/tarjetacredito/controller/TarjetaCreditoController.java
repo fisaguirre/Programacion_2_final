@@ -46,24 +46,13 @@ import org.springframework.data.domain.Pageable;
 public class TarjetaCreditoController {
 	@Autowired
     private TarjetaCreditoService tarjetacreditoService;
-	/*
-	@GetMapping("/")
-    public ResponseEntity<List<TarjetaCredito>> getAllTarjetaCredito(Pageable pageable) {
-        return new ResponseEntity<List<TarjetaCredito>>(tarjetacreditoService.findAll(), HttpStatus.OK);
-    }
-    */
+
 	@GetMapping("/")
 	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
-	/*
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<TarjetaCredito>> getTarjetaCredito(@PathVariable Long id) {
-        Optional<TarjetaCredito> tarjetacredito = tarjetacreditoService.findById(id);
-        return ResponseEntity.ok(tarjetacredito);
-    }
-    */
+
     @GetMapping("/{id}")
 	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
@@ -74,24 +63,19 @@ public class TarjetaCreditoController {
 	public boolean tarjeta_existente(@PathVariable Long id) {
 		return tarjetacreditoService.tarjeta_existente(id);
 	}
-    /*
-    @PostMapping("/add")
-	public ResponseEntity<ResponseEntity<TarjetaCreditoObjeto>> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
-    	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto));
+    
+    @GetMapping("/token/{numero}")
+	public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero) {
+    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.findTokenByNumero(numero);
+    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}
-    */
+   
     @PostMapping("/add")
 	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
     	ResponseEntity<String> token = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto);    	
-    	return new ResponseEntity(token.getBody(), token.getStatusCode());
+    	return new ResponseEntity<String>(token.getBody(), token.getStatusCode());
 	}
     
-/*
-    @PostMapping
-	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
-    	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetacredito));
-	}
-  */  
     /*
     @DeleteMapping(value = "{idToDelete}")
 	public ResponseEntity<TarjetaCredito> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {

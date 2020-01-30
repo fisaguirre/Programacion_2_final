@@ -79,10 +79,18 @@ public class TarjetaCreditoController {
 		return ResponseEntity.ok(tarjetaObj);
 	}
 	*/
+	/*
 	@GetMapping("/token/{numero}")
 	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable Integer numero) {
 		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoId(numero));
 	}
+	*/
+
+	@GetMapping("/token/{numero}")
+	public ResponseEntity<ResponseEntity> getTarjetaCreditoToken(@PathVariable Integer numero) {
+		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoToken(numero));
+	}
+
 /*
 	@PostMapping("/po/")
 	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
