@@ -9,4 +9,6 @@ import edu.um.ar.programacion2.tarjetacredito.model.TarjetaCredito;
 public interface TarjetaCreditoRepository extends JpaRepository<TarjetaCredito, Long> {
 	Optional<TarjetaCredito> findByNumero(Integer numero);
 	Boolean existsByNumero(Integer numero);
+	Boolean existsByToken(String token);
+	Optional<TarjetaCredito> findByToken(String token);
 }

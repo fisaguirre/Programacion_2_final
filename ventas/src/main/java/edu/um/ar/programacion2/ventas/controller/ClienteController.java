@@ -43,7 +43,7 @@ import org.springframework.data.domain.Pageable;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
-@RequestMapping("/clientes")
+@RequestMapping("/cliente")
 public class ClienteController {
 	@Autowired
 	private RestTemplate restTemplate;
@@ -61,7 +61,7 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
     
-    @PostMapping("/po/")
+    @PostMapping("")
 	public ResponseEntity<ResponseEntity> createCliente(@RequestBody Cliente cliente) {
     	return ResponseEntity.ok(clienteService.createCliente(cliente));
 	}

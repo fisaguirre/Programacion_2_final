@@ -39,16 +39,17 @@ public class ClienteService {
     }
     
     public ResponseEntity createCliente(Cliente cliente) {
+    	if(this.verify_nombre_apellido(cliente.getNombre(), cliente.getApellido())) {
+    		return new ResponseEntity<String>("Ya existe un cliente con esos datos", HttpStatus.BAD_REQUEST);
+    	}
     	Cliente cliente_creado = clienteRepository.save(cliente);
 		return new ResponseEntity<>("Cliente registrado --- Su ID es: "+cliente_creado.getId(), HttpStatus.OK);
     }
     
     public ResponseEntity getClienteByNombreApellido(String nombre, String apellido) {
-		
     	if(!verify_nombre_apellido(nombre, apellido)) {
 			return new ResponseEntity<>("0", HttpStatus.OK);
 		}
-		
 		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre,apellido);
 		return new ResponseEntity<>("ID: "+cliente_encontrado.getId(), HttpStatus.OK);
 	}
@@ -57,7 +58,7 @@ public class ClienteService {
 		boolean verificar_cliente = clienteRepository.existsByNombreAndApellido(nombre,apellido);
 		return verificar_cliente;
 	}
-
+	
     public boolean exist(Long id) {
     	return clienteRepository.existsById(id);
     }

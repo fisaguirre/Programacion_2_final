@@ -51,12 +51,11 @@ public class VentasService {
         //log.debug("Request to get Ventas : {}", id);
         return ventasRepository.findById(id);
     }
-    /*
-    public Ventas createVentas(Ventas venta) {
-    	return ventasRepository.save(venta);
-    }
-    */
-	public ResponseEntity createVentas(VentasObjeto ventasObj) {
+    public ResponseEntity createVenta(VentasObjeto ventasObj) {
+    	Boolean cliente_existente = clienteService.exist(ventasObj.getCliente_id());
+    	if(cliente_existente) {
+    		
+    	}
 		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
 		//VentasObjeto ventaReturn = new VentasObjeto();
 		if (optionalCliente.isPresent()) {
@@ -75,10 +74,36 @@ public class VentasService {
 		return new ResponseEntity<>("Se creo la venta exitosamente!", HttpStatus.OK);
 
 	}
+    /*
+    
+	public ResponseEntity createVenta(VentasObjeto ventasObj) {
+		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
+		//VentasObjeto ventaReturn = new VentasObjeto();
+		if (optionalCliente.isPresent()) {
+			Cliente cliente_encontrado = optionalCliente.get();
+			Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente_encontrado, ventasObj.getTokenTarjeta());
+			ventasRepository.save(nueva_venta);
+			
+			
+			Ventas venta_creada = ventasRepository.save(nueva_venta);
+			ventaReturn.setId(venta_creada.getId());
+			ventaReturn.setCliente_id(venta_creada.getCliente().getId());
+			ventaReturn.setMonto(venta_creada.getMonto());
+			ventaReturn.setTokenTarjeta(venta_creada.getTokentarjeta());
+			
+		}
+		//return ventaReturn;
+		return new ResponseEntity<>("Se creo la venta exitosamente!", HttpStatus.OK);
 
+	}
+*/
 	public ResponseEntity chequear_registros(VentasObjeto ventasObj) {
     	boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
-		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
+		/*
+    	ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate().getForEntity(
+				"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), TarjetaCreditoObjeto.class);
+		*/
+		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
 				"http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta(), TarjetaCreditoObjeto.class);
 		//HttpHeaders header = restTemplate.headForHeaders("http://localhost:8200/tarjetacredito/" + ventasObj.getTokenTarjeta());
 		
@@ -99,9 +124,12 @@ public class VentasService {
 				return new ResponseEntity<>("monto insuficiente!", HttpStatus.BAD_REQUEST);
 			}
 		}
-		return this.createVentas(ventasObj);
+		return this.createVenta(ventasObj);
 		//return responseEntity;
     }
+	
+	
+
     public Ventas deleteVentas(Long id) {
 		ventasRepository.deleteById(id);
 		return null;

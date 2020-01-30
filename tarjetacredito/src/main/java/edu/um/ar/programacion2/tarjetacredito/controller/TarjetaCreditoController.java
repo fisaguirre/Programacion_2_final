@@ -69,7 +69,25 @@ public class TarjetaCreditoController {
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.findTokenByNumero(numero);
     	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}
-   
+    
+    @GetMapping("/{token}")
+	public ResponseEntity<String> verificarTarjeta(@PathVariable String token) {
+    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarTarjeta(token);
+    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
+	}
+    @GetMapping("/{monto}/{token}")
+	public ResponseEntity<String> verificarMontoTarjeta(@PathVariable Float monto,@PathVariable String token) {
+    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto,token);
+    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
+	}
+    /*
+    @GetMapping("/{monto}")
+	public ResponseEntity<String> existsTarjeta(@PathVariable String monto) {
+    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.existTarjeta(monto);
+    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
+	}
+    */
+
     @PostMapping("/add")
 	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
     	ResponseEntity<String> token = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto);    	

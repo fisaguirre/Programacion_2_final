@@ -74,8 +74,44 @@ public class TarjetaCreditoService {
 		return tarjetaObj;
 	}
 
+	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
+		Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
+		if (optionalTarjeta.isPresent()) {
+			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
+			if (tarjeta_encontrada.getMontomaximo() < monto) {
+				return new ResponseEntity<String>("El valor maximo de la venta ha sido superado",
+						HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.OK);
+	}
+
+	
+	
+	public ResponseEntity<String> verificarTarjeta(String token) {
+		if (existsTarjetaByToken(token)) {
+			Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
+			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
+			Integer as = 5;
+			if (tarjeta_encontrada.getVencimiento() >= as) {
+				return new ResponseEntity<String>("Verificacion valida, se puede continuar con la venta",
+						HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
+	}
+
+	public boolean existsTarjetaByToken(String token) {
+		return tarjetacreditoRepository.existsByToken(token);
+	}
 	public boolean tarjeta_existente(Long id) {
 		return tarjetacreditoRepository.existsById(id);
+	}
+	
+	public Optional<TarjetaCredito> findTarjetaByToken(String token){
+		return tarjetacreditoRepository.findByToken(token);
 	}
 
 	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {

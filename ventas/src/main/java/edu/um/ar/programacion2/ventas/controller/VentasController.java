@@ -42,7 +42,7 @@ import org.springframework.data.domain.Pageable;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081")
-@RequestMapping("/ventas")
+@RequestMapping("/venta")
 public class VentasController {
 	//@Autowired
 	//private RestTemplate restTemplate;
@@ -82,8 +82,8 @@ public class VentasController {
 		//return ResponseEntity.ok(newVentas);
 	}
     */
-    @PostMapping("/agregar/")
-	public ResponseEntity<ResponseEntity> createVentas(@RequestBody VentasObjeto ventaObj) {
+    @PostMapping("")
+	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasObjeto ventaObj) {
     	return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
 	}
     
