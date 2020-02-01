@@ -53,7 +53,7 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	 @PostMapping("/add")
+	 @PostMapping("")
 	    public Boolean create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
 		 System.out.println("el nombre es: "+body.get("username"));
 	        String username = body.get("username");

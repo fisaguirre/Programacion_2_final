@@ -100,11 +100,4 @@ public class ClienteService {
 		}
 	}
 
-	public Cliente findByNombreApellido(String nombre, String apellido) {
-		if (!verify_nombre_apellido(nombre, apellido)) {
-			return null;
-		}
-		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre, apellido);
-		return cliente_encontrado;
-	}
 }

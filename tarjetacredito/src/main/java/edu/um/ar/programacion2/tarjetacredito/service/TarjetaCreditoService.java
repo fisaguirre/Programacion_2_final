@@ -42,12 +42,6 @@ public class TarjetaCreditoService {
 			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
 					tarjeta.getCliente_id().getId());
-			/*
-			 * TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(),
-			 * tarjeta.getTipo(), tarjeta.getNumero(), tarjeta.getCodseguridad(),
-			 * tarjeta.getVencimiento(), tarjeta.getMontomaximo(), tarjeta.getToken(),
-			 * tarjeta.getCliente_id().getId());
-			 */
 			tarjetaList.add(tarjetaObj);
 		}
 		return tarjetaList;

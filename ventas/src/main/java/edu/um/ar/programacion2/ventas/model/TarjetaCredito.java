@@ -49,6 +49,9 @@ public class TarjetaCredito {
 
 	@Column(name = "montomaximo")
 	private Float montomaximo;
+	
+	@Column(name = "activo", length = 60)
+	private boolean activo;
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)
@@ -166,6 +169,14 @@ public class TarjetaCredito {
 		this.token = token;
 	}
 
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
 
 	public TarjetaCredito() {
 		super();

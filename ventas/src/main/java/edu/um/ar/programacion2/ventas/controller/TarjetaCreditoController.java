@@ -45,60 +45,27 @@ import org.springframework.data.domain.Pageable;
 public class TarjetaCreditoController {
 	@Autowired
 	private TarjetaCreditoService tarjetacreditoService;
-	/*
-	 * @GetMapping("/") public ResponseEntity<List<TarjetaCredito>>
-	 * getAllTarjetaCredito(Pageable pageable) { return new
-	 * ResponseEntity<List<TarjetaCredito>>(tarjetacreditoService.findAll(),
-	 * HttpStatus.OK); }
-	 */
 
-	@GetMapping("/")
-	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
-		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
-		// return tarjetacreditoService.findAll(); }
+	@GetMapping("")
+	public ResponseEntity<TarjetaCreditoObjeto[]> getAllTarjetaCredito() {
+		ResponseEntity<TarjetaCreditoObjeto[]> allTarjetas = tarjetacreditoService.findAll();
+		return new ResponseEntity<TarjetaCreditoObjeto[]>(allTarjetas.getBody(),allTarjetas.getStatusCode());
 	}
 	
 /*
-	@GetMapping("/{id}")
-	public ResponseEntity<Optional<TarjetaCredito>> getTarjetaCredito(@PathVariable Long id) {
-		Optional<TarjetaCredito> tarjetacredito = tarjetacreditoService.findById(id);
-		return ResponseEntity.ok(tarjetacredito);
-	}
-	*/
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
 		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.fById(id);
 		return ResponseEntity.ok(tarjetaObj);
 	}
-	
-	/*
-	@GetMapping("/{id}")
-	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
-		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
-		return ResponseEntity.ok(tarjetaObj);
-	}
-	*/
-	/*
-	@GetMapping("/token/{numero}")
-	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable Integer numero) {
-		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoId(numero));
-	}
 	*/
 
-	@GetMapping("/token/{numero}")
-	public ResponseEntity<ResponseEntity> getTarjetaCreditoToken(@PathVariable Integer numero) {
-		return ResponseEntity.ok(tarjetacreditoService.getTarjetaCreditoToken(numero));
+	@GetMapping("/{numero}")
+	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Integer numero) {
+		return ResponseEntity.ok(tarjetacreditoService.getTokenIdByNumero(numero));
 	}
 
-/*
-	@PostMapping("/po/")
-	public ResponseEntity<TarjetaCredito> createTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {
-		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetacredito));
-	}
-*/
-
-	@PostMapping("/agregar/")
+	@PostMapping("")
 	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
 	}
