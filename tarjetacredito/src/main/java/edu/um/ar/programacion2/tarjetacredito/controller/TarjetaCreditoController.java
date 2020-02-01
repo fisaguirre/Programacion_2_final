@@ -96,12 +96,12 @@ public class TarjetaCreditoController {
     	return new ResponseEntity<String>(token.getBody(), token.getStatusCode());
 	}
     
-    /*
+    
     @DeleteMapping(value = "{idToDelete}")
-	public ResponseEntity<TarjetaCredito> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
-    	return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(id));
+	public ResponseEntity<TarjetaCredito> inactivarTarjeta(@PathVariable("idToDelete") Long id) {
+    	return ResponseEntity.ok(tarjetacreditoService.inactivarTarjeta(id));
 	}
-	*/
+	
     /*
     @PutMapping
 	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {

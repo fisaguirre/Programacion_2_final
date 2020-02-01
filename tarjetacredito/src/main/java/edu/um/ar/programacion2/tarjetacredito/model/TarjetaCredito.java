@@ -51,8 +51,12 @@ public class TarjetaCredito {
 	@Column(name = "token")
 	private String token;
 
+	@Column(name = "activo", length = 60)
+	private boolean activo;
+
+	
 	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
-			Float montomaximo, Cliente cliente_id, String token) {
+			Float montomaximo, Cliente cliente_id, String token, boolean activo) {
 		super();
 		this.id = id;
 		this.tipo = tipo;
@@ -62,6 +66,7 @@ public class TarjetaCredito {
 		this.montomaximo = montomaximo;
 		this.cliente_id = cliente_id;
 		this.token = token;
+		this.activo = activo;
 	}
 
 	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Date vencimiento, Float montomaximo,
@@ -138,6 +143,14 @@ public class TarjetaCredito {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}
 
 	public TarjetaCredito() {

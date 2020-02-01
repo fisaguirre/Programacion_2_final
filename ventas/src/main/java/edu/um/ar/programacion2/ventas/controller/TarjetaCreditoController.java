@@ -76,6 +76,11 @@ public class TarjetaCreditoController {
 		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(id));
 	}
 	
+	@DeleteMapping(value = "{idToDelete}")
+	public ResponseEntity<String> inactivarTarjeta(@PathVariable("idToDelete") Long id) {
+		ResponseEntity<String> inactivarCliente = tarjetacreditoService.inactivarTarjeta(id);
+		return new ResponseEntity<String>(inactivarCliente.getBody(), inactivarCliente.getStatusCode());
+	}
 /*
 	@PutMapping
 	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCredito tarjetacredito) {

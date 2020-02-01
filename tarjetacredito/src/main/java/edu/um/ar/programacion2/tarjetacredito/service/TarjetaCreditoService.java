@@ -170,4 +170,20 @@ public class TarjetaCreditoService {
 		return sb.toString();
 	}
 
+	public ResponseEntity<String> inactivarTarjeta(Long id) {
+		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findById(id);
+		if (buscarTarjeta.isPresent()) {
+			TarjetaCredito nuevaTarjeta = buscarTarjeta.get();
+			if (nuevaTarjeta.getActivo()) {
+				TarjetaCredito inactivarTarjeta = new TarjetaCredito(nuevaTarjeta.getId(), nuevaTarjeta.getTipo(),
+						nuevaTarjeta.getNumero(), nuevaTarjeta.getCodseguridad(), nuevaTarjeta.getVencimiento(),
+						nuevaTarjeta.getMontomaximo(), nuevaTarjeta.getCliente_id(), nuevaTarjeta.getToken(), false);
+				this.tarjetacreditoRepository.save(inactivarTarjeta);
+				return new ResponseEntity<String>("La tarjeta ha sido deshabilitada", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("La tarjeta ya se encuentra deshabilitada", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>("La tarjeta con esa ID no se encuentra registrada", HttpStatus.BAD_REQUEST);
+	}
 }

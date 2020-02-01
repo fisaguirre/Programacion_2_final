@@ -98,6 +98,11 @@ public class TarjetaCreditoService {
 		return null;
 		//return ventasRepository.deleteById(id);
 	}
+	public ResponseEntity<String> inactivarTarjeta(Long id) {
+		ResponseEntity<String> inactivarTarjeta;
+		inactivarTarjeta = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito",id, String.class);
+	}
+
 /*
 	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(TarjetaCredito tarjetacredito) {
 		Optional<TarjetaCredito> optionalTarjetaCredito = this.findById(tarjetacredito.getId());

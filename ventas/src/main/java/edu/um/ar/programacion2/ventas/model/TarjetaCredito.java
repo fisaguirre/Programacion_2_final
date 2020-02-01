@@ -170,7 +170,7 @@ public class TarjetaCredito {
 	}
 
 
-	public boolean isActivo() {
+	public boolean getActivo() {
 		return activo;
 	}
 
