@@ -45,8 +45,6 @@ import org.springframework.data.domain.Pageable;
 @CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/cliente")
 public class ClienteController {
-	@Autowired
-	private RestTemplate restTemplate;
 	
 	@Autowired
 	private ClienteService clienteService;

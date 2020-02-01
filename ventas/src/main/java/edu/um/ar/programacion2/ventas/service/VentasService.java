@@ -31,10 +31,10 @@ public class VentasService {
 	
 	@Autowired
 	private ClienteService clienteService;
-	
+	/*
 	@Autowired
 	private RestTemplate restTemplate;
-    
+    */
 	@Autowired
     private VentasRepository ventasRepository;
  /*
