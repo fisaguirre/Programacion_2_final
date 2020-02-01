@@ -49,12 +49,12 @@ public class ClienteController {
 	@Autowired
 	private ClienteService clienteService;
 	
-	@GetMapping("/")
-	public ResponseEntity<List<Cliente>> getAllVentas(Pageable pageable) {
+	@GetMapping("")
+	public ResponseEntity<List<Cliente>> getAllClientes(Pageable pageable) {
         return new ResponseEntity<List<Cliente>>(clienteService.findAll(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Cliente>> getCliente(@PathVariable Long id) {
+    public ResponseEntity<Optional<Cliente>> getClienteById(@PathVariable Long id) {
         Optional<Cliente> cliente = clienteService.findById(id);
         return ResponseEntity.ok(cliente);
     }
@@ -64,16 +64,17 @@ public class ClienteController {
     	return ResponseEntity.ok(clienteService.createCliente(cliente));
 	}
     
-    @GetMapping("/token/{nombre}/{apellido}")
-	public ResponseEntity<ResponseEntity> getTarjetaCreditoId(@PathVariable String nombre, @PathVariable String apellido) {
+    @GetMapping("/{nombre}/{apellido}")
+	public ResponseEntity<ResponseEntity> getClienteByNombreApellido(@PathVariable String nombre, @PathVariable String apellido) {
 		return ResponseEntity.ok(clienteService.getClienteByNombreApellido(nombre,apellido));
 	}
 
-    @DeleteMapping(value = "{idToDelete}")
-	public ResponseEntity<Cliente> deleteCliente(@PathVariable("idToDelete") Long id) {
-    	return ResponseEntity.ok(clienteService.deleteCliente(id));
+	@DeleteMapping(value = "{idToDelete}")
+	public ResponseEntity<String> deleteCliente(@PathVariable("idToDelete") Long id) {
+		ResponseEntity<String> inactivarCliente = clienteService.deleteCliente(id);
+		return new ResponseEntity<String>(inactivarCliente.getBody(), inactivarCliente.getStatusCode());
 	}
-    
+
     @PutMapping
 	public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente) {
     	return new ResponseEntity(clienteService.updateCliente(cliente), HttpStatus.OK);

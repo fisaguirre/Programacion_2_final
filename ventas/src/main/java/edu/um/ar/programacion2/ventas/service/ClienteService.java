@@ -63,22 +63,36 @@ public class ClienteService {
     	return clienteRepository.existsById(id);
     }
     	
-	public Cliente deleteCliente(Long id) {
-		clienteRepository.deleteById(id);
-		return null;
-		//return ventasRepository.deleteById(id);
+	public ResponseEntity<String> deleteCliente(Long id) {
+		Optional<Cliente> buscar_cliente = this.findById(id);
+		if (buscar_cliente.isPresent()) {
+			Cliente nuevo_cliente = buscar_cliente.get();
+			if (nuevo_cliente.getActivo()) {
+				nuevo_cliente.setActivo(false);
+				return new ResponseEntity<String>("Se cambio el cliente a inactivo", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("El cliente ya se encuentra inactivo", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>("El cliente con esa ID no se encuentra registrado", HttpStatus.BAD_REQUEST);
 	}
-	
-	public ResponseEntity<Cliente> updateCliente(Cliente cliente) {
+
+	public ResponseEntity<String> updateCliente(Cliente cliente) {
 		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
-		if(optionalCliente.isPresent()) {
+		if (optionalCliente.isPresent()) {
 			Cliente updateCliente = optionalCliente.get();
-			updateCliente.setNombre(cliente.getNombre());
-			updateCliente.setApellido(cliente.getApellido());
-			return ResponseEntity.ok(this.clienteRepository.save(updateCliente));
-		}else {
-			return ResponseEntity.notFound().build();			
+			Cliente actualizarCliente = new Cliente(updateCliente.getNombre(), updateCliente.getApellido(),
+					updateCliente.getActivo());
+			if (verify_nombre_apellido(actualizarCliente.getNombre(), actualizarCliente.getApellido())) {
+				clienteRepository.save(actualizarCliente);
+				return new ResponseEntity<String>("Cliente actualizado", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("Ya existe un cliente con esos datos", HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<String>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
+			// return ResponseEntity.notFound().build();
 		}
 	}
- 
+
 }
