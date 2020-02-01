@@ -68,8 +68,9 @@ public class ClienteService {
 		if (buscar_cliente.isPresent()) {
 			Cliente nuevo_cliente = buscar_cliente.get();
 			if (nuevo_cliente.getActivo()) {
-				System.out.println("esto es: " + nuevo_cliente.getActivo());
-				nuevo_cliente.setActivo(false);
+				Cliente inactivarCliente = new Cliente(nuevo_cliente.getId(), nuevo_cliente.getNombre(),
+						nuevo_cliente.getApellido(), false);
+				clienteRepository.save(inactivarCliente);
 				return new ResponseEntity<String>("Se cambio el cliente a inactivo", HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("El cliente ya se encuentra inactivo", HttpStatus.BAD_REQUEST);
