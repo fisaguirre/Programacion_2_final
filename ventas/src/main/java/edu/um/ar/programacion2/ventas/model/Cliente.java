@@ -38,8 +38,8 @@ public class Cliente {
 	// @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
 	// private List<TarjetaCredito> cards = new ArrayList<TarjetaCredito>();
 
-	@Column(name = "activo")
-	private Boolean activo;
+	@Column(name = "activo", length = 60)
+	private boolean activo;
 
 	public Long getId() {
 		return id;
@@ -65,15 +65,15 @@ public class Cliente {
 		this.apellido = apellido;
 	}
 
-	public Boolean getActivo() {
+	public boolean getActivo() {
 		return activo;
 	}
 
-	public void setActivo(Boolean activo) {
+	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
 
-	public Cliente(Long id, String nombre, String apellido, Boolean activo) {
+	public Cliente(Long id, String nombre, String apellido, boolean activo) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -81,7 +81,7 @@ public class Cliente {
 		this.activo = activo;
 	}
 
-	public Cliente(String nombre, String apellido, Boolean activo) {
+	public Cliente(String nombre, String apellido, boolean activo) {
 		super();
 		this.nombre = nombre;
 		this.apellido = apellido;

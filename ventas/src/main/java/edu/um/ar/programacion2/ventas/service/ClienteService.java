@@ -24,50 +24,51 @@ import edu.um.ar.programacion2.ventas.repository.VentasRepository;
 
 @Service
 public class ClienteService {
- 
-    @Autowired
-    private ClienteRepository clienteRepository;
-    
-    public List<Cliente> findAll() {
+
+	@Autowired
+	private ClienteRepository clienteRepository;
+
+	public List<Cliente> findAll() {
 		return clienteRepository.findAll();
 	}
-   
-    @Transactional(readOnly = true)
-    public Optional<Cliente> findById(Long id) {
-        //log.debug("Request to get Ventas : {}", id);
-        return clienteRepository.findById(id);
-    }
-    
-    public ResponseEntity createCliente(Cliente cliente) {
-    	if(this.verify_nombre_apellido(cliente.getNombre(), cliente.getApellido())) {
-    		return new ResponseEntity<String>("Ya existe un cliente con esos datos", HttpStatus.BAD_REQUEST);
-    	}
-    	Cliente cliente_creado = clienteRepository.save(cliente);
-		return new ResponseEntity<>("Cliente registrado --- Su ID es: "+cliente_creado.getId(), HttpStatus.OK);
-    }
-    
-    public ResponseEntity getClienteByNombreApellido(String nombre, String apellido) {
-    	if(!verify_nombre_apellido(nombre, apellido)) {
+
+	@Transactional(readOnly = true)
+	public Optional<Cliente> findById(Long id) {
+		// log.debug("Request to get Ventas : {}", id);
+		return clienteRepository.findById(id);
+	}
+
+	public ResponseEntity createCliente(Cliente cliente) {
+		if (this.verify_nombre_apellido(cliente.getNombre(), cliente.getApellido())) {
+			return new ResponseEntity<String>("Ya existe un cliente con esos datos", HttpStatus.BAD_REQUEST);
+		}
+		Cliente cliente_creado = clienteRepository.save(cliente);
+		return new ResponseEntity<>("Cliente registrado --- Su ID es: " + cliente_creado.getId(), HttpStatus.OK);
+	}
+
+	public ResponseEntity getClienteByNombreApellido(String nombre, String apellido) {
+		if (!verify_nombre_apellido(nombre, apellido)) {
 			return new ResponseEntity<>("0", HttpStatus.OK);
 		}
-		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre,apellido);
-		return new ResponseEntity<>("ID: "+cliente_encontrado.getId(), HttpStatus.OK);
+		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre, apellido);
+		return new ResponseEntity<>("ID: " + cliente_encontrado.getId(), HttpStatus.OK);
 	}
-	
+
 	public boolean verify_nombre_apellido(String nombre, String apellido) {
-		boolean verificar_cliente = clienteRepository.existsByNombreAndApellido(nombre,apellido);
+		boolean verificar_cliente = clienteRepository.existsByNombreAndApellido(nombre, apellido);
 		return verificar_cliente;
 	}
-	
-    public boolean exist(Long id) {
-    	return clienteRepository.existsById(id);
-    }
-    	
+
+	public boolean exist(Long id) {
+		return clienteRepository.existsById(id);
+	}
+
 	public ResponseEntity<String> deleteCliente(Long id) {
 		Optional<Cliente> buscar_cliente = this.findById(id);
 		if (buscar_cliente.isPresent()) {
 			Cliente nuevo_cliente = buscar_cliente.get();
 			if (nuevo_cliente.getActivo()) {
+				System.out.println("esto es: " + nuevo_cliente.getActivo());
 				nuevo_cliente.setActivo(false);
 				return new ResponseEntity<String>("Se cambio el cliente a inactivo", HttpStatus.OK);
 			} else {
@@ -80,14 +81,17 @@ public class ClienteService {
 	public ResponseEntity<String> updateCliente(Cliente cliente) {
 		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
 		if (optionalCliente.isPresent()) {
-			Cliente updateCliente = optionalCliente.get();
-			Cliente actualizarCliente = new Cliente(updateCliente.getNombre(), updateCliente.getApellido(),
-					updateCliente.getActivo());
-			if (verify_nombre_apellido(actualizarCliente.getNombre(), actualizarCliente.getApellido())) {
+			Cliente datosCliente = optionalCliente.get();
+			Cliente actualizarCliente = new Cliente(datosCliente.getId(), cliente.getNombre(), cliente.getApellido(),
+					cliente.getActivo());
+
+			if ((actualizarCliente.getNombre().equals(datosCliente.getNombre()))
+					&& (actualizarCliente.getApellido().equals(datosCliente.getApellido()))) {
 				clienteRepository.save(actualizarCliente);
 				return new ResponseEntity<String>("Cliente actualizado", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Ya existe un cliente con esos datos", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Verifique que el nombre y apellido sean correctos",
+						HttpStatus.BAD_REQUEST);
 			}
 		} else {
 			return new ResponseEntity<String>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
@@ -95,4 +99,11 @@ public class ClienteService {
 		}
 	}
 
+	public Cliente findByNombreApellido(String nombre, String apellido) {
+		if (!verify_nombre_apellido(nombre, apellido)) {
+			return null;
+		}
+		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre, apellido);
+		return cliente_encontrado;
+	}
 }
