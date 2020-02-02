@@ -63,7 +63,7 @@ public class ClienteService {
 		return clienteRepository.existsById(id);
 	}
 
-	public ResponseEntity<String> deleteCliente(Long id) {
+	public ResponseEntity deleteCliente(Long id) {
 		Optional<Cliente> buscar_cliente = this.findById(id);
 		if (buscar_cliente.isPresent()) {
 			Cliente nuevo_cliente = buscar_cliente.get();
@@ -71,15 +71,15 @@ public class ClienteService {
 				Cliente inactivarCliente = new Cliente(nuevo_cliente.getId(), nuevo_cliente.getNombre(),
 						nuevo_cliente.getApellido(), false);
 				clienteRepository.save(inactivarCliente);
-				return new ResponseEntity<String>("Se cambio el cliente a inactivo", HttpStatus.OK);
+				return new ResponseEntity<>("Se cambio el cliente a inactivo", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("El cliente ya se encuentra inactivo", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("El cliente ya se encuentra inactivo", HttpStatus.BAD_REQUEST);
 			}
 		}
-		return new ResponseEntity<String>("El cliente con esa ID no se encuentra registrado", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("El cliente con esa ID no se encuentra registrado", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<String> updateCliente(Cliente cliente) {
+	public ResponseEntity<Object> updateCliente(Cliente cliente) {
 		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
 		if (optionalCliente.isPresent()) {
 			Cliente datosCliente = optionalCliente.get();
@@ -89,13 +89,13 @@ public class ClienteService {
 			if ((actualizarCliente.getNombre().equals(datosCliente.getNombre()))
 					&& (actualizarCliente.getApellido().equals(datosCliente.getApellido()))) {
 				clienteRepository.save(actualizarCliente);
-				return new ResponseEntity<String>("Cliente actualizado", HttpStatus.OK);
+				return new ResponseEntity<>("Cliente actualizado", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<String>("Verifique que el nombre y apellido sean correctos",
+				return new ResponseEntity<>("Verifique que el nombre y apellido sean correctos",
 						HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<String>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
 			// return ResponseEntity.notFound().build();
 		}
 	}

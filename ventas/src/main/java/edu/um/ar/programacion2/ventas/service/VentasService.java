@@ -86,7 +86,7 @@ public class VentasService {
 	}
 	*/
 
-	public ResponseEntity<String> crearLaVenta(VentasObjeto ventasObj) {
+	public ResponseEntity<String> createVenta(VentasObjeto ventasObj) {
 		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente_encontrado = optionalCliente.get();
@@ -102,13 +102,27 @@ public class VentasService {
 							if (verificacionVenta.getStatusCode() == HttpStatus.OK) {
 								return new ResponseEntity<String>(verificacionVenta.getBody(),
 										verificacionVenta.getStatusCode());
+							} else {
+								return new ResponseEntity<String>(verificacionVenta.getBody(),
+										verificacionVenta.getStatusCode());
 							}
+						} else {
+							return new ResponseEntity<String>("La tarjeta no le pertenece al cliente",
+									HttpStatus.BAD_REQUEST);
 						}
+					} else {
+						return new ResponseEntity<String>("La tarjeta no esta habilitada", HttpStatus.BAD_REQUEST);
 					}
+				} else {
+					return new ResponseEntity<String>(verificarMontoTarjeta.getBody(),
+							verificarMontoTarjeta.getStatusCode());
 				}
+			} else {
+				return new ResponseEntity<String>(verificacionTarjeta.getBody(), verificacionTarjeta.getStatusCode());
 			}
+		} else {
+			return new ResponseEntity<String>("El cliente no se encuentra registrado", HttpStatus.BAD_REQUEST);
 		}
-		return null;
 	}
 
 	public ResponseEntity<String> ventaFinal(VentasObjeto ventasObj, Cliente cliente) {

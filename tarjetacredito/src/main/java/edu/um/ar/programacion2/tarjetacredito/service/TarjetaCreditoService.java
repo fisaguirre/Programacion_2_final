@@ -57,13 +57,13 @@ public class TarjetaCreditoService {
 		return null;
 	}
 
-	public ResponseEntity<String> findTokenByNumero(Integer numero) {
+	public ResponseEntity findTokenByNumero(Integer numero) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
 		if (optionalTarjeta.isPresent()) {
 			TarjetaCredito tar = optionalTarjeta.get();
-			return new ResponseEntity<String>(tar.getToken(), HttpStatus.OK);
+			return new ResponseEntity<>(tar.getToken(), HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("0", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("0", HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {

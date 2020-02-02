@@ -71,6 +71,4 @@ public class Usuario {
         this.fullname = fullname;
     }
 
-	
-
 }

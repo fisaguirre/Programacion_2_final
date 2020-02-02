@@ -49,16 +49,14 @@ public class TarjetaCreditoController {
 	@GetMapping("")
 	public ResponseEntity<TarjetaCreditoObjeto[]> getAllTarjetaCredito() {
 		ResponseEntity<TarjetaCreditoObjeto[]> allTarjetas = tarjetacreditoService.findAll();
-		return new ResponseEntity<TarjetaCreditoObjeto[]>(allTarjetas.getBody(),allTarjetas.getStatusCode());
+		return new ResponseEntity<TarjetaCreditoObjeto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}
-	
-/*
-	@GetMapping("/{id}")
-	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
-		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.fById(id);
-		return ResponseEntity.ok(tarjetaObj);
-	}
-	*/
+
+	/*
+	 * @GetMapping("/{id}") public ResponseEntity<TarjetaCreditoObjeto>
+	 * getTarjetaCredito(@PathVariable Long id) { TarjetaCreditoObjeto tarjetaObj =
+	 * tarjetacreditoService.fById(id); return ResponseEntity.ok(tarjetaObj); }
+	 */
 
 	@GetMapping("/{numero}")
 	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Integer numero) {
@@ -71,27 +69,12 @@ public class TarjetaCreditoController {
 	}
 
 	@DeleteMapping("/{tokenToDelete}")
-	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
-		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
-		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
+	public ResponseEntity<ResponseEntity> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
+		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(token));
 	}
-	/*
-	@DeleteMapping("")
-	public ResponseEntity<String> deleteTarjetaCredito(@RequestParam String token) {
-		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
-		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
-	}
-	*/
+
 	@PutMapping("{token}")
-	public ResponseEntity<String> updateTarjetaCredito(@PathVariable("token") String token) {
-		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
-		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
+	public ResponseEntity<ResponseEntity> updateTarjetaCredito(@PathVariable("token") String token) {
+		return ResponseEntity.ok(tarjetacreditoService.updateTarjetaCredito(token));
 	}
-/*
-	@PutMapping
-	public ResponseEntity<String> updateTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetacreditoObjeto) {
-		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(tarjetacreditoObjeto);
-		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
-	}
-	*/
 }

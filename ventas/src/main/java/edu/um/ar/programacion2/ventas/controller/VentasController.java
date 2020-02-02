@@ -64,7 +64,7 @@ public class VentasController {
 
 	@PostMapping("")
 	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasObjeto ventaObj) {
-		return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
+		return ResponseEntity.ok(ventasService.createVenta(ventaObj));
 	}
 
 }

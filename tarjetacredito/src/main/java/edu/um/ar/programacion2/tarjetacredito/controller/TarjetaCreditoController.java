@@ -60,10 +60,16 @@ public class TarjetaCreditoController {
 	}
     
     @GetMapping("/token/{numero}")
+    public ResponseEntity<ResponseEntity> findTokenByNumero(@PathVariable Integer numero) {
+    	return tarjetacreditoService.findTokenByNumero(numero);
+    	//return ResponseEntity.ok(tarjetacreditoService.findTokenByNumero(numero));
+	}
+    /*
 	public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero) {
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.findTokenByNumero(numero);
     	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}
+	*/
     
     @GetMapping("/{token}")
 	public ResponseEntity<String> verificarTarjeta(@PathVariable String token) {

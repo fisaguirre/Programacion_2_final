@@ -70,13 +70,17 @@ public class ClienteController {
 	}
 
 	@DeleteMapping(value = "{idToDelete}")
-	public ResponseEntity<String> deleteCliente(@PathVariable("idToDelete") Long id) {
-		ResponseEntity<String> inactivarCliente = clienteService.deleteCliente(id);
-		return new ResponseEntity<String>(inactivarCliente.getBody(), inactivarCliente.getStatusCode());
+	public ResponseEntity<ResponseEntity> deleteCliente(@PathVariable("idToDelete") Long id) {
+		return ResponseEntity.ok(clienteService.deleteCliente(id));
+		/*
+		ResponseEntity<ResponseEntity> inactivarCliente = clienteService.deleteCliente(id);
+		return new ResponseEntity<>(inactivarCliente.getBody(), inactivarCliente.getStatusCode());
+		*/
 	}
 
     @PutMapping
 	public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente) {
+    	//return ResponseEntity.ok(clienteService.updateCliente(cliente));
     	return new ResponseEntity(clienteService.updateCliente(cliente), HttpStatus.OK);
 	}
 }

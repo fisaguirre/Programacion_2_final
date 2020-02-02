@@ -34,7 +34,7 @@ public class TarjetaCredito {
 	@Column(name = "tipo", nullable = false)
 	private String tipo;
 
-	@Column(name = "numero")
+	@Column(name = "numero", length = 120)
 	private Long numero;
 
 	@Column(name = "codseguridad")
