@@ -134,7 +134,7 @@ public class TarjetaCreditoService {
 
 			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaObj.getTipo(), tarjetaObj.getNumero(),
 					tarjetaObj.getCodseguridad(), tarjetaObj.getVencimiento(), tarjetaObj.getMontomaximo(),
-					cliente_encontrado, token);
+					cliente_encontrado, token, true);
 			TarjetaCredito tarjeta_creada = tarjetacreditoRepository.save(tarjetaCredito);
 
 			TarjetaCreditoObjeto tarjetaCredObj = new TarjetaCreditoObjeto(tarjeta_creada.getId(),
@@ -170,7 +170,7 @@ public class TarjetaCreditoService {
 		return sb.toString();
 	}
 
-	public ResponseEntity<String> inactivarTarjeta(Long id) {
+	public ResponseEntity<String> deshabilitarTarjeta(Long id) {
 		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findById(id);
 		if (buscarTarjeta.isPresent()) {
 			TarjetaCredito nuevaTarjeta = buscarTarjeta.get();
