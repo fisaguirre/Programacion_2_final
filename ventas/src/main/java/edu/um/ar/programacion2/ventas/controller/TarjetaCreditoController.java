@@ -76,7 +76,8 @@ public class TarjetaCreditoController {
 		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
 	@PutMapping
-	public ResponseEntity<String> updateTarjetaCredito(@RequestParam String token) {
+	public ResponseEntity<String> updateTarjetaCredito(@RequestBody String token) {
+		System.out.println("el token es: "+token);
 		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
 		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
 	}
