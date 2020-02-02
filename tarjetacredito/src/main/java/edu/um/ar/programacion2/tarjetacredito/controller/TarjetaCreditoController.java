@@ -52,6 +52,12 @@ public class TarjetaCreditoController {
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
+	
+	@GetMapping("/find/{token}")
+	public TarjetaCredito findTarjetaByToken(@PathVariable String token) {
+    	TarjetaCredito tarjetaEncontrada = tarjetacreditoService.findTarjetaCreditoByToken(token);
+    	return tarjetaEncontrada;
+	}
     
     @GetMapping("/token/{numero}")
 	public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero) {
@@ -61,7 +67,6 @@ public class TarjetaCreditoController {
     
     @GetMapping("/{token}")
 	public ResponseEntity<String> verificarTarjeta(@PathVariable String token) {
-    	System.out.println("este token es: "+token);
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarTarjeta(token);
     	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}

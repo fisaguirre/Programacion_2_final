@@ -48,6 +48,15 @@ public class TarjetaCreditoService {
 		return tarjetaList;
 	}
 
+	public TarjetaCredito findTarjetaCreditoByToken(String token) {
+		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
+		if(findTarjeta.isPresent()) {
+			TarjetaCredito tarjetaEncontrada = findTarjeta.get();
+			return tarjetaEncontrada;
+		}
+		return null;
+	}
+
 	public ResponseEntity<String> findTokenByNumero(Integer numero) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
 		if (optionalTarjeta.isPresent()) {

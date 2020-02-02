@@ -44,6 +44,7 @@ public class VentasService {
 		return ventasRepository.findById(id);
 	}
 
+	/*
 	public ResponseEntity<String> chequear_registros(VentasObjeto ventasObj) {
 		ResponseEntity<String> existsTarjeta, verificarMontoTarjeta;
 		boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
@@ -73,7 +74,6 @@ public class VentasService {
 		}
 		return this.createVenta(ventasObj);
 	}
-
 	public ResponseEntity<String> createVenta(VentasObjeto ventasObj) {
 		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
@@ -83,6 +83,77 @@ public class VentasService {
 			return new ResponseEntity<String>("La venta ha sido exitosa", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("La venta no ha sido exitosa", HttpStatus.BAD_REQUEST);
+	}
+	*/
+
+	public ResponseEntity<String> crearLaVenta(VentasObjeto ventasObj) {
+		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
+		if (optionalCliente.isPresent()) {
+			Cliente cliente_encontrado = optionalCliente.get();
+			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasObj.getToken());
+			ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasObj.getMonto(),
+					ventasObj.getToken());
+			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.OK) {
+				if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
+					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasObj.getToken());
+					if (findTarjetaByToken.getBody().getActivo()) {
+						if (findTarjetaByToken.getBody().getCliente_id().getId().equals(ventasObj.getCliente_id())) {
+							ResponseEntity<String> verificacionVenta = ventaFinal(ventasObj, cliente_encontrado);
+							if (verificacionVenta.getStatusCode() == HttpStatus.OK) {
+								return new ResponseEntity<String>(verificacionVenta.getBody(),
+										verificacionVenta.getStatusCode());
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public ResponseEntity<String> ventaFinal(VentasObjeto ventasObj, Cliente cliente) {
+		Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente, ventasObj.getToken());
+		if (ventasRepository.save(nueva_venta) != null) {
+			return new ResponseEntity<String>("La venta se realizo correctamente", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("No se pudo concretar la venta", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<TarjetaCredito> findTarjetaByToken(String token) {
+		try {
+			ResponseEntity<TarjetaCredito> existsTarjeta = new RestTemplate()
+					.getForEntity("http://localhost:8200/tarjetacredito/find/" + token, TarjetaCredito.class);
+			return new ResponseEntity<TarjetaCredito>(existsTarjeta.getBody(), existsTarjeta.getStatusCode());
+		} catch (HttpClientErrorException error1) {
+			return new ResponseEntity<TarjetaCredito>(error1.getStatusCode());
+		} catch (RestClientException error2) {
+			return new ResponseEntity<TarjetaCredito>(HttpStatus.FORBIDDEN);
+		}
+	}
+
+	public ResponseEntity<String> verificarTarjeta(String token) {
+
+		try {
+			ResponseEntity<String> existsTarjeta = new RestTemplate()
+					.getForEntity("http://localhost:8200/tarjetacredito/" + token, String.class);
+			return new ResponseEntity<String>(existsTarjeta.getBody(), existsTarjeta.getStatusCode());
+		} catch (HttpClientErrorException error1) {
+			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+		} catch (RestClientException error2) {
+			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.FORBIDDEN);
+		}
+	}
+
+	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
+		try {
+			ResponseEntity<String> verificarMontoTarjeta = new RestTemplate()
+					.getForEntity("http://localhost:8200/tarjetacredito/" + monto + "/" + token, String.class);
+			return new ResponseEntity<String>(verificarMontoTarjeta.getBody(), verificarMontoTarjeta.getStatusCode());
+		} catch (HttpClientErrorException error1) {
+			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+		} catch (RestClientException error2) {
+			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.FORBIDDEN);
+		}
 	}
 
 }
