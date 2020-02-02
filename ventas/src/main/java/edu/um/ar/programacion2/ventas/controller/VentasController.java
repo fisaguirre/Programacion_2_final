@@ -67,16 +67,4 @@ public class VentasController {
 		return ResponseEntity.ok(ventasService.chequear_registros(ventaObj));
 	}
 
-	@DeleteMapping(value = "{idToDelete}")
-	public ResponseEntity<Ventas> deleteVentas(@PathVariable("idToDelete") Long id) {
-		return ResponseEntity.ok(ventasService.deleteVentas(id));
-		// newProduct has same properties but also has ID
-		// this.productDAO.deleteById(id);
-		// return ResponseEntity.ok(null);
-	}
-	/*
-	 * @PutMapping public ResponseEntity<Ventas> updateVentas(@RequestBody Ventas
-	 * venta) { return new ResponseEntity(ventasService.updateVentas(venta),
-	 * HttpStatus.OK); }
-	 */
 }

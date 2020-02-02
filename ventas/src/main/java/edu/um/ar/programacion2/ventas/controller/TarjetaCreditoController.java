@@ -75,9 +75,15 @@ public class TarjetaCreditoController {
 		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
 		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
-	@PutMapping
-	public ResponseEntity<String> updateTarjetaCredito(@RequestBody String token) {
-		System.out.println("el token es: "+token);
+	/*
+	@DeleteMapping("")
+	public ResponseEntity<String> deleteTarjetaCredito(@RequestParam String token) {
+		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
+		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
+	}
+	*/
+	@PutMapping("{token}")
+	public ResponseEntity<String> updateTarjetaCredito(@PathVariable("token") String token) {
 		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
 		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
 	}

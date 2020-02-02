@@ -36,6 +36,7 @@ public class TarjetaCreditoService {
 	private ClienteService clienteService;
 
 	public List<TarjetaCreditoObjeto> findAll() {
+		System.out.println("service de tarjeta");
 		List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
 		List<TarjetaCreditoObjeto> tarjetaList = new ArrayList<TarjetaCreditoObjeto>();
 		for (TarjetaCredito tarjeta : list) {

@@ -47,7 +47,7 @@ public class TarjetaCreditoController {
 	@Autowired
     private TarjetaCreditoService tarjetacreditoService;
 
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
@@ -86,8 +86,8 @@ public class TarjetaCreditoController {
 	}
 	
     
-    @PutMapping
-	public ResponseEntity<String> updateTarjetaCredito(@RequestParam String token) {
+    @PutMapping("/{token}")
+	public ResponseEntity<String> updateTarjetaCredito(@PathVariable("token") String token) {
     	ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
     	return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
 	}
