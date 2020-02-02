@@ -70,9 +70,9 @@ public class TarjetaCreditoController {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
 	}
 
-	@DeleteMapping("/{idToDelete}")
-	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
-		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(id);
+	@DeleteMapping("/{tokenToDelete}")
+	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
+		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
 		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
 	@PutMapping

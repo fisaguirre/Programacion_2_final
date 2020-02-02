@@ -41,7 +41,7 @@ public class TarjetaCreditoService {
 		for (TarjetaCredito tarjeta : list) {
 			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
-					tarjeta.getCliente_id().getId());
+					tarjeta.getCliente_id().getId(), tarjeta.getActivo());
 			tarjetaList.add(tarjetaObj);
 		}
 		return tarjetaList;
@@ -56,23 +56,6 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("0", HttpStatus.BAD_REQUEST);
 	}
 
-	public TarjetaCreditoObjeto findById(Long id) {
-		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findById(id);
-		TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto();
-		if (optionalTarjeta.isPresent()) {
-			TarjetaCredito tar = optionalTarjeta.get();
-			tarjetaObj.setId(tar.getId());
-			tarjetaObj.setTipo(tar.getTipo());
-			tarjetaObj.setNumero(tar.getNumero());
-			tarjetaObj.setCodseguridad(tar.getCodseguridad());
-			tarjetaObj.setVencimiento(tar.getVencimiento());
-			tarjetaObj.setMontomaximo(tar.getMontomaximo());
-			// tarjetaObj.setToken(tar.getToken());
-			tarjetaObj.setCliente_id(tar.getCliente_id().getId());
-		}
-		return tarjetaObj;
-	}
-
 	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
 		Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
 		if (optionalTarjeta.isPresent()) {
@@ -85,46 +68,28 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.OK);
 	}
 
-	public Date TodayDate() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-		Date date = new Date();
-		//dateFormat.format(date);
-		return date;
-	}
-	
 	public ResponseEntity<String> verificarTarjeta(String token) {
 		if (existsTarjetaByToken(token)) {
 			Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
 			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
 
 			Date fecha = this.TodayDate();
-			
-			if(fecha.equals(tarjeta_encontrada.getVencimiento()) || fecha.before(tarjeta_encontrada.getVencimiento()) ) {
+
+			if (fecha.equals(tarjeta_encontrada.getVencimiento())
+					|| fecha.before(tarjeta_encontrada.getVencimiento())) {
 				return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
-			}else {
+			} else {
 				return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
 			}
-			
 		}
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
-	}
-
-	public boolean existsTarjetaByToken(String token) {
-		return tarjetacreditoRepository.existsByToken(token);
-	}
-	public boolean tarjeta_existente(Long id) {
-		return tarjetacreditoRepository.existsById(id);
-	}
-	
-	public Optional<TarjetaCredito> findTarjetaByToken(String token){
-		return tarjetacreditoRepository.findByToken(token);
 	}
 
 	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		if (this.tarjetaExistenteByNumero(tarjetaObj.getNumero())) {
 			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente = optionalCliente.get();
@@ -135,73 +100,30 @@ public class TarjetaCreditoService {
 			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaObj.getTipo(), tarjetaObj.getNumero(),
 					tarjetaObj.getCodseguridad(), tarjetaObj.getVencimiento(), tarjetaObj.getMontomaximo(),
 					cliente_encontrado, token, true);
-			TarjetaCredito tarjeta_creada = tarjetacreditoRepository.save(tarjetaCredito);
-
-			TarjetaCreditoObjeto tarjetaCredObj = new TarjetaCreditoObjeto(tarjeta_creada.getId(),
-					tarjeta_creada.getTipo(), tarjeta_creada.getNumero(), tarjeta_creada.getCodseguridad(),
-					tarjeta_creada.getVencimiento(), tarjeta_creada.getMontomaximo(),
-					tarjeta_creada.getCliente_id().getId());
+			tarjetacreditoRepository.save(tarjetaCredito);
 
 			return new ResponseEntity<String>(token, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
 	}
-	
-	public boolean tarjetaExistenteByNumero(Integer numero) {
-		return tarjetacreditoRepository.existsByNumero(numero);
-	}
 
-	public String convertirSHA256(String password) {
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		byte[] hash = md.digest(password.getBytes());
-		StringBuffer sb = new StringBuffer();
-
-		for (byte b : hash) {
-			sb.append(String.format("%02x", b));
-		}
-
-		return sb.toString();
-	}
-
-	public ResponseEntity<String> deshabilitarTarjeta(Long id) {
-		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findById(id);
+	public ResponseEntity<String> deleteTarjetaCredito(String token) {
+		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findByToken(token);
 		if (buscarTarjeta.isPresent()) {
-			TarjetaCredito nuevaTarjeta = buscarTarjeta.get();
-			if (nuevaTarjeta.getActivo()) {
-				TarjetaCredito inactivarTarjeta = new TarjetaCredito(nuevaTarjeta.getId(), nuevaTarjeta.getTipo(),
-						nuevaTarjeta.getNumero(), nuevaTarjeta.getCodseguridad(), nuevaTarjeta.getVencimiento(),
-						nuevaTarjeta.getMontomaximo(), nuevaTarjeta.getCliente_id(), nuevaTarjeta.getToken(), false);
-				this.tarjetacreditoRepository.save(inactivarTarjeta);
+			TarjetaCredito datosTarjetaCredito = buscarTarjeta.get();
+			if (datosTarjetaCredito.getActivo()) {
+				TarjetaCredito deshabilitarTarjeta = new TarjetaCredito(datosTarjetaCredito.getId(),
+						datosTarjetaCredito.getTipo(), datosTarjetaCredito.getNumero(),
+						datosTarjetaCredito.getCodseguridad(), datosTarjetaCredito.getVencimiento(),
+						datosTarjetaCredito.getMontomaximo(), datosTarjetaCredito.getCliente_id(),
+						datosTarjetaCredito.getToken(), false);
+				tarjetacreditoRepository.save(deshabilitarTarjeta);
 				return new ResponseEntity<String>("La tarjeta ha sido deshabilitada", HttpStatus.OK);
 			} else {
 				return new ResponseEntity<String>("La tarjeta ya se encuentra deshabilitada", HttpStatus.BAD_REQUEST);
 			}
 		}
-		return new ResponseEntity<String>("La tarjeta con esa ID no se encuentra registrada", HttpStatus.BAD_REQUEST);
-	}
-	
-	public ResponseEntity<String> updateTarjetaCredito(TarjetaCreditoObjeto tarjetaCreditoObjeto) {
-		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findById(tarjetaCreditoObjeto.getId());
-		if (buscarTarjeta.isPresent()) {
-			TarjetaCredito nuevaTarjeta = buscarTarjeta.get();
-			if (nuevaTarjeta.getActivo()) {
-				TarjetaCredito updateTarjetaCredito = new TarjetaCredito(nuevaTarjeta.getId(), tarjetaCreditoObjeto.getTipo(),
-						tarjetaCreditoObjeto.getNumero(), tarjetaCreditoObjeto.getCodseguridad(), tarjetaCreditoObjeto.getVencimiento(),
-						tarjetaCreditoObjeto.getMontomaximo(), tarjetaCreditoObjeto.getCliente_id(), nuevaTarjeta.getToken(), tarjetaCreditoObjeto.getActivo());
-				this.tarjetacreditoRepository.save(updateTarjetaCredito);
-				return new ResponseEntity<String>("La tarjeta ha sido deshabilitada", HttpStatus.OK);
-			} else {
-				return new ResponseEntity<String>("La tarjeta ya se encuentra deshabilitada", HttpStatus.BAD_REQUEST);
-			}
-		}
-		return new ResponseEntity<String>("La tarjeta con esa ID no se encuentra registrada", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<String> updateTarjetaCredito(String token) {
@@ -222,4 +144,41 @@ public class TarjetaCreditoService {
 		}
 	}
 
+	public boolean tarjetaExistenteByNumero(Integer numero) {
+		return tarjetacreditoRepository.existsByNumero(numero);
+	}
+
+	public boolean existsTarjetaByToken(String token) {
+		return tarjetacreditoRepository.existsByToken(token);
+	}
+
+	public Optional<TarjetaCredito> findTarjetaByToken(String token) {
+		return tarjetacreditoRepository.findByToken(token);
+	}
+
+	public Date TodayDate() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		Date date = new Date();
+		// dateFormat.format(date);
+		return date;
+	}
+
+	public String convertirSHA256(String password) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		byte[] hash = md.digest(password.getBytes());
+		StringBuffer sb = new StringBuffer();
+
+		for (byte b : hash) {
+			sb.append(String.format("%02x", b));
+		}
+
+		return sb.toString();
+	}
 }

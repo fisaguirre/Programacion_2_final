@@ -46,15 +46,12 @@ public class TarjetaCreditoService {
 	public ResponseEntity<TarjetaCreditoObjeto[]> findAll() {
 		ResponseEntity<TarjetaCreditoObjeto[]> responseEntity = new RestTemplate()
 				.getForEntity("http://localhost:8200/tarjetacredito/", TarjetaCreditoObjeto[].class);
-
 		return new ResponseEntity<TarjetaCreditoObjeto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
 	}
 
 	public TarjetaCreditoObjeto fById(Long id) {
-		// boolean exist_cliente = clienteService.exist(ventasObj.getCliente_id());
 		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate()
 				.getForEntity("http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoObjeto.class);
-		// System.out.println(responseEntity.getStatusCodeValue());
 		return responseEntity.getBody();
 	}
 
@@ -85,13 +82,6 @@ public class TarjetaCreditoService {
 			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<String>(responseEntity.getBody(), responseEntity.getStatusCode());
-		/*
-		 * ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(
-		 * "http://localhost:8200/tarjetacredito/token/"+numero, String.class); return
-		 * new
-		 * ResponseEntity<String>(responseEntity.getBody(),responseEntity.getStatusCode(
-		 * ));
-		 */
 	}
 
 	public boolean verify_numero(Integer numero) {
@@ -99,12 +89,12 @@ public class TarjetaCreditoService {
 		return verificar_tarjeta;
 	}
 
-	public ResponseEntity<String> deleteTarjetaCredito(Long id) {
+	public ResponseEntity<String> deleteTarjetaCredito(String token) {
 		ResponseEntity<String> deshabilitarTarjeta;
 		try {
 			HttpEntity request = new HttpEntity("");
-			String url = "http://localhost:8200/tarjetacredito/delete/{idToDelete}";
-			deshabilitarTarjeta = new RestTemplate().exchange(url, HttpMethod.DELETE, request, String.class, id);
+			String url = "http://localhost:8200/tarjetacredito/delete/{tokenToDelete}";
+			deshabilitarTarjeta = new RestTemplate().exchange(url, HttpMethod.DELETE, request, String.class, token);
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
@@ -118,8 +108,7 @@ public class TarjetaCreditoService {
 		try {
 			HttpEntity request = new HttpEntity("");
 			String url = "http://localhost:8200/tarjetacredito";
-			updateTarjetaCredito = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class,
-					token);
+			updateTarjetaCredito = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class, token);
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {

@@ -52,17 +52,6 @@ public class TarjetaCreditoController {
 		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
-/*
-    @GetMapping("/{id}")
-	public ResponseEntity<TarjetaCreditoObjeto> getTarjetaCredito(@PathVariable Long id) {
-		TarjetaCreditoObjeto tarjetaObj = tarjetacreditoService.findById(id);
-		return ResponseEntity.ok(tarjetaObj);
-	}
-  */  
-    @GetMapping("/verify/{id}")
-	public boolean tarjeta_existente(@PathVariable Long id) {
-		return tarjetacreditoService.tarjeta_existente(id);
-	}
     
     @GetMapping("/token/{numero}")
 	public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero) {
@@ -82,13 +71,6 @@ public class TarjetaCreditoController {
     	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto,token);
     	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
 	}
-    /*
-    @GetMapping("/{monto}")
-	public ResponseEntity<String> existsTarjeta(@PathVariable String monto) {
-    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.existTarjeta(monto);
-    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
-	}
-    */
 
     @PostMapping("/add")
 	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
@@ -97,9 +79,9 @@ public class TarjetaCreditoController {
 	}
     
     
-    @DeleteMapping("/delete/{idToDelete}")
-	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
-    	ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deshabilitarTarjeta(id);
+    @DeleteMapping("/{tokenToDelete}")
+	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
+    	ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
     	return new ResponseEntity<String>(deshabilitarTarjeta.getBody(),deshabilitarTarjeta.getStatusCode());
 	}
 	
