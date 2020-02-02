@@ -105,8 +105,9 @@ public class TarjetaCreditoController {
 	
     
     @PutMapping
-	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetacreditoObjeto) {
-    	return new ResponseEntity(tarjetacreditoService.updateTarjetaCredito(tarjetacredito), HttpStatus.OK);
+	public ResponseEntity<String> updateTarjetaCredito(@RequestParam String token) {
+    	ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
+    	return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
 	}
 	
 }

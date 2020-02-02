@@ -113,13 +113,13 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
 
-	public ResponseEntity<String> updateTarjetaCredito(TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+	public ResponseEntity<String> updateTarjetaCredito(String token) {
 		ResponseEntity<String> updateTarjetaCredito;
 		try {
 			HttpEntity request = new HttpEntity("");
 			String url = "http://localhost:8200/tarjetacredito";
 			updateTarjetaCredito = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class,
-					tarjetaCreditoObjeto);
+					token);
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {

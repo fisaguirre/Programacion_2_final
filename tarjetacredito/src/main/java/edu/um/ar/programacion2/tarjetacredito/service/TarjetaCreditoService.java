@@ -186,4 +186,40 @@ public class TarjetaCreditoService {
 		}
 		return new ResponseEntity<String>("La tarjeta con esa ID no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
+	
+	public ResponseEntity<String> updateTarjetaCredito(TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+		Optional<TarjetaCredito> buscarTarjeta = tarjetacreditoRepository.findById(tarjetaCreditoObjeto.getId());
+		if (buscarTarjeta.isPresent()) {
+			TarjetaCredito nuevaTarjeta = buscarTarjeta.get();
+			if (nuevaTarjeta.getActivo()) {
+				TarjetaCredito updateTarjetaCredito = new TarjetaCredito(nuevaTarjeta.getId(), tarjetaCreditoObjeto.getTipo(),
+						tarjetaCreditoObjeto.getNumero(), tarjetaCreditoObjeto.getCodseguridad(), tarjetaCreditoObjeto.getVencimiento(),
+						tarjetaCreditoObjeto.getMontomaximo(), tarjetaCreditoObjeto.getCliente_id(), nuevaTarjeta.getToken(), tarjetaCreditoObjeto.getActivo());
+				this.tarjetacreditoRepository.save(updateTarjetaCredito);
+				return new ResponseEntity<String>("La tarjeta ha sido deshabilitada", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("La tarjeta ya se encuentra deshabilitada", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>("La tarjeta con esa ID no se encuentra registrada", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<String> updateTarjetaCredito(String token) {
+		Optional<TarjetaCredito> optionalTarjetaCredito = tarjetacreditoRepository.findByToken(token);
+		if (optionalTarjetaCredito.isPresent()) {
+			TarjetaCredito datosTarjeta = optionalTarjetaCredito.get();
+			if (!datosTarjeta.getActivo()) {
+				TarjetaCredito actualizarTarjeta = new TarjetaCredito(datosTarjeta.getId(), datosTarjeta.getTipo(),
+						datosTarjeta.getNumero(), datosTarjeta.getCodseguridad(), datosTarjeta.getVencimiento(),
+						datosTarjeta.getMontomaximo(), datosTarjeta.getCliente_id(), datosTarjeta.getToken(), true);
+				tarjetacreditoRepository.save(actualizarTarjeta);
+				return new ResponseEntity<String>("La tarjeta ha sido habilitada", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("La tarjeta ya esta habilitada", HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<String>("No se encontro ninguna tarjeta", HttpStatus.BAD_REQUEST);
+		}
+	}
+
 }

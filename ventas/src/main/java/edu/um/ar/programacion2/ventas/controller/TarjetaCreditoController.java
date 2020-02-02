@@ -69,23 +69,22 @@ public class TarjetaCreditoController {
 	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
 	}
-/*
-	//@DeleteMapping(value = "{idToDelete}")
-	@DeleteMapping("/{idToDelete}")
-	public ResponseEntity<TarjetaCredito> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
-		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(id));
-	}
-	*/
-	//@DeleteMapping(value = "{idToDelete}")
+
 	@DeleteMapping("/{idToDelete}")
 	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("idToDelete") Long id) {
 		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(id);
 		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
-
 	@PutMapping
-	public ResponseEntity<TarjetaCredito> updateTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetacreditoObjeto) {
-		return new ResponseEntity(tarjetacreditoService.updateTarjetaCredito(tarjetacredito), HttpStatus.OK);
+	public ResponseEntity<String> updateTarjetaCredito(@RequestParam String token) {
+		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
+		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
 	}
-	
+/*
+	@PutMapping
+	public ResponseEntity<String> updateTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetacreditoObjeto) {
+		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(tarjetacreditoObjeto);
+		return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
+	}
+	*/
 }
