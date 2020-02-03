@@ -34,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 import org.springframework.data.domain.Page;
@@ -46,8 +47,18 @@ public class TarjetaCreditoController {
 	private TarjetaCreditoService tarjetacreditoService;
 
 	@GetMapping("")
-	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito() {
-		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll();
+	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito(@RequestHeader("Authorization") String token) {
+		System.out.println("el JWT es: "+token);
+		/*
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", token);
+
+		HttpEntity<RestRequest> entityReq = new HttpEntity<RestRequest>(request, headers);
+		
+		template.exchange("RestSvcUrl", HttpMethod.POST, entityReq, SomeResponse.class);
+
+		*/
+		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll(token);
 		return new ResponseEntity<TarjetaCreditoDto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}
 

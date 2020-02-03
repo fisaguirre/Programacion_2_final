@@ -66,7 +66,7 @@ public class TarjetaCreditoService {
 	@Autowired
 	private ClienteService clienteService;
 
-	public ResponseEntity<TarjetaCreditoDto[]> findAll() {
+	public ResponseEntity<TarjetaCreditoDto[]> findAll(String token) {
 		ResponseEntity<TarjetaCreditoDto[]> responseEntity;
 		responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito",
 				TarjetaCreditoDto[].class);
