@@ -95,7 +95,7 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<String> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		if (this.tarjetaExistenteByNumero(tarjetaObj.getNumero())) {
 			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
 		}
@@ -154,7 +154,7 @@ public class TarjetaCreditoService {
 		}
 	}
 
-	public boolean tarjetaExistenteByNumero(Integer numero) {
+	public boolean tarjetaExistenteByNumero(Long numero) {
 		return tarjetacreditoRepository.existsByNumero(numero);
 	}
 

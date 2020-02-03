@@ -32,8 +32,8 @@ public class TarjetaCredito {
 	@Column(name = "tipo", nullable = false)
 	private String tipo;
 
-	@Column(name = "numero", length = 120)
-	private Integer numero;
+	@Column(name = "numero")
+	private Long numero;
 
 	@Column(name = "codseguridad")
 	private Integer codseguridad;
@@ -55,7 +55,7 @@ public class TarjetaCredito {
 	private boolean activo;
 
 	
-	public TarjetaCredito(Long id, String tipo, Integer numero, Integer codseguridad, Date vencimiento,
+	public TarjetaCredito(Long id, String tipo, Long numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Cliente cliente_id, String token, boolean activo) {
 		super();
 		this.id = id;
@@ -69,7 +69,7 @@ public class TarjetaCredito {
 		this.activo = activo;
 	}
 
-	public TarjetaCredito(String tipo, Integer numero, Integer codseguridad, Date vencimiento, Float montomaximo,
+	public TarjetaCredito(String tipo, Long numero, Integer codseguridad, Date vencimiento, Float montomaximo,
 			Cliente cliente_id, String token, boolean activo) {
 		super();
 		this.tipo = tipo;
@@ -98,11 +98,11 @@ public class TarjetaCredito {
 		this.tipo = tipo;
 	}
 
-	public Integer getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Integer numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 

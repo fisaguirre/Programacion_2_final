@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.client.RestTemplate;
 
-import com.thoughtworks.xstream.mapper.Mapper.Null;
+//import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
@@ -36,10 +36,10 @@ public class TarjetaCreditoService {
 
 	@Autowired
 	private TarjetaCreditoRepository tarjetacreditoRepository;
-
+/*
 	@Autowired
 	private RestTemplate restTemplate;
-
+*/
 	@Autowired
 	private ClienteService clienteService;
 
@@ -56,20 +56,20 @@ public class TarjetaCreditoService {
 		return responseEntity.getBody();
 	}
 
-	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
-		ResponseEntity<Object> responseEntity;
+	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
 		try {
-			responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
+			ResponseEntity<Object> responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
 					Object.class);
 			// parece que restTemplate serializa el objeto java a objeto JSON para el otro
 			// servicio(al menos con peticion
 			// tipo post)
+			return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
 			return new ResponseEntity<>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
+		
 	}
 
 	public ResponseEntity<Object> getTokenIdByNumero(Integer numero) {

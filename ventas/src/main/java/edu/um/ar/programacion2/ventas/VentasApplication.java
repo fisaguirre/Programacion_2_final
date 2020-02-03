@@ -11,8 +11,4 @@ public class VentasApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VentasApplication.class, args);
 	}
-	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
 }

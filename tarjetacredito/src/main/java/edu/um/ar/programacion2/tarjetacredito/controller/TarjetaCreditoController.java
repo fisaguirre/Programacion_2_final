@@ -84,9 +84,12 @@ public class TarjetaCreditoController {
 	}
 
     @PostMapping("/add")
-	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
+    	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto));
+    	/*
     	ResponseEntity<String> token = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto);    	
     	return new ResponseEntity<String>(token.getBody(), token.getStatusCode());
+    	*/
 	}
     
     
