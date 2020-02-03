@@ -40,7 +40,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8082")
 @RequestMapping("/tarjetacredito")
 public class TarjetaCreditoController {
 	@Autowired

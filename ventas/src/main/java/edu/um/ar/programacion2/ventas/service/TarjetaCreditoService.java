@@ -86,11 +86,6 @@ public class TarjetaCreditoService {
 		}
 	}
 
-	public boolean verify_numero(Integer numero) {
-		boolean verificar_tarjeta = tarjetacreditoRepository.existsByNumero(numero);
-		return verificar_tarjeta;
-	}
-
 	public ResponseEntity<String> deleteTarjetaCredito(String token) {
 		ResponseEntity<String> deshabilitarTarjeta;
 		try {
