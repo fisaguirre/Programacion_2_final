@@ -1,10 +1,10 @@
-package edu.um.ar.programacion2.tarjetacredito.objeto;
+package edu.um.ar.programacion2.tarjetacredito.dto;
 
 import java.sql.Date;
 
 import javax.persistence.Column;
 
-public class TarjetaCreditoObjeto {
+public class TarjetaCreditoDto {
 
 	private Long id;
 	private String tipo;
@@ -85,7 +85,7 @@ public class TarjetaCreditoObjeto {
 		this.activo = activo;
 	}
 
-	public TarjetaCreditoObjeto(Long id, String tipo, Long numero, Integer codseguridad, Date vencimiento,
+	public TarjetaCreditoDto(Long id, String tipo, Long numero, Integer codseguridad, Date vencimiento,
 			Float montomaximo, Long cliente_id, boolean activo) {
 		super();
 		this.id = id;
@@ -106,7 +106,7 @@ public class TarjetaCreditoObjeto {
 	 * cliente_id; }
 	 */
 
-	public TarjetaCreditoObjeto() {
+	public TarjetaCreditoDto() {
 		super();
 	}
 

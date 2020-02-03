@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.um.ar.programacion2.tarjetacredito.dto.TarjetaCreditoDto;
 import edu.um.ar.programacion2.tarjetacredito.model.Cliente;
 import edu.um.ar.programacion2.tarjetacredito.model.TarjetaCredito;
-import edu.um.ar.programacion2.tarjetacredito.objeto.TarjetaCreditoObjeto;
 import edu.um.ar.programacion2.tarjetacredito.repository.TarjetaCreditoRepository;
 
 @Service
@@ -35,12 +35,12 @@ public class TarjetaCreditoService {
 	@Autowired
 	private ClienteService clienteService;
 
-	public List<TarjetaCreditoObjeto> findAll() {
+	public List<TarjetaCreditoDto> findAll() {
 		System.out.println("service de tarjeta");
 		List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
-		List<TarjetaCreditoObjeto> tarjetaList = new ArrayList<TarjetaCreditoObjeto>();
+		List<TarjetaCreditoDto> tarjetaList = new ArrayList<TarjetaCreditoDto>();
 		for (TarjetaCredito tarjeta : list) {
-			TarjetaCreditoObjeto tarjetaObj = new TarjetaCreditoObjeto(tarjeta.getId(), tarjeta.getTipo(),
+			TarjetaCreditoDto tarjetaObj = new TarjetaCreditoDto(tarjeta.getId(), tarjeta.getTipo(),
 					tarjeta.getNumero(), tarjeta.getCodseguridad(), tarjeta.getVencimiento(), tarjeta.getMontomaximo(),
 					tarjeta.getCliente_id().getId(), tarjeta.getActivo());
 			tarjetaList.add(tarjetaObj);
@@ -50,14 +50,14 @@ public class TarjetaCreditoService {
 
 	public TarjetaCredito findTarjetaCreditoByToken(String token) {
 		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
-		if(findTarjeta.isPresent()) {
+		if (findTarjeta.isPresent()) {
 			TarjetaCredito tarjetaEncontrada = findTarjeta.get();
 			return tarjetaEncontrada;
 		}
 		return null;
 	}
 
-	public ResponseEntity findTokenByNumero(Integer numero) {
+	public ResponseEntity findTokenByNumero(Long numero) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
 		if (optionalTarjeta.isPresent()) {
 			TarjetaCredito tar = optionalTarjeta.get();
@@ -95,20 +95,20 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
-		if (this.tarjetaExistenteByNumero(tarjetaObj.getNumero())) {
+	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
+		if (this.tarjetaExistenteByNumero(tarjetaDto.getNumero())) {
 			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
 		}
 
-		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaObj.getCliente_id());
+		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaDto.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente = optionalCliente.get();
 			Cliente cliente_encontrado = new Cliente(cliente.getId(), cliente.getNombre(), cliente.getApellido());
 
 			String token = this.convertirSHA256(cliente_encontrado.getNombre());
 
-			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaObj.getTipo(), tarjetaObj.getNumero(),
-					tarjetaObj.getCodseguridad(), tarjetaObj.getVencimiento(), tarjetaObj.getMontomaximo(),
+			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaDto.getTipo(), tarjetaDto.getNumero(),
+					tarjetaDto.getCodseguridad(), tarjetaDto.getVencimiento(), tarjetaDto.getMontomaximo(),
 					cliente_encontrado, token, true);
 			tarjetacreditoRepository.save(tarjetaCredito);
 

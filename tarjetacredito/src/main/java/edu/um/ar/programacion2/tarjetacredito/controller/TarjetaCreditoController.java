@@ -32,8 +32,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import edu.um.ar.programacion2.tarjetacredito.dto.TarjetaCreditoDto;
 import edu.um.ar.programacion2.tarjetacredito.model.TarjetaCredito;
-import edu.um.ar.programacion2.tarjetacredito.objeto.TarjetaCreditoObjeto;
 import edu.um.ar.programacion2.tarjetacredito.service.TarjetaCreditoService;
 
 import org.springframework.http.HttpHeaders;
@@ -41,69 +42,68 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@RestController @CrossOrigin(origins = "http://localhost:8082")
 @RequestMapping("/tarjetacredito")
 public class TarjetaCreditoController {
 	@Autowired
-    private TarjetaCreditoService tarjetacreditoService;
+	private TarjetaCreditoService tarjetacreditoService;
 
 	@GetMapping("")
-	public ResponseEntity<List<TarjetaCreditoObjeto>> getAllTarjetaCredito() {
-		return new ResponseEntity<List<TarjetaCreditoObjeto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<TarjetaCreditoDto>> getAllTarjetaCredito() {
+		return new ResponseEntity<List<TarjetaCreditoDto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
-	
+
 	@GetMapping("/find/{token}")
 	public TarjetaCredito findTarjetaByToken(@PathVariable String token) {
-    	TarjetaCredito tarjetaEncontrada = tarjetacreditoService.findTarjetaCreditoByToken(token);
-    	return tarjetaEncontrada;
-	}
-    
-    @GetMapping("/token/{numero}")
-    public ResponseEntity<ResponseEntity> findTokenByNumero(@PathVariable Integer numero) {
-    	return tarjetacreditoService.findTokenByNumero(numero);
-    	//return ResponseEntity.ok(tarjetacreditoService.findTokenByNumero(numero));
-	}
-    /*
-	public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero) {
-    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.findTokenByNumero(numero);
-    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
-	}
-	*/
-    
-    @GetMapping("/{token}")
-	public ResponseEntity<String> verificarTarjeta(@PathVariable String token) {
-    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarTarjeta(token);
-    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
-	}
-    
-    @GetMapping("/{monto}/{token}")
-	public ResponseEntity<String> verificarMontoTarjeta(@PathVariable Float monto,@PathVariable String token) {
-    	ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto,token);
-    	return new ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode());
+		TarjetaCredito tarjetaEncontrada = tarjetacreditoService.findTarjetaCreditoByToken(token);
+		return tarjetaEncontrada;
 	}
 
-    @PostMapping("/add")
-	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoObjeto tarjetaCreditoObjeto) {
-    	return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto));
-    	/*
-    	ResponseEntity<String> token = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto);    	
-    	return new ResponseEntity<String>(token.getBody(), token.getStatusCode());
-    	*/
+	@GetMapping("/token/{numero}")
+	public ResponseEntity<ResponseEntity> findTokenByNumero(@PathVariable Long numero) {
+		return tarjetacreditoService.findTokenByNumero(numero);
+		// return ResponseEntity.ok(tarjetacreditoService.findTokenByNumero(numero));
 	}
-    
-    
-    @DeleteMapping("/{tokenToDelete}")
+	/*
+	 * public ResponseEntity<String> findTokenByNumero(@PathVariable Integer numero)
+	 * { ResponseEntity<String> token_tarjeta =
+	 * tarjetacreditoService.findTokenByNumero(numero); return new
+	 * ResponseEntity<String>(token_tarjeta.getBody(),token_tarjeta.getStatusCode())
+	 * ; }
+	 */
+
+	@GetMapping("/{token}")
+	public ResponseEntity<String> verificarTarjeta(@PathVariable String token) {
+		ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarTarjeta(token);
+		return new ResponseEntity<String>(token_tarjeta.getBody(), token_tarjeta.getStatusCode());
+	}
+
+	@GetMapping("/{monto}/{token}")
+	public ResponseEntity<String> verificarMontoTarjeta(@PathVariable Float monto, @PathVariable String token) {
+		ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto, token);
+		return new ResponseEntity<String>(token_tarjeta.getBody(), token_tarjeta.getStatusCode());
+	}
+
+	@PostMapping("")
+	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) {
+		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoDto));
+		/*
+		 * ResponseEntity<String> token =
+		 * tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto); return new
+		 * ResponseEntity<String>(token.getBody(), token.getStatusCode());
+		 */
+	}
+
+	@DeleteMapping("/{tokenToDelete}")
 	public ResponseEntity<String> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
-    	ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
-    	return new ResponseEntity<String>(deshabilitarTarjeta.getBody(),deshabilitarTarjeta.getStatusCode());
+		ResponseEntity<String> deshabilitarTarjeta = tarjetacreditoService.deleteTarjetaCredito(token);
+		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
 	}
-	
-    
-    @PutMapping("/{token}")
+
+	@PutMapping("/{token}")
 	public ResponseEntity<String> updateTarjetaCredito(@PathVariable("token") String token) {
-    	ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
-    	return new ResponseEntity<String>(updateTarjetaCredito.getBody(),updateTarjetaCredito.getStatusCode());
+		ResponseEntity<String> updateTarjetaCredito = tarjetacreditoService.updateTarjetaCredito(token);
+		return new ResponseEntity<String>(updateTarjetaCredito.getBody(), updateTarjetaCredito.getStatusCode());
 	}
-	
+
 }
