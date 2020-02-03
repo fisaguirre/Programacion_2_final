@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -36,7 +37,6 @@ public class TarjetaCreditoService {
 	private ClienteService clienteService;
 
 	public List<TarjetaCreditoDto> findAll() {
-		System.out.println("service de tarjeta");
 		List<TarjetaCredito> list = tarjetacreditoRepository.findAll();
 		List<TarjetaCreditoDto> tarjetaList = new ArrayList<TarjetaCreditoDto>();
 		for (TarjetaCredito tarjeta : list) {
@@ -95,7 +95,7 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
+	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) throws NoSuchAlgorithmException {
 		if (this.tarjetaExistenteByNumero(tarjetaDto.getNumero())) {
 			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
 		}
@@ -105,7 +105,7 @@ public class TarjetaCreditoService {
 			Cliente cliente = optionalCliente.get();
 			Cliente cliente_encontrado = new Cliente(cliente.getId(), cliente.getNombre(), cliente.getApellido());
 
-			String token = this.convertirSHA256(cliente_encontrado.getNombre());
+			String token = this.convertirSHA256(cliente_encontrado.getNombre(),1);
 
 			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaDto.getTipo(), tarjetaDto.getNumero(),
 					tarjetaDto.getCodseguridad(), tarjetaDto.getVencimiento(), tarjetaDto.getMontomaximo(),
@@ -172,8 +172,11 @@ public class TarjetaCreditoService {
 		// dateFormat.format(date);
 		return date;
 	}
-
-	public String convertirSHA256(String password) {
+	
+	public String convertirSHA256(String nombre, int numberOfWords) {
+		String[] randomWord = generateRandomWords(numberOfWords);
+		String wordToCrypt = nombre+randomWord;
+		
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -182,7 +185,7 @@ public class TarjetaCreditoService {
 			return null;
 		}
 
-		byte[] hash = md.digest(password.getBytes());
+		byte[] hash = md.digest(wordToCrypt.getBytes());
 		StringBuffer sb = new StringBuffer();
 
 		for (byte b : hash) {
@@ -191,4 +194,21 @@ public class TarjetaCreditoService {
 
 		return sb.toString();
 	}
+	
+	public static String[] generateRandomWords(int numberOfWords)
+	{
+	    String[] randomStrings = new String[numberOfWords];
+	    Random random = new Random();
+	    for(int i = 0; i < numberOfWords; i++)
+	    {
+	        char[] word = new char[random.nextInt(8)+3]; // words of length 3 through 10. (1 and 2 letter words are boring.)
+	        for(int j = 0; j < word.length; j++)
+	        {
+	            word[j] = (char)('a' + random.nextInt(26));
+	        }
+	        randomStrings[i] = new String(word);
+	    }
+	    return randomStrings;
+	}
+	
 }

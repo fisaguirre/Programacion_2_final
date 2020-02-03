@@ -1,5 +1,6 @@
 package edu.um.ar.programacion2.tarjetacredito.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ import org.springframework.http.HttpHeaders;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+@RestController
 @RequestMapping("/tarjetacredito")
 public class TarjetaCreditoController {
 	@Autowired
@@ -85,7 +86,7 @@ public class TarjetaCreditoController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) {
+	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) throws NoSuchAlgorithmException {
 		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoDto));
 		/*
 		 * ResponseEntity<String> token =
