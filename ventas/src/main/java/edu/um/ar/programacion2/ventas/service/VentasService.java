@@ -18,11 +18,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.um.ar.programacion2.ventas.dto.VentasDto;
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
 import edu.um.ar.programacion2.ventas.model.Ventas;
-import edu.um.ar.programacion2.ventas.objeto.TarjetaCreditoObjeto;
-import edu.um.ar.programacion2.ventas.objeto.VentasObjeto;
 import edu.um.ar.programacion2.ventas.repository.VentasRepository;
 
 @Service
@@ -86,19 +85,19 @@ public class VentasService {
 	}
 	*/
 
-	public ResponseEntity<String> createVenta(VentasObjeto ventasObj) {
-		Optional<Cliente> optionalCliente = clienteService.findById(ventasObj.getCliente_id());
+	public ResponseEntity<String> createVenta(VentasDto ventasDto) {
+		Optional<Cliente> optionalCliente = clienteService.findById(ventasDto.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente_encontrado = optionalCliente.get();
-			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasObj.getToken());
-			ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasObj.getMonto(),
-					ventasObj.getToken());
+			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasDto.getToken());
+			ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasDto.getMonto(),
+					ventasDto.getToken());
 			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.OK) {
 				if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
-					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasObj.getToken());
+					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasDto.getToken());
 					if (findTarjetaByToken.getBody().getActivo()) {
-						if (findTarjetaByToken.getBody().getCliente_id().getId().equals(ventasObj.getCliente_id())) {
-							ResponseEntity<String> verificacionVenta = ventaFinal(ventasObj, cliente_encontrado);
+						if (findTarjetaByToken.getBody().getCliente_id().getId().equals(ventasDto.getCliente_id())) {
+							ResponseEntity<String> verificacionVenta = ventaFinal(ventasDto, cliente_encontrado);
 							if (verificacionVenta.getStatusCode() == HttpStatus.OK) {
 								return new ResponseEntity<String>(verificacionVenta.getBody(),
 										verificacionVenta.getStatusCode());
@@ -125,8 +124,8 @@ public class VentasService {
 		}
 	}
 
-	public ResponseEntity<String> ventaFinal(VentasObjeto ventasObj, Cliente cliente) {
-		Ventas nueva_venta = new Ventas(ventasObj.getMonto(), cliente, ventasObj.getToken());
+	public ResponseEntity<String> ventaFinal(VentasDto ventasDto, Cliente cliente) {
+		Ventas nueva_venta = new Ventas(ventasDto.getMonto(), cliente, ventasDto.getToken());
 		if (ventasRepository.save(nueva_venta) != null) {
 			return new ResponseEntity<String>("La venta se realizo correctamente", HttpStatus.OK);
 		}

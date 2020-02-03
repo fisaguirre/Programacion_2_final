@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.um.ar.programacion2.ventas.model.Ventas;
-import edu.um.ar.programacion2.ventas.objeto.VentasObjeto;
 import edu.um.ar.programacion2.ventas.service.VentasService;
+import edu.um.ar.programacion2.ventas.dto.VentasDto;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
 import org.springframework.http.HttpHeaders;
 
@@ -63,8 +63,8 @@ public class VentasController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasObjeto ventaObj) {
-		return ResponseEntity.ok(ventasService.createVenta(ventaObj));
+	public ResponseEntity<ResponseEntity> createVenta(@RequestBody VentasDto ventasDto) {
+		return ResponseEntity.ok(ventasService.createVenta(ventasDto));
 	}
 
 }

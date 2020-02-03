@@ -22,11 +22,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 //import org.springframework.web.client.RestTemplate;
 
+import edu.um.ar.programacion2.ventas.dto.TarjetaCreditoDto;
+
 //import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
-import edu.um.ar.programacion2.ventas.objeto.TarjetaCreditoObjeto;
 import edu.um.ar.programacion2.ventas.repository.TarjetaCreditoRepository;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -43,22 +44,22 @@ public class TarjetaCreditoService {
 	@Autowired
 	private ClienteService clienteService;
 
-	public ResponseEntity<TarjetaCreditoObjeto[]> findAll() {
-		ResponseEntity<TarjetaCreditoObjeto[]> responseEntity;
+	public ResponseEntity<TarjetaCreditoDto[]> findAll() {
+		ResponseEntity<TarjetaCreditoDto[]> responseEntity;
 		responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito",
-				TarjetaCreditoObjeto[].class);
-		return new ResponseEntity<TarjetaCreditoObjeto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
+				TarjetaCreditoDto[].class);
+		return new ResponseEntity<TarjetaCreditoDto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
 	}
 
-	public TarjetaCreditoObjeto fById(Long id) {
-		ResponseEntity<TarjetaCreditoObjeto> responseEntity = new RestTemplate()
-				.getForEntity("http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoObjeto.class);
+	public TarjetaCreditoDto fById(Long id) {
+		ResponseEntity<TarjetaCreditoDto> responseEntity = new RestTemplate()
+				.getForEntity("http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoDto.class);
 		return responseEntity.getBody();
 	}
 
-	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoObjeto tarjetaObj) {
+	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
 		try {
-			ResponseEntity<Object> responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaObj,
+			ResponseEntity<Object> responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito/add", tarjetaDto,
 					Object.class);
 			// parece que restTemplate serializa el objeto java a objeto JSON para el otro
 			// servicio(al menos con peticion
@@ -72,7 +73,7 @@ public class TarjetaCreditoService {
 		
 	}
 
-	public ResponseEntity<Object> getTokenIdByNumero(Integer numero) {
+	public ResponseEntity<Object> getTokenIdByNumero(Long numero) {
 		ResponseEntity<Object> responseEntity;
 		try {
 			responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/token/" + numero,

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
-import edu.um.ar.programacion2.ventas.objeto.TarjetaCreditoObjeto;
+import edu.um.ar.programacion2.ventas.dto.TarjetaCreditoDto;
 import edu.um.ar.programacion2.ventas.repository.TarjetaCreditoRepository;
 import edu.um.ar.programacion2.ventas.service.TarjetaCreditoService;
 
@@ -47,9 +47,9 @@ public class TarjetaCreditoController {
 	private TarjetaCreditoService tarjetacreditoService;
 
 	@GetMapping("")
-	public ResponseEntity<TarjetaCreditoObjeto[]> getAllTarjetaCredito() {
-		ResponseEntity<TarjetaCreditoObjeto[]> allTarjetas = tarjetacreditoService.findAll();
-		return new ResponseEntity<TarjetaCreditoObjeto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
+	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito() {
+		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll();
+		return new ResponseEntity<TarjetaCreditoDto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}
 
 	/*
@@ -59,13 +59,13 @@ public class TarjetaCreditoController {
 	 */
 
 	@GetMapping("/{numero}")
-	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Integer numero) {
+	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Long numero) {
 		return ResponseEntity.ok(tarjetacreditoService.getTokenIdByNumero(numero));
 	}
 
 	@PostMapping("")
-	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoObjeto tarjetaObj) {
-		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaObj));
+	public ResponseEntity<ResponseEntity> post(@RequestBody TarjetaCreditoDto tarjetaDto) {
+		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaDto));
 	}
 
 	@DeleteMapping("/{tokenToDelete}")

@@ -1,13 +1,12 @@
-package edu.um.ar.programacion2.ventas.objeto;
+package edu.um.ar.programacion2.ventas.dto;
 
-public class VentasObjeto {
+public class VentasDto {
 
 	private Long id;
 	private Float monto;
 	private Long cliente_id;
 	private String token;
 
-	
 	public Long getId() {
 		return id;
 	}
@@ -40,7 +39,7 @@ public class VentasObjeto {
 		this.token = token;
 	}
 
-	public VentasObjeto(Long id, Float monto, Long cliente_id, String token) {
+	public VentasDto(Long id, Float monto, Long cliente_id, String token) {
 		super();
 		this.id = id;
 		this.monto = monto;
@@ -48,7 +47,7 @@ public class VentasObjeto {
 		this.token = token;
 	}
 
-	public VentasObjeto() {
+	public VentasDto() {
 		super();
 	}
 
