@@ -105,7 +105,8 @@ public class TarjetaCreditoService {
 			Cliente cliente = optionalCliente.get();
 			Cliente cliente_encontrado = new Cliente(cliente.getId(), cliente.getNombre(), cliente.getApellido());
 
-			String token = this.convertirSHA256(cliente_encontrado.getNombre(),1);
+			String token = encriptarToken(tarjetaDto);
+	        //String token = this.convertirSHA256(cliente_encontrado.getNombre(),1);
 
 			TarjetaCredito tarjetaCredito = new TarjetaCredito(tarjetaDto.getTipo(), tarjetaDto.getNumero(),
 					tarjetaDto.getCodseguridad(), tarjetaDto.getVencimiento(), tarjetaDto.getMontomaximo(),
@@ -173,10 +174,21 @@ public class TarjetaCreditoService {
 		return date;
 	}
 	
-	public String convertirSHA256(String nombre, int numberOfWords) {
-		String[] randomWord = generateRandomWords(numberOfWords);
-		String wordToCrypt = nombre+randomWord;
-		
+	public String encriptarToken(TarjetaCreditoDto tarjetaDto) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		String vencimiento = dateFormat.format(tarjetaDto.getVencimiento());
+		String token = vencimiento + tarjetaDto.getNumero() + tarjetaDto.getCodseguridad() + System.currentTimeMillis();
+		// token = Hashing.sha256().hashString(token,
+		// StandardCharsets.UTF_8).toString();
+		String tokenEncriptado = convertirSHA256(token);
+		return tokenEncriptado;
+	}
+	
+	// public String convertirSHA256(String nombre, int numberOfWords) {
+	public String convertirSHA256(String token) {
+		//String[] randomWord = generateRandomWords(numberOfWords);
+		//String wordToCrypt = nombre + randomWord;
+
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -185,7 +197,7 @@ public class TarjetaCreditoService {
 			return null;
 		}
 
-		byte[] hash = md.digest(wordToCrypt.getBytes());
+		byte[] hash = md.digest(token.getBytes());
 		StringBuffer sb = new StringBuffer();
 
 		for (byte b : hash) {
@@ -194,7 +206,7 @@ public class TarjetaCreditoService {
 
 		return sb.toString();
 	}
-	
+/*
 	public static String[] generateRandomWords(int numberOfWords)
 	{
 	    String[] randomStrings = new String[numberOfWords];
@@ -210,5 +222,6 @@ public class TarjetaCreditoService {
 	    }
 	    return randomStrings;
 	}
+*/
 	
 }
