@@ -62,6 +62,13 @@ public class TarjetaCreditoController {
 		return new ResponseEntity<TarjetaCreditoDto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}
 
+	@GetMapping("/buscaruno")
+	public ResponseEntity<String> buscarUno(@RequestHeader("Authorization") String token) {
+		System.out.println("el JWT es: " + token);
+		ResponseEntity<String> allTarjetas = tarjetacreditoService.buscarUno(token);
+		return new ResponseEntity<String>(allTarjetas.getBody(), allTarjetas.getStatusCode());
+	}
+
 	/*
 	 * @GetMapping("/{id}") public ResponseEntity<TarjetaCreditoObjeto>
 	 * getTarjetaCredito(@PathVariable Long id) { TarjetaCreditoObjeto tarjetaObj =

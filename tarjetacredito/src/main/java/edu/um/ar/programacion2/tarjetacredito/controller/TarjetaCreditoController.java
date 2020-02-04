@@ -47,10 +47,15 @@ import org.springframework.data.domain.Pageable;
 public class TarjetaCreditoController {
 	@Autowired
 	private TarjetaCreditoService tarjetacreditoService;
+	
+	@GetMapping("/buscarlos")
+	public TarjetaCredito buscarlos() {
+		System.out.println("esto es buscarlos");
+		return null;
+	}
 
 	@GetMapping("")
 	public ResponseEntity<List<TarjetaCreditoDto>> getAllTarjetaCredito() {
-		System.out.println("hola");
 		return new ResponseEntity<List<TarjetaCreditoDto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}

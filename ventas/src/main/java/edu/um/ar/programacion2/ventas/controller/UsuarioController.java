@@ -2,6 +2,7 @@ package edu.um.ar.programacion2.ventas.controller;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +73,13 @@ public class UsuarioController {
 	        usuarioRepository.save(new Usuario(username, encodedPassword, fullname));
 	        return true;
 	    }
+	 
+	@GetMapping("/verificar/{username}")
+	public ResponseEntity<Usuario> verificarUsusuario(@PathVariable String username) {
+		return ResponseEntity.ok(usuarioService.verificarUsuario(username));
+	}
+	
+
 /*
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ResponseEntity<List<User>> getAllUsers() {

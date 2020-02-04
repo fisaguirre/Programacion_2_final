@@ -25,25 +25,32 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+    
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+    	System.out.println("esto es filter");
 
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("asd");
 
         String username = null;
         String jwt = null;
+        System.out.println("header es: "+authorizationHeader);
+        System.out.println("alal");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        	System.out.println("primer if dde filter");
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
+            System.out.println("el username de filter es: "+username);
         }
 
-
+        System.out.println("vivi");
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username,authorizationHeader);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 

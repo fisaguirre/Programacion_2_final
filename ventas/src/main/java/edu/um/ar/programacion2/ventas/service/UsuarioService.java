@@ -15,6 +15,20 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	public Usuario verificarUsuario(String username) {
+		//Optional<Usuario> userToFind = this.usuarioRepository.buscarPorUsername(username);
+		Usuario userToFind = this.usuarioRepository.findByUsername(username);
+		return userToFind;
+		/*
+		if (userToFind.isPresent()) {
+			return userToFind.get();
+		} else {
+			return null;
+		}
+		*/
+	}
+
 
 	/*
 	public Usuario findByUsername(String username) {

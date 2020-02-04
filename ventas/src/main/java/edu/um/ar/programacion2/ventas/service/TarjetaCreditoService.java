@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,8 @@ import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
 import edu.um.ar.programacion2.ventas.repository.TarjetaCreditoRepository;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Service
 public class TarjetaCreditoService {
@@ -65,14 +68,52 @@ public class TarjetaCreditoService {
 */
 	@Autowired
 	private ClienteService clienteService;
-
+	
 	public ResponseEntity<TarjetaCreditoDto[]> findAll(String token) {
-		ResponseEntity<TarjetaCreditoDto[]> responseEntity;
-		responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito",
-				TarjetaCreditoDto[].class);
-		return new ResponseEntity<TarjetaCreditoDto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8200/tarjetacredito";
+		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+		System.out.println("aca el token es: "+token);
+		token = token.substring(7);
+		System.out.println("el token sub es: "+token);
+		headers.add("Authorization", "Bearer " + token);
+	//
+		HttpEntity request = new HttpEntity("", headers);
+	//
+		System.out.println("antes de mandar");
+		final ResponseEntity<TarjetaCreditoDto[]> exchange = restTemplate.exchange(url, HttpMethod.GET, request, TarjetaCreditoDto[].class);
+		System.out.println("despues");
+		return new ResponseEntity<TarjetaCreditoDto[]>(exchange.getBody(), exchange.getStatusCode());
 	}
 
+	public ResponseEntity buscarUno(String token) {
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8200/tarjetacredito/buscarlos";
+		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+		System.out.println("aca el token es: "+token);
+		token = token.substring(7);
+		System.out.println("el token sub es: "+token);
+		headers.add("Authorization", "Bearer " + token);
+	//
+		HttpEntity request = new HttpEntity("", headers);
+	//
+		System.out.println("antes de mandar");
+		final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+		System.out.println("despues");
+		return new ResponseEntity<String>(exchange.getBody(), exchange.getStatusCode());
+	}
+/*
+	public ResponseEntity<TarjetaCreditoDto[]> findAll(String token) {
+		ResponseEntity<TarjetaCreditoDto[]> responseEntity;
+		System.out.println("antes");
+		responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito",
+				TarjetaCreditoDto[].class);
+		System.out.println("despues");
+		return new ResponseEntity<TarjetaCreditoDto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
+	}
+*/
 	public TarjetaCreditoDto fById(Long id) {
 		ResponseEntity<TarjetaCreditoDto> responseEntity = new RestTemplate()
 				.getForEntity("http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoDto.class);
