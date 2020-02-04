@@ -60,28 +60,25 @@ public class UsuarioService {
 		}
 		return new ResponseEntity<>("El usuario no se encuentra registrado", HttpStatus.BAD_REQUEST);
 	}
-	/*
-	public ResponseEntity<Object> updateCliente(Cliente cliente) {
-		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
-		if (optionalCliente.isPresent()) {
-			Cliente datosCliente = optionalCliente.get();
-			Cliente actualizarCliente = new Cliente(datosCliente.getId(), cliente.getNombre(), cliente.getApellido(),
-					cliente.getActivo());
+	
+	public ResponseEntity<Object> updateUsuario(Usuario usuario) {
+		Optional<Usuario> buscarUsuario = usuarioRepository.findByUsername(usuario.getUsername());
+		if (buscarUsuario.isPresent()) {
+			Usuario datosUsuario = buscarUsuario.get();
+			Usuario actualizarUsuario = new Usuario(datosUsuario.getId(), usuario.getUsername(), usuario.getPassword(),
+					usuario.getFullname(), usuario.getActivo());
 
-			if ((actualizarCliente.getNombre().equals(datosCliente.getNombre()))
-					&& (actualizarCliente.getApellido().equals(datosCliente.getApellido()))) {
-				clienteRepository.save(actualizarCliente);
-				return new ResponseEntity<>("Cliente actualizado", HttpStatus.OK);
+			if ((actualizarUsuario.getUsername().equals(datosUsuario.getUsername()))) {
+				usuarioRepository.save(actualizarUsuario);
+				return new ResponseEntity<>("Usuario actualizado", HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>("Verifique que el nombre y apellido sean correctos",
-						HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Verifique que el nombre de usuario este correcto", HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
-			// return ResponseEntity.notFound().build();
+			return new ResponseEntity<>("No se encontro ningun usuario con ese nombre", HttpStatus.BAD_REQUEST);
 		}
 	}
-*/
+
 	public boolean usuarioExists(String username) {
 		boolean usuarioExists = usuarioRepository.existsByUsername(username);
 		return usuarioExists;
