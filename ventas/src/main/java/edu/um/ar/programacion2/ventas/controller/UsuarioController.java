@@ -24,7 +24,7 @@ import edu.um.ar.programacion2.ventas.service.UsuarioService;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
-
+import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +64,11 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioService.findAll());
 	}
 
+	@GetMapping("/{username}")
+	public ResponseEntity<ResponseEntity> getByUsername(@PathVariable String username) {
+		return ResponseEntity.ok(usuarioService.getByUsername(username));
+	}
+
 	@PostMapping("")
 	public ResponseEntity create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
 		return ResponseEntity.ok(usuarioService.createUsuario(body));
@@ -79,11 +84,10 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioService.updateUsuario(usuario));
 	}
 
-	 /*
-	@GetMapping("/verificar/{username}")
-	public ResponseEntity<Usuario> verificarUsusuario(@PathVariable String username) {
-		return ResponseEntity.ok(usuarioService.verificarUsuario(username));
-	}
-	*/
+	/*
+	 * @GetMapping("/verificar/{username}") public ResponseEntity<Usuario>
+	 * verificarUsusuario(@PathVariable String username) { return
+	 * ResponseEntity.ok(usuarioService.verificarUsuario(username)); }
+	 */
 
 }

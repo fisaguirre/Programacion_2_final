@@ -28,13 +28,22 @@ public class UsuarioService {
 		List<Usuario> list = usuarioRepository.findAll();
 		List<UsuarioDto> usuarioList = new ArrayList<UsuarioDto>();
 		for (Usuario usuario : list) {
-			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname(), usuario.getActivo());
+			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname(),
+					usuario.getActivo());
 			usuarioList.add(usuarioDto);
 		}
 		return usuarioList;
 	}
-	
-	
+
+	public ResponseEntity getByUsername(String username) {
+		Optional<Usuario> buscarUsuario = usuarioRepository.findByUsername(username);
+		if (buscarUsuario.isPresent()) {
+			Usuario usuarioEncontrado = buscarUsuario.get();
+			return new ResponseEntity<>(usuarioEncontrado, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("El usuario no esta registrado", HttpStatus.BAD_REQUEST);
+	}
+
 	public ResponseEntity createUsuario(Map<String, String> body) {
 		if (usuarioExists(body.get("username"))) {
 			return new ResponseEntity<String>("Ya existe un usuario con esos datos", HttpStatus.BAD_REQUEST);
@@ -44,7 +53,7 @@ public class UsuarioService {
 		usuarioRepository.save(crearUsuario);
 		return new ResponseEntity<>("Usuario registrado", HttpStatus.OK);
 	}
-	
+
 	public ResponseEntity deleteUsuario(String username) {
 		Optional<Usuario> buscarUsuario = usuarioRepository.findByUsername(username);
 		if (buscarUsuario.isPresent()) {
@@ -60,7 +69,7 @@ public class UsuarioService {
 		}
 		return new ResponseEntity<>("El usuario no se encuentra registrado", HttpStatus.BAD_REQUEST);
 	}
-	
+
 	public ResponseEntity<Object> updateUsuario(Usuario usuario) {
 		Optional<Usuario> buscarUsuario = usuarioRepository.findByUsername(usuario.getUsername());
 		if (buscarUsuario.isPresent()) {
@@ -83,27 +92,11 @@ public class UsuarioService {
 		boolean usuarioExists = usuarioRepository.existsByUsername(username);
 		return usuarioExists;
 	}
-/*
-	public Usuario verificarUsuario(String username) {
-		//Optional<Usuario> userToFind = this.usuarioRepository.buscarPorUsername(username);
-		Usuario userToFind = this.usuarioRepository.findByUsername(username);
-		return userToFind;
-	}
-*/
-
 	/*
-	public Usuario findByUsername(String username) {
-		Optional<Usuario> userToFind = this.usuarioRepository.findByUsername(username);
-		if (userToFind.isPresent()) {
-			return userToFind.get();
-		} else {
-			return null;
-		}
-	}
+	 * public Usuario verificarUsuario(String username) { //Optional<Usuario>
+	 * userToFind = this.usuarioRepository.buscarPorUsername(username); Usuario
+	 * userToFind = this.usuarioRepository.findByUsername(username); return
+	 * userToFind; }
+	 */
 
-	*/
-
-	
-
-	
 }
