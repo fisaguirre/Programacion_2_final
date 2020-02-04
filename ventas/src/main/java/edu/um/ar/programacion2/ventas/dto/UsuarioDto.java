@@ -19,6 +19,8 @@ public class UsuarioDto {
 
 	private String fullname;
 
+	private boolean activo;
+
 	public UsuarioDto() {
 	}
 
@@ -46,11 +48,19 @@ public class UsuarioDto {
 		this.fullname = fullname;
 	}
 
-	public UsuarioDto(Integer id, String username, String fullname) {
-		super();
+	public boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	public UsuarioDto(Integer id, String username, String fullname, boolean activo) {
 		this.id = id;
 		this.username = username;
 		this.fullname = fullname;
+		this.activo = activo;
 	}
 
 }

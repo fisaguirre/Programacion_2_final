@@ -71,15 +71,14 @@ public class UsuarioController {
 
 	@DeleteMapping(value = "{usernameToDelete}")
 	public ResponseEntity<ResponseEntity> deleteCliente(@PathVariable("usernameToDelete") String username) {
-		return ResponseEntity.ok(clienteService.deleteCliente(id));
+		return ResponseEntity.ok(usuarioService.deleteUsuario(username));
 	}
-
+/*
 	@PutMapping
-	public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente) {
-		// return ResponseEntity.ok(clienteService.updateCliente(cliente));
-		return new ResponseEntity(clienteService.updateCliente(cliente), HttpStatus.OK);
+	public ResponseEntity<Cliente> updateUsuario(@RequestBody Map<String, String> body) {
+		return ResponseEntity.ok(usuarioService.updateUsuario(body));
 	}
-
+*/
 	 /*
 	@GetMapping("/verificar/{username}")
 	public ResponseEntity<Usuario> verificarUsusuario(@PathVariable String username) {

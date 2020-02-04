@@ -26,9 +26,12 @@ public class Usuario {
 
 	@Column(name = "password", nullable = false, length = 60)
 	private String password;
-	
+
 	@Column(name = "fullname", nullable = false, length = 60)
 	private String fullname;
+
+	@Column(name = "activo", length = 60)
+	private boolean activo;
 
 	public Usuario() {
 	}
@@ -65,10 +68,27 @@ public class Usuario {
 		this.fullname = fullname;
 	}
 
-	public Usuario(String username, String password, String fullname) {
-        this.username = username;
-        this.password = password;
-        this.fullname = fullname;
-    }
+	public boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
+	public Usuario(String username, String password, String fullname, boolean activo) {
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.activo = activo;
+	}
+	
+	public Usuario(Integer id, String username, String password, String fullname, boolean activo) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.activo = activo;
+	}
 
 }

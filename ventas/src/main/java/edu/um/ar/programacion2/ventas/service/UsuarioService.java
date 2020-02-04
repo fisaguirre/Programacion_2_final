@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import edu.um.ar.programacion2.ventas.dto.UsuarioDto;
 import edu.um.ar.programacion2.ventas.jwt.exceptions.ValidationException;
+import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.Usuario;
 import edu.um.ar.programacion2.ventas.repository.UsuarioRepository;
 
@@ -27,7 +28,7 @@ public class UsuarioService {
 		List<Usuario> list = usuarioRepository.findAll();
 		List<UsuarioDto> usuarioList = new ArrayList<UsuarioDto>();
 		for (Usuario usuario : list) {
-			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname());
+			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname(), usuario.getActivo());
 			usuarioList.add(usuarioDto);
 		}
 		return usuarioList;
@@ -39,11 +40,48 @@ public class UsuarioService {
 			return new ResponseEntity<String>("Ya existe un usuario con esos datos", HttpStatus.BAD_REQUEST);
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(body.get("password"));
-		Usuario crearUsuario = new Usuario(body.get("username"), encodedPassword, body.get("fullname"));
+		Usuario crearUsuario = new Usuario(body.get("username"), encodedPassword, body.get("fullname"), true);
 		usuarioRepository.save(crearUsuario);
 		return new ResponseEntity<>("Usuario registrado", HttpStatus.OK);
 	}
+	
+	public ResponseEntity deleteUsuario(String username) {
+		Optional<Usuario> buscarUsuario = usuarioRepository.findByUsername(username);
+		if (buscarUsuario.isPresent()) {
+			Usuario usuarioEncontrado = buscarUsuario.get();
+			if (usuarioEncontrado.getActivo()) {
+				Usuario eliminarUsuario = new Usuario(usuarioEncontrado.getId(), usuarioEncontrado.getUsername(),
+						usuarioEncontrado.getPassword(), usuarioEncontrado.getFullname(), false);
+				usuarioRepository.save(eliminarUsuario);
+				return new ResponseEntity<>("Se cambio el usuario a inactivo", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("El usuario ya se encuentra inactivo", HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<>("El usuario no se encuentra registrado", HttpStatus.BAD_REQUEST);
+	}
+	/*
+	public ResponseEntity<Object> updateCliente(Cliente cliente) {
+		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
+		if (optionalCliente.isPresent()) {
+			Cliente datosCliente = optionalCliente.get();
+			Cliente actualizarCliente = new Cliente(datosCliente.getId(), cliente.getNombre(), cliente.getApellido(),
+					cliente.getActivo());
 
+			if ((actualizarCliente.getNombre().equals(datosCliente.getNombre()))
+					&& (actualizarCliente.getApellido().equals(datosCliente.getApellido()))) {
+				clienteRepository.save(actualizarCliente);
+				return new ResponseEntity<>("Cliente actualizado", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("Verifique que el nombre y apellido sean correctos",
+						HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
+			// return ResponseEntity.notFound().build();
+		}
+	}
+*/
 	public boolean usuarioExists(String username) {
 		boolean usuarioExists = usuarioRepository.existsByUsername(username);
 		return usuarioExists;
