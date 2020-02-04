@@ -57,21 +57,21 @@ public class UsuarioController {
 	private UsuarioRepository usuarioRepository;
 	
 	 @PostMapping("")
-	    public Boolean create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
+	    public ResponseEntity create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
+		 return ResponseEntity.ok(usuarioService.createUsuario(body));
+		/*
 		 System.out.println("el nombre es: "+body.get("username"));
 	        String username = body.get("username");
 	        if (usuarioRepository.existsByUsername(username)){
-
 	            throw new ValidationException("Username already existed");
-
 	        }
-
 	        String password = body.get("password");
 	        String encodedPassword = new BCryptPasswordEncoder().encode(password);
 //	        String hashedPassword = hashData.get_SHA_512_SecurePassword(password);
 	        String fullname = body.get("fullname");
 	        usuarioRepository.save(new Usuario(username, encodedPassword, fullname));
 	        return true;
+	        */
 	    }
 	 
 	@GetMapping("/verificar/{username}")

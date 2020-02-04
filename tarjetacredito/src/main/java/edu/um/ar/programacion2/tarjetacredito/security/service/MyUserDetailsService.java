@@ -14,6 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import edu.um.ar.programacion2.tarjetacredito.model.Usuario;
+//import edu.um.ar.programacion2.tarjetacredito.model.Usuario;
 import edu.um.ar.programacion2.tarjetacredito.repository.UsuarioRepository;
 
 import java.util.ArrayList;
@@ -24,27 +25,11 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
-	//@Override
-	public UserDetails loadUserByUsername(String username, String token) throws UsernameNotFoundException {
-		RestTemplate restTemplate = new RestTemplate();
-		String url = "http://localhost:8300/user/verificar/"+username;
-		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
-		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-		headers.add("Authorization", token);
-	//
-		HttpEntity request = new HttpEntity("", headers);
-	//
-		System.out.println("antes de mandar");
-		final ResponseEntity<Usuario> exchange = restTemplate.exchange(url, HttpMethod.GET, request, Usuario.class);
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		System.out.println("esto es userdetails");
+		//ResponseEntity<String> user = verificarUsuario(username, token);
 		
-		
-		System.out.println("lo que se extrajo de servicio tarjeta en metodo de busqueda de usuario es: ");
-		System.out.println("nombre usuario: "+exchange.getBody().getUsername());
-		System.out.println(exchange.getStatusCodeValue());
-		
-
 		Usuario user = usuarioRepository.findByUsername(username);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found with username: " + username);
@@ -52,11 +37,31 @@ public class MyUserDetailsService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				new ArrayList<>());
 	}
+	/*
+	public ResponseEntity<String> verificarUsuario(String username, String token) {
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8300/user/verificar/"+username;
+		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+		headers.add("Authorization", token);
+	
+		HttpEntity request = new HttpEntity("", headers);
+	
+		final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+		
+		if(exchange.getBody()!=null) {
+			return new ResponseEntity<String>(exchange.getBody(),exchange.getStatusCode());
+		}
+		return null;
+		
+	}
+	*/
+	/*
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+*/
 }
