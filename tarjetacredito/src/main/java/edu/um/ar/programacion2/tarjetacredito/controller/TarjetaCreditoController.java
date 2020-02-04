@@ -50,6 +50,7 @@ public class TarjetaCreditoController {
 
 	@GetMapping("")
 	public ResponseEntity<List<TarjetaCreditoDto>> getAllTarjetaCredito() {
+		System.out.println("hola");
 		return new ResponseEntity<List<TarjetaCreditoDto>>(tarjetacreditoService.findAll(), HttpStatus.OK);
 		// return tarjetacreditoService.findAll(); }
 	}
