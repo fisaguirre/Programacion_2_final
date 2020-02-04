@@ -47,16 +47,9 @@ public class TarjetaCreditoController {
 	private TarjetaCreditoService tarjetacreditoService;
 
 	@GetMapping("")
-	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito(@RequestHeader("Authorization") String token) {
-		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll(token);
+	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito(@RequestHeader("Authorization") String jwToken) {
+		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll(jwToken);
 		return new ResponseEntity<TarjetaCreditoDto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
-	}
-
-	@GetMapping("/buscaruno")
-	public ResponseEntity<String> buscarUno(@RequestHeader("Authorization") String token) {
-		System.out.println("el JWT es: " + token);
-		ResponseEntity<String> allTarjetas = tarjetacreditoService.buscarUno(token);
-		return new ResponseEntity<String>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}
 
 	/*
@@ -66,22 +59,22 @@ public class TarjetaCreditoController {
 	 */
 
 	@GetMapping("/{numero}")
-	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Long numero) {
-		return ResponseEntity.ok(tarjetacreditoService.getTokenIdByNumero(numero));
+	public ResponseEntity<ResponseEntity> getTokenIdByNumero(@PathVariable Long numero,@RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(tarjetacreditoService.getTokenIdByNumero(numero,jwToken));
 	}
 
 	@PostMapping("")
-	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaDto) {
-		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaDto));
+	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaDto,@RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaDto,jwToken));
 	}
 
 	@DeleteMapping("/{tokenToDelete}")
-	public ResponseEntity<ResponseEntity> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token) {
-		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(token));
+	public ResponseEntity<ResponseEntity> deleteTarjetaCredito(@PathVariable("tokenToDelete") String token, @RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(tarjetacreditoService.deleteTarjetaCredito(token,jwToken));
 	}
 
 	@PutMapping("{token}")
-	public ResponseEntity<ResponseEntity> updateTarjetaCredito(@PathVariable("token") String token) {
-		return ResponseEntity.ok(tarjetacreditoService.updateTarjetaCredito(token));
+	public ResponseEntity<ResponseEntity> updateTarjetaCredito(@PathVariable("token") String token, @RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(tarjetacreditoService.updateTarjetaCredito(token,jwToken));
 	}
 }

@@ -48,12 +48,6 @@ public class TarjetaCreditoController {
 	@Autowired
 	private TarjetaCreditoService tarjetacreditoService;
 	
-	@GetMapping("/buscarlos")
-	public TarjetaCredito buscarlos() {
-		System.out.println("esto es buscarlos");
-		return null;
-	}
-
 	@GetMapping("")
 	public ResponseEntity<List<TarjetaCreditoDto>> getAllTarjetaCredito() {
 		return new ResponseEntity<List<TarjetaCreditoDto>>(tarjetacreditoService.findAll(), HttpStatus.OK);

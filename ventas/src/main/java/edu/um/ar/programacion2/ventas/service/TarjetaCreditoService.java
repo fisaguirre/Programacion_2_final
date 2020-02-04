@@ -62,117 +62,141 @@ public class TarjetaCreditoService {
 
 	@Autowired
 	private TarjetaCreditoRepository tarjetacreditoRepository;
-/*
-	@Autowired
-	private RestTemplate restTemplate;
-*/
+	/*
+	 * @Autowired private RestTemplate restTemplate;
+	 */
 	@Autowired
 	private ClienteService clienteService;
-	
-	public ResponseEntity<TarjetaCreditoDto[]> findAll(String token) {
+
+	public ResponseEntity<TarjetaCreditoDto[]> findAll(String jwToken) {
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "http://localhost:8200/tarjetacredito";
 		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
 		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-		token = token.substring(7);
-		headers.add("Authorization", "Bearer " + token);
-	//
+		headers.add("Authorization", jwToken);
+		//
 		HttpEntity request = new HttpEntity("", headers);
-	//
-		System.out.println("antes de mandar");
-		final ResponseEntity<TarjetaCreditoDto[]> exchange = restTemplate.exchange(url, HttpMethod.GET, request, TarjetaCreditoDto[].class);
-		System.out.println("despues");
+		//
+		final ResponseEntity<TarjetaCreditoDto[]> exchange = restTemplate.exchange(url, HttpMethod.GET, request,
+				TarjetaCreditoDto[].class);
 		return new ResponseEntity<TarjetaCreditoDto[]>(exchange.getBody(), exchange.getStatusCode());
 	}
 
-	public ResponseEntity buscarUno(String token) {
-		RestTemplate restTemplate = new RestTemplate();
-		String url = "http://localhost:8200/tarjetacredito/buscarlos";
-		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
-		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-		System.out.println("aca el token es: "+token);
-		token = token.substring(7);
-		System.out.println("el token sub es: "+token);
-		headers.add("Authorization", "Bearer " + token);
-	//
-		HttpEntity request = new HttpEntity("", headers);
-	//
-		System.out.println("antes de mandar");
-		final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-		System.out.println("despues");
-		return new ResponseEntity<String>(exchange.getBody(), exchange.getStatusCode());
+	public ResponseEntity<Object> getTokenIdByNumero(Long numero, String jwToken) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/token/" + numero;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<Object> exchange = restTemplate.exchange(url, HttpMethod.GET, request, Object.class);
+			return new ResponseEntity<Object>(exchange.getBody(), exchange.getStatusCode());
+			/*
+			 * responseEntity = new
+			 * RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/token/" +
+			 * numero, Object.class); return new ResponseEntity<>(responseEntity.getBody(),
+			 * responseEntity.getStatusCode());
+			 */
+		} catch (HttpClientErrorException error1) {
+			return new ResponseEntity<>(error1.getResponseBodyAsString(), error1.getStatusCode());
+		} catch (RestClientException error2) {
+			return new ResponseEntity<>(error2.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
-/*
-	public ResponseEntity<TarjetaCreditoDto[]> findAll(String token) {
-		ResponseEntity<TarjetaCreditoDto[]> responseEntity;
-		System.out.println("antes");
-		responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito",
-				TarjetaCreditoDto[].class);
-		System.out.println("despues");
-		return new ResponseEntity<TarjetaCreditoDto[]>(responseEntity.getBody(), responseEntity.getStatusCode());
-	}
-*/
+
 	public TarjetaCreditoDto fById(Long id) {
 		ResponseEntity<TarjetaCreditoDto> responseEntity = new RestTemplate()
 				.getForEntity("http://localhost:8200/tarjetacredito/" + id, TarjetaCreditoDto.class);
 		return responseEntity.getBody();
 	}
 
-	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
+	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoDto tarjetaDto, String jwToken) {
 		try {
-			ResponseEntity<Object> responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito", tarjetaDto,
-					Object.class);
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito";
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<Object> exchange = restTemplate.exchange(url, HttpMethod.POST, request, Object.class);
+			return new ResponseEntity<Object>(exchange.getBody(), exchange.getStatusCode());
+			/*
+			 * ResponseEntity<Object> responseEntity = new RestTemplate()
+			 * .postForEntity("http://localhost:8200/tarjetacredito", tarjetaDto,
+			 * Object.class);
+			 */
 			// parece que restTemplate serializa el objeto java a objeto JSON para el otro
 			// servicio(al menos con peticion
 			// tipo post)
-			return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
+			// return new ResponseEntity<>(responseEntity.getBody(),
+			// responseEntity.getStatusCode());
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
 			return new ResponseEntity<>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		
+
 	}
 
-	public ResponseEntity<Object> getTokenIdByNumero(Long numero) {
-		ResponseEntity<Object> responseEntity;
+	public ResponseEntity<Object> deleteTarjetaCredito(String token, String jwToken) {
+		// ResponseEntity<String> deshabilitarTarjeta;
 		try {
-			responseEntity = new RestTemplate().getForEntity("http://localhost:8200/tarjetacredito/token/" + numero,
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/" + token;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<Object> exchange = restTemplate.exchange(url, HttpMethod.DELETE, request,
 					Object.class);
-			return new ResponseEntity<>(responseEntity.getBody(), responseEntity.getStatusCode());
+			return new ResponseEntity<Object>(exchange.getBody(), exchange.getStatusCode());
+			/*
+			 * HttpEntity request = new HttpEntity(""); String url =
+			 * "http://localhost:8200/tarjetacredito/{tokenToDelete}"; deshabilitarTarjeta =
+			 * new RestTemplate().exchange(url, HttpMethod.DELETE, request, String.class,
+			 * token);
+			 */
 		} catch (HttpClientErrorException error1) {
-			return new ResponseEntity<>(error1.getResponseBodyAsString(), error1.getStatusCode());
+			return new ResponseEntity<Object>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
-			return new ResponseEntity<>(error2.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 		}
+		// return new ResponseEntity<Object>(deshabilitarTarjeta.getBody(),
+		// deshabilitarTarjeta.getStatusCode());
 	}
 
-	public ResponseEntity<String> deleteTarjetaCredito(String token) {
-		ResponseEntity<String> deshabilitarTarjeta;
+	public ResponseEntity<Object> updateTarjetaCredito(String token, String jwToken) {
+		// ResponseEntity<String> updateTarjetaCredito;
 		try {
-			HttpEntity request = new HttpEntity("");
-			String url = "http://localhost:8200/tarjetacredito/{tokenToDelete}";
-			deshabilitarTarjeta = new RestTemplate().exchange(url, HttpMethod.DELETE, request, String.class, token);
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/" + token;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<Object> exchange = restTemplate.exchange(url, HttpMethod.PUT, request, Object.class);
+			return new ResponseEntity<Object>(exchange.getBody(), exchange.getStatusCode());
+			/*
+			 * HttpEntity request = new HttpEntity(""); String url =
+			 * "http://localhost:8200/tarjetacredito/{token}"; updateTarjetaCredito = new
+			 * RestTemplate().exchange(url, HttpMethod.PUT, request, String.class, token);
+			 */
 		} catch (HttpClientErrorException error1) {
-			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
+			return new ResponseEntity<Object>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
-			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(error2.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<String>(deshabilitarTarjeta.getBody(), deshabilitarTarjeta.getStatusCode());
-	}
-
-	public ResponseEntity<String> updateTarjetaCredito(String token) {
-		ResponseEntity<String> updateTarjetaCredito;
-		try {
-			HttpEntity request = new HttpEntity("");
-			String url = "http://localhost:8200/tarjetacredito/{token}";
-			updateTarjetaCredito = new RestTemplate().exchange(url, HttpMethod.PUT, request, String.class, token);
-		} catch (HttpClientErrorException error1) {
-			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
-		} catch (RestClientException error2) {
-			return new ResponseEntity<String>(error2.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<String>(updateTarjetaCredito.getBody(), updateTarjetaCredito.getStatusCode());
+		// return new ResponseEntity<String>(updateTarjetaCredito.getBody(),
+		// updateTarjetaCredito.getStatusCode());
 	}
 
 }
