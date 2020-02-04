@@ -81,7 +81,6 @@ public class TarjetaCreditoService {
 
 	public ResponseEntity<Object> createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
 		try {
-			System.out.println("service ventas");
 			ResponseEntity<Object> responseEntity = new RestTemplate().postForEntity("http://localhost:8200/tarjetacredito", tarjetaDto,
 					Object.class);
 			// parece que restTemplate serializa el objeto java a objeto JSON para el otro
