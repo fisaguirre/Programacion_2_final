@@ -74,9 +74,7 @@ public class TarjetaCreditoService {
 		String url = "http://localhost:8200/tarjetacredito";
 		MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
 		headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-		System.out.println("aca el token es: "+token);
 		token = token.substring(7);
-		System.out.println("el token sub es: "+token);
 		headers.add("Authorization", "Bearer " + token);
 	//
 		HttpEntity request = new HttpEntity("", headers);

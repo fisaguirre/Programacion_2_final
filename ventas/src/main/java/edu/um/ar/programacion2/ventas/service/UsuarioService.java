@@ -1,5 +1,6 @@
 package edu.um.ar.programacion2.ventas.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import edu.um.ar.programacion2.ventas.dto.UsuarioDto;
 import edu.um.ar.programacion2.ventas.jwt.exceptions.ValidationException;
 import edu.um.ar.programacion2.ventas.model.Usuario;
 import edu.um.ar.programacion2.ventas.repository.UsuarioRepository;
@@ -20,6 +22,17 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	public List<UsuarioDto> findAll() {
+		List<Usuario> list = usuarioRepository.findAll();
+		List<UsuarioDto> usuarioList = new ArrayList<UsuarioDto>();
+		for (Usuario usuario : list) {
+			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname());
+			usuarioList.add(usuarioDto);
+		}
+		return usuarioList;
+	}
+	
 	
 	public ResponseEntity createUsuario(Map<String, String> body) {
 		if (usuarioExists(body.get("username"))) {
@@ -35,20 +48,13 @@ public class UsuarioService {
 		boolean usuarioExists = usuarioRepository.existsByUsername(username);
 		return usuarioExists;
 	}
-
+/*
 	public Usuario verificarUsuario(String username) {
 		//Optional<Usuario> userToFind = this.usuarioRepository.buscarPorUsername(username);
 		Usuario userToFind = this.usuarioRepository.findByUsername(username);
 		return userToFind;
-		/*
-		if (userToFind.isPresent()) {
-			return userToFind.get();
-		} else {
-			return null;
-		}
-		*/
 	}
-
+*/
 
 	/*
 	public Usuario findByUsername(String username) {
@@ -60,25 +66,9 @@ public class UsuarioService {
 		}
 	}
 
-	public Usuario findById(Integer id) {
-		Optional<Usuario> userToFind = this.usuarioRepository.findById(id);
-		if (userToFind.isPresent()) {
-			return userToFind.get();
-		} else {
-			return null;
-		}
-	}
+	*/
 
-	public List<Usuario> findAll() {
-		return this.usuarioRepository.findAll();
-	}
+	
 
-	public Usuario save(Usuario user) {
-		System.out.println("USER PARAMETER: " + user.toString());
-		Usuario savedUser = this.usuarioRepository.save(user);
-		System.out.println("SAVED USER: " + savedUser.toString());
-		return this.usuarioRepository.save(user);
-
-	}
-*/
+	
 }

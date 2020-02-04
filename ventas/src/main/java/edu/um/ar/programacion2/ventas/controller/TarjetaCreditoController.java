@@ -48,16 +48,6 @@ public class TarjetaCreditoController {
 
 	@GetMapping("")
 	public ResponseEntity<TarjetaCreditoDto[]> getAllTarjetaCredito(@RequestHeader("Authorization") String token) {
-		System.out.println("el JWT es: "+token);
-		/*
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", token);
-
-		HttpEntity<RestRequest> entityReq = new HttpEntity<RestRequest>(request, headers);
-		
-		template.exchange("RestSvcUrl", HttpMethod.POST, entityReq, SomeResponse.class);
-
-		*/
 		ResponseEntity<TarjetaCreditoDto[]> allTarjetas = tarjetacreditoService.findAll(token);
 		return new ResponseEntity<TarjetaCreditoDto[]>(allTarjetas.getBody(), allTarjetas.getStatusCode());
 	}

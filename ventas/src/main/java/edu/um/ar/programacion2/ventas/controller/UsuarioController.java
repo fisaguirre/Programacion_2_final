@@ -2,13 +2,19 @@ package edu.um.ar.programacion2.ventas.controller;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.um.ar.programacion2.ventas.dto.TarjetaCreditoDto;
+import edu.um.ar.programacion2.ventas.dto.UsuarioDto;
 import edu.um.ar.programacion2.ventas.jwt.exceptions.ValidationException;
+import edu.um.ar.programacion2.ventas.model.Cliente;
 
 //import com.netflix.config.validation.ValidationException;
 
@@ -23,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,84 +42,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-//@RequestMapping("/usuario")
 @RequestMapping("/user")
 public class UsuarioController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-/*
-	@Autowired
-	private JwtUtil jwtTokenUtil;
-
-	@Autowired
-	private MyUserDetailsService userDetailsService;
-*/
+	/*
+	 * @Autowired private JwtUtil jwtTokenUtil;
+	 * 
+	 * @Autowired private MyUserDetailsService userDetailsService;
+	 */
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	 @PostMapping("")
-	    public ResponseEntity create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
-		 return ResponseEntity.ok(usuarioService.createUsuario(body));
-		/*
-		 System.out.println("el nombre es: "+body.get("username"));
-	        String username = body.get("username");
-	        if (usuarioRepository.existsByUsername(username)){
-	            throw new ValidationException("Username already existed");
-	        }
-	        String password = body.get("password");
-	        String encodedPassword = new BCryptPasswordEncoder().encode(password);
-//	        String hashedPassword = hashData.get_SHA_512_SecurePassword(password);
-	        String fullname = body.get("fullname");
-	        usuarioRepository.save(new Usuario(username, encodedPassword, fullname));
-	        return true;
-	        */
-	    }
-	 
+
+	@GetMapping("")
+	public ResponseEntity<List<UsuarioDto>> getAllTarjetaCredito() {
+		return ResponseEntity.ok(usuarioService.findAll());
+	}
+
+	@PostMapping("")
+	public ResponseEntity create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
+		return ResponseEntity.ok(usuarioService.createUsuario(body));
+	}
+
+	@DeleteMapping(value = "{usernameToDelete}")
+	public ResponseEntity<ResponseEntity> deleteCliente(@PathVariable("usernameToDelete") String username) {
+		return ResponseEntity.ok(clienteService.deleteCliente(id));
+	}
+
+	@PutMapping
+	public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente) {
+		// return ResponseEntity.ok(clienteService.updateCliente(cliente));
+		return new ResponseEntity(clienteService.updateCliente(cliente), HttpStatus.OK);
+	}
+
+	 /*
 	@GetMapping("/verificar/{username}")
 	public ResponseEntity<Usuario> verificarUsusuario(@PathVariable String username) {
 		return ResponseEntity.ok(usuarioService.verificarUsuario(username));
 	}
-	
+	*/
 
-/*
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseEntity<List<User>> getAllUsers() {
-		return ResponseEntity.ok(this.userService.findAll());
-	}
-
-	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-	public ResponseEntity<User> getAllUsers(@PathVariable("userId") UUID id) {
-		return ResponseEntity.ok(this.userService.findById(id));
-	}
-
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public ResponseEntity<User> addUser(@RequestBody User user) {
-		User newUser = this.userService.save(user);
-		return ResponseEntity.ok(newUser);
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
-			throws Exception {
-
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-		} catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
-		}
-
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
-		final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new AuthenticationResponse(jwt));
-	}
-*/
 }
