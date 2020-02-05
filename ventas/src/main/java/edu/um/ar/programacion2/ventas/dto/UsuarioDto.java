@@ -18,6 +18,8 @@ public class UsuarioDto {
 	private String username;
 
 	private String fullname;
+	
+	private String rol;
 
 	private boolean activo;
 
@@ -55,12 +57,23 @@ public class UsuarioDto {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
+	
+	
 
-	public UsuarioDto(Integer id, String username, String fullname, boolean activo) {
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public UsuarioDto(Integer id, String username, String fullname, boolean activo, String rol) {
 		this.id = id;
 		this.username = username;
 		this.fullname = fullname;
 		this.activo = activo;
+		this.rol = rol;
 	}
 
 }

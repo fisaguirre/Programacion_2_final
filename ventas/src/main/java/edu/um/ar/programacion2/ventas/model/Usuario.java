@@ -32,6 +32,9 @@ public class Usuario {
 
 	@Column(name = "activo", length = 60)
 	private boolean activo;
+	
+	@Column(name = "rol")
+	private String rol;
 
 	public Usuario() {
 	}
@@ -76,19 +79,31 @@ public class Usuario {
 		this.activo = activo;
 	}
 
-	public Usuario(String username, String password, String fullname, boolean activo) {
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public Usuario(String username, String password, String fullname, boolean activo, String rol) {
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
+		this.rol = rol;
 	}
 	
-	public Usuario(Integer id, String username, String password, String fullname, boolean activo) {
+	public Usuario(Integer id, String username, String password, String fullname, boolean activo, String rol) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
+		this.rol = rol;
 	}
+	
+	
 
 }

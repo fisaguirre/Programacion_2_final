@@ -49,7 +49,7 @@ public class UsuarioService {
 			return new ResponseEntity<String>("Ya existe un usuario con esos datos", HttpStatus.BAD_REQUEST);
 		}
 		String encodedPassword = new BCryptPasswordEncoder().encode(body.get("password"));
-		Usuario crearUsuario = new Usuario(body.get("username"), encodedPassword, body.get("fullname"), true);
+		Usuario crearUsuario = new Usuario(body.get("username"), encodedPassword, body.get("fullname"), true, body.get("rol"));
 		usuarioRepository.save(crearUsuario);
 		return new ResponseEntity<>("Usuario registrado", HttpStatus.OK);
 	}
@@ -60,7 +60,7 @@ public class UsuarioService {
 			Usuario usuarioEncontrado = buscarUsuario.get();
 			if (usuarioEncontrado.getActivo()) {
 				Usuario eliminarUsuario = new Usuario(usuarioEncontrado.getId(), usuarioEncontrado.getUsername(),
-						usuarioEncontrado.getPassword(), usuarioEncontrado.getFullname(), false);
+						usuarioEncontrado.getPassword(), usuarioEncontrado.getFullname(), false, usuarioEncontrado.getRol());
 				usuarioRepository.save(eliminarUsuario);
 				return new ResponseEntity<>("Se cambio el usuario a inactivo", HttpStatus.OK);
 			} else {
@@ -75,7 +75,7 @@ public class UsuarioService {
 		if (buscarUsuario.isPresent()) {
 			Usuario datosUsuario = buscarUsuario.get();
 			Usuario actualizarUsuario = new Usuario(datosUsuario.getId(), usuario.getUsername(), usuario.getPassword(),
-					usuario.getFullname(), usuario.getActivo());
+					usuario.getFullname(), usuario.getActivo(), usuario.getRol());
 
 			if ((actualizarUsuario.getUsername().equals(datosUsuario.getUsername()))) {
 				usuarioRepository.save(actualizarUsuario);
