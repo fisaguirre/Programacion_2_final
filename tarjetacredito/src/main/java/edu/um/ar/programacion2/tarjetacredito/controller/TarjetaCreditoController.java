@@ -86,13 +86,9 @@ public class TarjetaCreditoController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<ResponseEntity> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) throws NoSuchAlgorithmException {
-		return ResponseEntity.ok(tarjetacreditoService.createTarjetaCredito(tarjetaCreditoDto));
-		/*
-		 * ResponseEntity<String> token =
-		 * tarjetacreditoService.createTarjetaCredito(tarjetaCreditoObjeto); return new
-		 * ResponseEntity<String>(token.getBody(), token.getStatusCode());
-		 */
+	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) {
+		ResponseEntity<String> crearTarjeta = tarjetacreditoService.createTarjetaCredito(tarjetaCreditoDto);
+		return new ResponseEntity<String>(crearTarjeta.getBody(),crearTarjeta.getStatusCode());
 	}
 
 	@DeleteMapping("/{tokenToDelete}")

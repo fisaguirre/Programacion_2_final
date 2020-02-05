@@ -95,9 +95,9 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) throws NoSuchAlgorithmException {
+	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
 		if (this.tarjetaExistenteByNumero(tarjetaDto.getNumero())) {
-			return new ResponseEntity<String>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Ya exixte una tarjeta con ese numero", HttpStatus.BAD_REQUEST);
 		}
 
 		Optional<Cliente> optionalCliente = clienteService.findById(tarjetaDto.getCliente_id());
@@ -112,10 +112,10 @@ public class TarjetaCreditoService {
 					tarjetaDto.getCodseguridad(), tarjetaDto.getVencimiento(), tarjetaDto.getMontomaximo(),
 					cliente_encontrado, token, true);
 			tarjetacreditoRepository.save(tarjetaCredito);
-
-			return new ResponseEntity<String>(token, HttpStatus.OK);
+			
+			return new ResponseEntity<>(token, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity<String> deleteTarjetaCredito(String token) {
