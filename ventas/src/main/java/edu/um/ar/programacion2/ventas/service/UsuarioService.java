@@ -29,7 +29,7 @@ public class UsuarioService {
 		List<UsuarioDto> usuarioList = new ArrayList<UsuarioDto>();
 		for (Usuario usuario : list) {
 			UsuarioDto usuarioDto = new UsuarioDto(usuario.getId(), usuario.getUsername(), usuario.getFullname(),
-					usuario.getActivo());
+					usuario.getActivo(), usuario.getRol());
 			usuarioList.add(usuarioDto);
 		}
 		return usuarioList;

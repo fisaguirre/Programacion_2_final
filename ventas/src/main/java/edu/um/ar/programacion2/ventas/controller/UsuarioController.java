@@ -31,6 +31,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,7 +59,8 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-
+	
+    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("")
 	public ResponseEntity<List<UsuarioDto>> getAllTarjetaCredito() {
 		return ResponseEntity.ok(usuarioService.findAll());

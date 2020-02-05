@@ -1,0 +1,13 @@
+package edu.um.ar.programacion2.log.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import edu.um.ar.programacion2.log.model.Log;
+
+public interface LogRepository extends JpaRepository<Log, Long> {
+	
+	Optional<Log> findByVentaId(Long ventaId);
+	
+}

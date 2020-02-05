@@ -58,8 +58,6 @@ public class UsuarioDto {
 		this.activo = activo;
 	}
 	
-	
-
 	public String getRol() {
 		return rol;
 	}

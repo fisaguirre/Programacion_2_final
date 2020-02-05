@@ -38,6 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		String username = null;
 
 		String jwtToken = null;
+		System.out.println("el token es: "+ requestTokenHeader);
 
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 

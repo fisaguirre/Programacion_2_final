@@ -26,9 +26,12 @@ public class Usuario {
 
 	@Column(name = "password", nullable = false, length = 60)
 	private String password;
-	
+
 	@Column(name = "fullname", nullable = false, length = 60)
 	private String fullname;
+
+	@Column(name = "rol")
+	private String rol;
 
 	public Usuario() {
 	}
@@ -65,10 +68,19 @@ public class Usuario {
 		this.fullname = fullname;
 	}
 
-	public Usuario(String username, String password, String fullname) {
-        this.username = username;
-        this.password = password;
-        this.fullname = fullname;
-    }
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public Usuario(String username, String password, String fullname, String rol) {
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.rol = rol;
+	}
 
 }

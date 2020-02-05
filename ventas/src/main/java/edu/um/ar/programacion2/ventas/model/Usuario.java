@@ -1,6 +1,7 @@
 package edu.um.ar.programacion2.ventas.model;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,8 +34,9 @@ public class Usuario {
 	@Column(name = "activo", length = 60)
 	private boolean activo;
 	
-	@Column(name = "rol")
-	private String rol;
+	@Column(name = "roles")
+	private Set roles;
+	//private String rol;
 
 	public Usuario() {
 	}
@@ -79,29 +81,29 @@ public class Usuario {
 		this.activo = activo;
 	}
 
-	public String getRol() {
-		return rol;
+	public Set getRoles() {
+		return roles;
 	}
 
-	public void setRol(String rol) {
-		this.rol = rol;
+	public void setRoles(Set roles) {
+		this.roles = roles;
 	}
 
-	public Usuario(String username, String password, String fullname, boolean activo, String rol) {
+	public Usuario(String username, String password, String fullname, boolean activo, Set roles) {
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
-		this.rol = rol;
+		this.roles = roles;
 	}
 	
-	public Usuario(Integer id, String username, String password, String fullname, boolean activo, String rol) {
+	public Usuario(Integer id, String username, String password, String fullname, boolean activo, Set roles) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
-		this.rol = rol;
+		this.roles = roles;
 	}
 	
 	
