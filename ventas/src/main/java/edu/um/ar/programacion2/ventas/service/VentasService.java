@@ -7,8 +7,11 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,7 +20,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import edu.um.ar.programacion2.ventas.dto.TarjetaCreditoDto;
 import edu.um.ar.programacion2.ventas.dto.VentasDto;
 import edu.um.ar.programacion2.ventas.model.Cliente;
 import edu.um.ar.programacion2.ventas.model.TarjetaCredito;
@@ -85,16 +91,16 @@ public class VentasService {
 	}
 	*/
 
-	public ResponseEntity<String> createVenta(VentasDto ventasDto) {
+	public ResponseEntity<String> createVenta(VentasDto ventasDto, String jwToken) {
 		Optional<Cliente> optionalCliente = clienteService.findById(ventasDto.getCliente_id());
 		if (optionalCliente.isPresent()) {
 			Cliente cliente_encontrado = optionalCliente.get();
-			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasDto.getToken());
+			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasDto.getToken(),jwToken);
 			ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasDto.getMonto(),
-					ventasDto.getToken());
+					ventasDto.getToken(),jwToken);
 			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.OK) {
 				if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
-					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasDto.getToken());
+					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasDto.getToken(),jwToken);
 					if (findTarjetaByToken.getBody().getActivo()) {
 						if (findTarjetaByToken.getBody().getCliente_id().getId().equals(ventasDto.getCliente_id())) {
 							ResponseEntity<String> verificacionVenta = ventaFinal(ventasDto, cliente_encontrado);
@@ -132,11 +138,24 @@ public class VentasService {
 		return new ResponseEntity<String>("No se pudo concretar la venta", HttpStatus.BAD_REQUEST);
 	}
 
-	public ResponseEntity<TarjetaCredito> findTarjetaByToken(String token) {
+	public ResponseEntity<TarjetaCredito> findTarjetaByToken(String token, String jwToken) {
 		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/find/"+token;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<TarjetaCredito> exchange = restTemplate.exchange(url, HttpMethod.GET, request,
+					TarjetaCredito.class);
+			return new ResponseEntity<TarjetaCredito>(exchange.getBody(),exchange.getStatusCode());
+			/*
 			ResponseEntity<TarjetaCredito> existsTarjeta = new RestTemplate()
 					.getForEntity("http://localhost:8200/tarjetacredito/find/" + token, TarjetaCredito.class);
 			return new ResponseEntity<TarjetaCredito>(existsTarjeta.getBody(), existsTarjeta.getStatusCode());
+			*/
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<TarjetaCredito>(error1.getStatusCode());
 		} catch (RestClientException error2) {
@@ -144,12 +163,24 @@ public class VentasService {
 		}
 	}
 
-	public ResponseEntity<String> verificarTarjeta(String token) {
-
+	public ResponseEntity<String> verificarTarjeta(String token, String jwToken) {
 		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/"+token;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, request,
+					String.class);
+			return new ResponseEntity<String>(exchange.getBody(),exchange.getStatusCode());
+			/*
 			ResponseEntity<String> existsTarjeta = new RestTemplate()
 					.getForEntity("http://localhost:8200/tarjetacredito/" + token, String.class);
 			return new ResponseEntity<String>(existsTarjeta.getBody(), existsTarjeta.getStatusCode());
+			*/
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
@@ -157,11 +188,24 @@ public class VentasService {
 		}
 	}
 
-	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
+	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token, String jwToken) {
 		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String url = "http://localhost:8200/tarjetacredito/"+monto+"/"+token;
+			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
+			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+			headers.add("Authorization", jwToken);
+			//
+			HttpEntity request = new HttpEntity("", headers);
+			//
+			final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, request,
+					String.class);
+			return new ResponseEntity<String>(exchange.getBody(),exchange.getStatusCode());
+			/*
 			ResponseEntity<String> verificarMontoTarjeta = new RestTemplate()
 					.getForEntity("http://localhost:8200/tarjetacredito/" + monto + "/" + token, String.class);
 			return new ResponseEntity<String>(verificarMontoTarjeta.getBody(), verificarMontoTarjeta.getStatusCode());
+		*/
 		} catch (HttpClientErrorException error1) {
 			return new ResponseEntity<String>(error1.getResponseBodyAsString(), error1.getStatusCode());
 		} catch (RestClientException error2) {
