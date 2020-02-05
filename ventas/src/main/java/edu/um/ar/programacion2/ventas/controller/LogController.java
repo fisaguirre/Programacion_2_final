@@ -1,4 +1,4 @@
-package edu.um.ar.programacion2.log.controller;
+package edu.um.ar.programacion2.ventas.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.um.ar.programacion2.log.model.Log;
-import edu.um.ar.programacion2.log.service.LogService;
-import edu.um.ar.programacion2.ventas.model.Ventas;
+import edu.um.ar.programacion2.ventas.dto.TarjetaCreditoDto;
+import edu.um.ar.programacion2.ventas.model.Log;
+import edu.um.ar.programacion2.ventas.service.LogService;
 
 @RestController
 @RequestMapping("/log")
@@ -28,17 +28,21 @@ public class LogController {
 	private LogService logService;
 
 	@GetMapping("")
-	public ResponseEntity<List<Log>> getAllVentas(Pageable pageable) {
-		ResponseEntity<List<Log>> allLog;
-		allLog = logService.findAll();
-		return new ResponseEntity<List<Log>>(allLog.getBody(), allLog.getStatusCode());
+	public ResponseEntity<Log[]> getAllLog(@RequestHeader("Authorization") String jwToken) {
+		ResponseEntity<Log[]> allLog = logService.findAll(jwToken);
+		return new ResponseEntity<Log[]>(allLog.getBody(), allLog.getStatusCode());
 	}
 
 	@GetMapping("/{ventaId}")
-	public ResponseEntity<ResponseEntity> getLog(@PathVariable Long ventaId) {
-		return ResponseEntity.ok(logService.findByVentaId(ventaId));
+	public ResponseEntity<ResponseEntity> getLogByVentaId(@PathVariable Long ventaId, @RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(logService.getLogByVentaId(ventaId,jwToken));
 		// ResponseEntity<Log> log = logService.findByVentaId(ventaId);
 		// return new ResponseEntity<Log>(log);
 	}
 
+	@PostMapping("")
+	public ResponseEntity<ResponseEntity> createLog(@RequestBody Log log,
+			@RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(logService.createLog(log, jwToken));
+	}
 }
