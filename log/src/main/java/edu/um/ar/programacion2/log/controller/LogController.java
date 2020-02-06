@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.um.ar.programacion2.log.model.Log;
 import edu.um.ar.programacion2.log.service.LogService;
+import edu.um.ar.programacion2.tarjetacredito.dto.TarjetaCreditoDto;
 
 @RestController
 @RequestMapping("/log")
@@ -38,6 +39,12 @@ public class LogController {
 		return ResponseEntity.ok(logService.findByVentaId(venta));
 		// ResponseEntity<Log> log = logService.findByVentaId(ventaId);
 		// return new ResponseEntity<Log>(log);
+	}
+
+	@PostMapping("")
+	public ResponseEntity<String> crearLog(@RequestBody Log log) {
+		ResponseEntity<String> crearLog = logService.createLog(log);
+		return new ResponseEntity<String>(crearLog.getBody(), crearLog.getStatusCode());
 	}
 
 }

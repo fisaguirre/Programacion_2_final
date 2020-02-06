@@ -91,5 +91,13 @@ public class Log {
 		this.resultado = resultado;
 		this.explicacion = explicacion;
 	}
+	
+	public Log(Long venta, String paso, String resultado, String explicacion) {
+		super();
+		this.venta = venta;
+		this.paso = paso;
+		this.resultado = resultado;
+		this.explicacion = explicacion;
+	}
 
 }

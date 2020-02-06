@@ -44,6 +44,9 @@ public class Ventas {
 	
 	@Column(name = "token")
 	private String token;
+	
+	@Column(name = "valido", length = 60)
+	private boolean valido;
 
 	public Long getId() {
 		return id;
@@ -93,6 +96,14 @@ public class Ventas {
 		this.token = token;
 	}
 
+	public boolean getValido() {
+		return valido;
+	}
+
+	public void setValido(boolean valido) {
+		this.valido = valido;
+	}
+
 	public Ventas(Long id, Float monto, Cliente cliente,
 			String token) {
 		super();
@@ -104,11 +115,12 @@ public class Ventas {
 		this.token = token;
 	}
 
-	public Ventas(Float monto, Cliente cliente, String token) {
+	public Ventas(Float monto, Cliente cliente, String token, boolean valido) {
 		super();
 		this.monto = monto;
 		this.cliente = cliente;
 		this.token = token;
+		this.valido = valido;
 	}
 
 	public Ventas() {
