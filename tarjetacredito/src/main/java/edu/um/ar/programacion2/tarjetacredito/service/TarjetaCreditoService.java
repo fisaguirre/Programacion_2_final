@@ -66,6 +66,15 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<String>("La tarjeta no se encuentra habilitada", HttpStatus.BAD_REQUEST);
 	}
 
+	public ResponseEntity verificarPertenenciaTarjeta(String token, Long clienteId) {
+		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
+		TarjetaCredito tarjetaEncontrada = findTarjeta.get();
+		if (tarjetaEncontrada.getCliente_id().getId().equals(clienteId)) {
+			return new ResponseEntity<String>("La tarjeta le pertenece al cliente", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("La tarjeta no le pertenece al cliente", HttpStatus.BAD_REQUEST);
+	}
+
 	public ResponseEntity findTokenByNumero(Long numero) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
 		if (optionalTarjeta.isPresent()) {
