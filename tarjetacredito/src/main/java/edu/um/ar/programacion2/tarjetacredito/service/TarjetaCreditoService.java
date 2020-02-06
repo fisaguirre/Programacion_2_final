@@ -66,6 +66,25 @@ public class TarjetaCreditoService {
 		return new ResponseEntity<>("0", HttpStatus.BAD_REQUEST);
 	}
 
+	public ResponseEntity<String> verificarTarjeta(String token) {
+		if (existsTarjetaByToken(token)) {
+			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<String> verificarVencimiento(String token) {
+		Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
+		TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
+
+		Date fecha = this.TodayDate();
+
+		if (fecha.equals(tarjeta_encontrada.getVencimiento()) || fecha.before(tarjeta_encontrada.getVencimiento())) {
+			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
+	}
+	
 	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
 		Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
 		if (optionalTarjeta.isPresent()) {
@@ -76,23 +95,6 @@ public class TarjetaCreditoService {
 			}
 		}
 		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.OK);
-	}
-
-	public ResponseEntity<String> verificarTarjeta(String token) {
-		if (existsTarjetaByToken(token)) {
-			Optional<TarjetaCredito> optionalTarjeta = findTarjetaByToken(token);
-			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
-
-			Date fecha = this.TodayDate();
-
-			if (fecha.equals(tarjeta_encontrada.getVencimiento())
-					|| fecha.before(tarjeta_encontrada.getVencimiento())) {
-				return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
-			} else {
-				return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
-			}
-		}
-		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
 	}
 
 	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
