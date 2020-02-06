@@ -116,8 +116,10 @@ public class VentasService {
 								jwToken);
 						crearLog(ventaInvalida.getId(), "verificacion de tarjeta", "OK", verificacionTarjeta.getBody(),
 								jwToken);
+						crearLog(ventaInvalida.getId(), "verificacion de vencimiento de tarjeta", "OK",
+								verificarVencimiento.getBody(), jwToken);
 						crearLog(ventaInvalida.getId(), "verificacion de monto de tarjeta", "FALLO",
-								verificacionTarjeta.getBody(), jwToken);
+								verificarMontoTarjeta.getBody(), jwToken);
 						return new ResponseEntity<String>(verificarMontoTarjeta.getBody(),
 								verificarMontoTarjeta.getStatusCode());
 					}
@@ -128,19 +130,19 @@ public class VentasService {
 					crearLog(ventaInvalida.getId(), "verificacion de tarjeta", "OK", verificacionTarjeta.getBody(),
 							jwToken);
 					crearLog(ventaInvalida.getId(), "verificacion de vencimiento de tarjeta", "FALLO",
-							verificacionTarjeta.getBody(), jwToken);
+							verificarVencimiento.getBody(), jwToken);
 					return new ResponseEntity<String>(verificacionTarjeta.getBody(),
 							verificacionTarjeta.getStatusCode());
 				}
 			} else {
-				Ventas ventaInvalida = ventaFinal(ventasDto, cliente_encontrado, false);
-				crearLog(ventaInvalida.getId(), "verificacion de cliente", "OK", "El cliente esta registrado", jwToken);
-				crearLog(ventaInvalida.getId(), "verificacion de tarjeta", "FALLO", verificacionTarjeta.getBody(),
+				crearLog((long) 0, "verificacion de cliente", "OK", "El cliente esta registrado", jwToken);
+				crearLog((long) 0, "verificacion de tarjeta", "FALLO", verificacionTarjeta.getBody(),
 						jwToken);
 				return new ResponseEntity<String>(verificacionTarjeta.getBody(), verificacionTarjeta.getStatusCode());
 			}
 
 		} else {
+			crearLog((long) 0, "verificacion de cliente", "OK", "El cliente esta registrado", jwToken);
 			return new ResponseEntity<String>("El cliente no se encuentra registrado", HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -181,6 +183,7 @@ public class VentasService {
 	}
 
 	public ResponseEntity<String> consultaToTarjeta(String url, HttpMethod method, String jwToken) {
+		
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> headers = new LinkedMultiValueMap<String, Object>();
@@ -189,10 +192,10 @@ public class VentasService {
 			//
 			HttpEntity request = new HttpEntity("", headers);
 			//
-			final ResponseEntity<String> exchange = restTemplate.exchange(url, method, request, String.class);
+			ResponseEntity<String> exchange = exchange = restTemplate.exchange(url, method, request, String.class);
 			return new ResponseEntity<String>(exchange.getBody(), exchange.getStatusCode());
 		} catch (HttpClientErrorException error1) {
-			return new ResponseEntity<String>(error1.getStatusCode());
+			return new ResponseEntity<String>(error1.getResponseBodyAsString(),error1.getStatusCode());
 		} catch (RestClientException error2) {
 			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
 		}

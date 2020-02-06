@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.um.ar.programacion2.log.model.Log;
 import edu.um.ar.programacion2.log.service.LogService;
-import edu.um.ar.programacion2.tarjetacredito.dto.TarjetaCreditoDto;
 
 @RestController
 @RequestMapping("/log")

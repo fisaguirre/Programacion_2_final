@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.um.ar.programacion2.log.model.Log;
 import edu.um.ar.programacion2.log.repository.LogRepository;
-import edu.um.ar.programacion2.tarjetacredito.dto.TarjetaCreditoDto;
-import edu.um.ar.programacion2.tarjetacredito.model.Cliente;
-import edu.um.ar.programacion2.tarjetacredito.model.TarjetaCredito;
 
 @Service
 public class LogService {
