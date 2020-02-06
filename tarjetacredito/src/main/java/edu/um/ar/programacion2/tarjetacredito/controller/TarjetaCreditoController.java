@@ -90,6 +90,18 @@ public class TarjetaCreditoController {
 		ResponseEntity<String> token_tarjeta = tarjetacreditoService.verificarMontoTarjeta(monto, token);
 		return new ResponseEntity<String>(token_tarjeta.getBody(), token_tarjeta.getStatusCode());
 	}
+	
+	@GetMapping("/habilitada/{token}")
+	public ResponseEntity<String> verificarTarjetaHabilitada(@PathVariable String token) {
+		ResponseEntity<String> tarjetaHabilitada = tarjetacreditoService.verificarTarjetaHabilitada(token);
+		return new ResponseEntity<String>(tarjetaHabilitada.getBody(), tarjetaHabilitada.getStatusCode());
+	}
+	
+	@GetMapping("/habilitada/{token}")
+	public ResponseEntity<String> verificarPertenenciaTarjeta(@PathVariable String token) {
+		ResponseEntity<String> tarjetaCliente = tarjetacreditoService.verificarPertenenciaTarjeta(token);
+		return new ResponseEntity<String>(tarjetaCliente.getBody(), tarjetaCliente.getStatusCode());
+	}
 
 	@PostMapping("")
 	public ResponseEntity<String> createTarjetaCredito(@RequestBody TarjetaCreditoDto tarjetaCreditoDto) {

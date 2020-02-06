@@ -62,7 +62,8 @@ public class VentasService {
 					if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
 						ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasDto.getToken(),
 								jwToken);
-						if (findTarjetaByToken.getBody().getActivo()) {
+						ResponseEntity<String> verificarTarjetaHabilitada = verificarTarjetaHabilitada(ventasDto.getToken(), jwToken);
+						if (verificarTarjetaHabilitada.getStatusCode()==HttpStatus.OK) {
 							if (findTarjetaByToken.getBody().getCliente_id().getId()
 									.equals(ventasDto.getCliente_id())) {
 								Ventas verificacionVenta = ventaFinal(ventasDto, cliente_encontrado, false);
@@ -107,8 +108,8 @@ public class VentasService {
 							crearLog(ventaInvalida.getId(), "verificacion de monto de tarjeta", "OK",
 									verificacionTarjeta.getBody(), jwToken);
 							crearLog(ventaInvalida.getId(), "verificacion de tarjeta habilitada", "FALLO",
-									verificacionTarjeta.getBody(), jwToken);
-							return new ResponseEntity<String>("La tarjeta no esta habilitada", HttpStatus.BAD_REQUEST);
+									verificarTarjetaHabilitada.getBody(), jwToken);
+							return new ResponseEntity<String>(verificarTarjetaHabilitada.getBody(), verificarTarjetaHabilitada.getStatusCode());
 						}
 					} else {
 						Ventas ventaInvalida = ventaFinal(ventasDto, cliente_encontrado, false);
@@ -180,6 +181,14 @@ public class VentasService {
 		respuestaConsultaTarjeta = consultaToTarjeta(url, method, jwToken);
 		return new ResponseEntity<String>(respuestaConsultaTarjeta.getBody(), respuestaConsultaTarjeta.getStatusCode());
 
+	}
+	
+	public ResponseEntity<String> verificarTarjetaHabilitada(String token, String jwToken) {
+		String url = "http://localhost:8200/tarjetacredito/habilitada/" + token;
+		HttpMethod method = HttpMethod.GET;
+		ResponseEntity<String> respuestaConsultaTarjeta;
+		respuestaConsultaTarjeta = consultaToTarjeta(url, method, jwToken);
+		return new ResponseEntity<String>(respuestaConsultaTarjeta.getBody(), respuestaConsultaTarjeta.getStatusCode());
 	}
 
 	public ResponseEntity<String> consultaToTarjeta(String url, HttpMethod method, String jwToken) {

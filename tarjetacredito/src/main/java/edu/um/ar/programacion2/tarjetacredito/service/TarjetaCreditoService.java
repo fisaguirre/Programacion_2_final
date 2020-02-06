@@ -57,6 +57,15 @@ public class TarjetaCreditoService {
 		return null;
 	}
 
+	public ResponseEntity verificarTarjetaHabilitada(String token) {
+		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
+		TarjetaCredito tarjetaEncontrada = findTarjeta.get();
+		if (tarjetaEncontrada.getActivo()) {
+			return new ResponseEntity<String>("La tarjeta se encuentra habilitada", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("La tarjeta no se encuentra habilitada", HttpStatus.BAD_REQUEST);
+	}
+
 	public ResponseEntity findTokenByNumero(Long numero) {
 		Optional<TarjetaCredito> optionalTarjeta = tarjetacreditoRepository.findByNumero(numero);
 		if (optionalTarjeta.isPresent()) {
