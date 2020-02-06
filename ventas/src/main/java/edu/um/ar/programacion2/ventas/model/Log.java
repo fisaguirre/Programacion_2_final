@@ -31,8 +31,8 @@ public class Log {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "venta_id")
-	private Long venta_id;
+	@Column(name = "venta")
+	private Long venta;
 
 	@Column(name = "paso", nullable = false)
 	private String paso;
@@ -51,12 +51,12 @@ public class Log {
 		this.id = id;
 	}
 
-	public Long getVenta_id() {
-		return venta_id;
+	public Long getVenta() {
+		return venta;
 	}
 
-	public void setVenta_id(Long venta_id) {
-		this.venta_id = venta_id;
+	public void setVenta(Long venta) {
+		this.venta = venta;
 	}
 
 	public String getPaso() {
@@ -83,10 +83,10 @@ public class Log {
 		this.explicacion = explicacion;
 	}
 
-	public Log(Long id, Long venta_id, String paso, String resultado, String explicacion) {
+	public Log(Long id, Long venta, String paso, String resultado, String explicacion) {
 		super();
 		this.id = id;
-		this.venta_id = venta_id;
+		this.venta = venta;
 		this.paso = paso;
 		this.resultado = resultado;
 		this.explicacion = explicacion;

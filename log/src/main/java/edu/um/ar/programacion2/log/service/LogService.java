@@ -6,11 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.um.ar.programacion2.log.model.Log;
 import edu.um.ar.programacion2.log.repository.LogRepository;
 
+@Service
 public class LogService {
 
 	@Autowired
@@ -21,8 +23,8 @@ public class LogService {
 	}
 
 	@Transactional(readOnly = true)
-	public ResponseEntity<Log> findByVentaId(Long ventaId) {
-		Optional<Log> buscarLog = logRepository.findByVentaId(ventaId);
+	public ResponseEntity<Log> findByVentaId(Long venta) {
+		Optional<Log> buscarLog = logRepository.findByVenta(venta);
 		if (buscarLog.isPresent()) {
 			Log logEncontrado = buscarLog.get();
 			return new ResponseEntity<Log>(logEncontrado, HttpStatus.OK);

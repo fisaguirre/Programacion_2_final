@@ -91,6 +91,10 @@ public class VentasService {
 	}
 	*/
 
+	public ResponseEntity<String> logVerificarTarjeta(Long venta_id, HttpStatus resultado, String explicacion){
+		System.out.println("el id de la venta es: "+venta_id);
+		return null;
+	}
 	public ResponseEntity<String> createVenta(VentasDto ventasDto, String jwToken) {
 		Optional<Cliente> optionalCliente = clienteService.findById(ventasDto.getCliente_id());
 		if (optionalCliente.isPresent()) {
@@ -99,6 +103,7 @@ public class VentasService {
 			ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasDto.getMonto(),
 					ventasDto.getToken(),jwToken);
 			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.OK) {
+				logVerificarTarjeta(ventasDto.getId(),verificacionTarjeta.getStatusCode(),verificacionTarjeta.getBody());
 				if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
 					ResponseEntity<TarjetaCredito> findTarjetaByToken = findTarjetaByToken(ventasDto.getToken(),jwToken);
 					if (findTarjetaByToken.getBody().getActivo()) {

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.um.ar.programacion2.log.model.Log;
 import edu.um.ar.programacion2.log.service.LogService;
-import edu.um.ar.programacion2.ventas.model.Ventas;
 
 @RestController
 @RequestMapping("/log")
@@ -35,8 +34,8 @@ public class LogController {
 	}
 
 	@GetMapping("/{ventaId}")
-	public ResponseEntity<ResponseEntity> getLog(@PathVariable Long ventaId) {
-		return ResponseEntity.ok(logService.findByVentaId(ventaId));
+	public ResponseEntity<ResponseEntity> getLog(@PathVariable Long venta) {
+		return ResponseEntity.ok(logService.findByVentaId(venta));
 		// ResponseEntity<Log> log = logService.findByVentaId(ventaId);
 		// return new ResponseEntity<Log>(log);
 	}

@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,8 +14,13 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.um.ar.programacion2.ventas.model.Log;
+import edu.um.ar.programacion2.ventas.repository.LogRepository;
 
+@Service
 public class LogService {
+	
+	@Autowired
+	private LogRepository logRepository;
 	
 	public ResponseEntity<Log[]> findAll(String jwToken) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -30,10 +36,10 @@ public class LogService {
 		return new ResponseEntity<Log[]>(exchange.getBody(), exchange.getStatusCode());
 	}
 	
-	public ResponseEntity getLogByVentaId(Long ventaId, String jwToken) {
+	public ResponseEntity getLogByVentaId(Long venta, String jwToken) {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
-			String url = "http://localhost:8200/log/" + ventaId;
+			String url = "http://localhost:8200/log/" + venta;
 			MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 			headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 			headers.add("Authorization", jwToken);

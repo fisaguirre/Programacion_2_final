@@ -34,8 +34,8 @@ public class Usuario {
 	@Column(name = "activo", length = 60)
 	private boolean activo;
 	
-	@Column(name = "roles")
-	private Set roles;
+	@Column(name = "rol")
+	private String rol;
 	//private String rol;
 
 	public Usuario() {
@@ -81,29 +81,29 @@ public class Usuario {
 		this.activo = activo;
 	}
 
-	public Set getRoles() {
-		return roles;
+	public String getRol() {
+		return rol;
 	}
 
-	public void setRoles(Set roles) {
-		this.roles = roles;
+	public void setRoles(String rol) {
+		this.rol = rol;
 	}
 
-	public Usuario(String username, String password, String fullname, boolean activo, Set roles) {
+	public Usuario(String username, String password, String fullname, boolean activo, String rol) {
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
-		this.roles = roles;
+		this.rol = rol;
 	}
 	
-	public Usuario(Integer id, String username, String password, String fullname, boolean activo, Set roles) {
+	public Usuario(Integer id, String username, String password, String fullname, boolean activo, String rol) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.activo = activo;
-		this.roles = roles;
+		this.rol = rol;
 	}
 	
 	
