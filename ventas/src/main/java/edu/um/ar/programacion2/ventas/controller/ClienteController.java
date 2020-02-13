@@ -76,11 +76,17 @@ public class ClienteController {
 		return new ResponseEntity<>(inactivarCliente.getBody(), inactivarCliente.getStatusCode());
 		*/
 	}
-
-    @PutMapping
+	
+	@PutMapping(value = "{idToPut}")
+	public ResponseEntity<ResponseEntity> updateCliente(@PathVariable("idToPut") Long id) {
+		return ResponseEntity.ok(clienteService.updateCliente(id));
+	}
+/*
+    @PutMapping("/{idToPut}")
 	public ResponseEntity<Cliente> updateCliente(@RequestBody Cliente cliente) {
     	//return ResponseEntity.ok(clienteService.updateCliente(cliente));
     	return new ResponseEntity(clienteService.updateCliente(cliente), HttpStatus.OK);
 	}
+	*/
 }
  

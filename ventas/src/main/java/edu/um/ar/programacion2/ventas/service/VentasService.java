@@ -54,30 +54,30 @@ public class VentasService {
 		if (optionalCliente.isPresent()) {
 			Cliente cliente_encontrado = optionalCliente.get();
 			ResponseEntity<String> verificacionTarjeta = verificarTarjeta(ventasDto.getToken(), jwToken);
-			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.OK) {
+			if ((verificacionTarjeta.getStatusCode()) == HttpStatus.CREATED) {
 				ResponseEntity<String> verificarVencimiento = verificarVencimiento(ventasDto.getToken(), jwToken);
-				if (verificarVencimiento.getStatusCode() == HttpStatus.OK) {
+				if (verificarVencimiento.getStatusCode() == HttpStatus.CREATED) {
 					ResponseEntity<String> verificarMontoTarjeta = verificarMontoTarjeta(ventasDto.getMonto(),
 							ventasDto.getToken(), jwToken);
-					if (verificarMontoTarjeta.getStatusCode() == HttpStatus.OK) {
+					if (verificarMontoTarjeta.getStatusCode() == HttpStatus.CREATED) {
 						ResponseEntity<String> verificarTarjetaHabilitada = verificarTarjetaHabilitada(
 								ventasDto.getToken(), jwToken);
-						if (verificarTarjetaHabilitada.getStatusCode() == HttpStatus.OK) {
+						if (verificarTarjetaHabilitada.getStatusCode() == HttpStatus.CREATED) {
 							ResponseEntity<String> verificarPertenenciaTarjeta = verificarPertenenciaTarjeta(
 									ventasDto.getCliente_id(), ventasDto.getToken(), jwToken);
-							if (verificarPertenenciaTarjeta.getStatusCode() == HttpStatus.OK) {
+							if (verificarPertenenciaTarjeta.getStatusCode() == HttpStatus.CREATED) {
 								Ventas ventaValida = ventaFinal(ventasDto, cliente_encontrado, true);
 								crearLog(ventaValida.getId(), "verificacion de cliente", "OK",
 										"El cliente esta registrado", jwToken);
 								crearLog(ventaValida.getId(), "verificacion de tarjeta", "OK",
 										verificacionTarjeta.getBody(), jwToken);
 								crearLog(ventaValida.getId(), "verificacion de monto de tarjeta", "OK",
-										verificacionTarjeta.getBody(), jwToken);
+										verificarMontoTarjeta.getBody(), jwToken);
 								crearLog(ventaValida.getId(), "verificacion de tarjeta habilitada", "OK",
-										verificacionTarjeta.getBody(), jwToken);
+										verificarTarjetaHabilitada.getBody(), jwToken);
 								crearLog(ventaValida.getId(), "verificacion de pertenencia de tarjeta a cliente", "OK",
-										verificacionTarjeta.getBody(), jwToken);
-								return new ResponseEntity<String>("Venta realizada con exito)", HttpStatus.OK);
+										verificarPertenenciaTarjeta.getBody(), jwToken);
+								return new ResponseEntity<String>("Venta realizada con exito", HttpStatus.OK);
 							} else {
 								Ventas ventaInvalida = ventaFinal(ventasDto, cliente_encontrado, false);
 								crearLog(ventaInvalida.getId(), "verificacion de cliente", "OK",
@@ -85,11 +85,11 @@ public class VentasService {
 								crearLog(ventaInvalida.getId(), "verificacion de tarjeta", "OK",
 										verificacionTarjeta.getBody(), jwToken);
 								crearLog(ventaInvalida.getId(), "verificacion de monto de tarjeta", "OK",
-										verificacionTarjeta.getBody(), jwToken);
+										verificarMontoTarjeta.getBody(), jwToken);
 								crearLog(ventaInvalida.getId(), "verificacion de tarjeta habilitada", "OK",
-										verificacionTarjeta.getBody(), jwToken);
+										verificarTarjetaHabilitada.getBody(), jwToken);
 								crearLog(ventaInvalida.getId(), "verificacion de pertenencia de tarjeta a cliente",
-										"FALLO", verificacionTarjeta.getBody(), jwToken);
+										"FALLO", verificarPertenenciaTarjeta.getBody(), jwToken);
 								return new ResponseEntity<String>("La tarjeta no le pertenece al cliente",
 										HttpStatus.BAD_REQUEST);
 							}
@@ -100,7 +100,7 @@ public class VentasService {
 							crearLog(ventaInvalida.getId(), "verificacion de tarjeta", "OK",
 									verificacionTarjeta.getBody(), jwToken);
 							crearLog(ventaInvalida.getId(), "verificacion de monto de tarjeta", "OK",
-									verificacionTarjeta.getBody(), jwToken);
+									verificarMontoTarjeta.getBody(), jwToken);
 							crearLog(ventaInvalida.getId(), "verificacion de tarjeta habilitada", "FALLO",
 									verificarTarjetaHabilitada.getBody(), jwToken);
 							return new ResponseEntity<String>(verificarTarjetaHabilitada.getBody(),
@@ -181,7 +181,7 @@ public class VentasService {
 	}
 
 	public ResponseEntity<String> verificarPertenenciaTarjeta(Long clienteId, String token, String jwToken) {
-		String url = "http://localhost:8200/tarjetacredito/habilitada/" + token + "/" + clienteId;
+		String url = "http://localhost:8200/tarjetacredito/pertenencia/" + token + "/" + clienteId;
 		HttpMethod method = HttpMethod.GET;
 		ResponseEntity<String> respuestaConsultaTarjeta = consultaToTarjeta(url, method, jwToken);
 		return new ResponseEntity<String>(respuestaConsultaTarjeta.getBody(), respuestaConsultaTarjeta.getStatusCode());

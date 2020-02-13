@@ -48,7 +48,7 @@ public class ClienteService {
 
 	public ResponseEntity getClienteByNombreApellido(String nombre, String apellido) {
 		if (!verify_nombre_apellido(nombre, apellido)) {
-			return new ResponseEntity<>("0", HttpStatus.OK);
+			return new ResponseEntity<>("0", HttpStatus.BAD_REQUEST);
 		}
 		Cliente cliente_encontrado = clienteRepository.findByNombreAndApellido(nombre, apellido);
 		return new ResponseEntity<>("ID: " + cliente_encontrado.getId(), HttpStatus.OK);
@@ -78,7 +78,25 @@ public class ClienteService {
 		}
 		return new ResponseEntity<>("El cliente con esa ID no se encuentra registrado", HttpStatus.BAD_REQUEST);
 	}
-
+	
+	public ResponseEntity<Object> updateCliente(Long idCliente) {
+		Optional<Cliente> optionalCliente = this.findById(idCliente);
+		if (optionalCliente.isPresent()) {
+			Cliente datosCliente = optionalCliente.get();
+			if (!datosCliente.getActivo()) {
+				Cliente actualizarCliente = new Cliente(datosCliente.getId(), datosCliente.getNombre(),
+						datosCliente.getApellido(), true);
+				clienteRepository.save(actualizarCliente);
+				return new ResponseEntity<>("Se habilito el cliente", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("El cliente ya se encuentra habilitado", HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<>("No se encontro ningun cliente con esa ID", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	/*
 	public ResponseEntity<Object> updateCliente(Cliente cliente) {
 		Optional<Cliente> optionalCliente = this.findById(cliente.getId());
 		if (optionalCliente.isPresent()) {
@@ -99,5 +117,6 @@ public class ClienteService {
 			// return ResponseEntity.notFound().build();
 		}
 	}
+	*/
 
 }

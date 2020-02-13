@@ -61,18 +61,18 @@ public class TarjetaCreditoService {
 		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
 		TarjetaCredito tarjetaEncontrada = findTarjeta.get();
 		if (tarjetaEncontrada.getActivo()) {
-			return new ResponseEntity<String>("La tarjeta se encuentra habilitada", HttpStatus.OK);
+			return new ResponseEntity<String>("La tarjeta se encuentra habilitada", HttpStatus.CREATED);
 		}
-		return new ResponseEntity<String>("La tarjeta no se encuentra habilitada", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("La tarjeta no se encuentra habilitada", HttpStatus.FORBIDDEN);
 	}
 
 	public ResponseEntity verificarPertenenciaTarjeta(String token, Long clienteId) {
 		Optional<TarjetaCredito> findTarjeta = tarjetacreditoRepository.findByToken(token);
 		TarjetaCredito tarjetaEncontrada = findTarjeta.get();
 		if (tarjetaEncontrada.getCliente_id().getId().equals(clienteId)) {
-			return new ResponseEntity<String>("La tarjeta le pertenece al cliente", HttpStatus.OK);
+			return new ResponseEntity<String>("La tarjeta le pertenece al cliente", HttpStatus.CREATED);
 		}
-		return new ResponseEntity<String>("La tarjeta no le pertenece al cliente", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("La tarjeta no le pertenece al cliente", HttpStatus.FORBIDDEN);
 	}
 
 	public ResponseEntity findTokenByNumero(Long numero) {
@@ -86,9 +86,9 @@ public class TarjetaCreditoService {
 
 	public ResponseEntity<String> verificarTarjeta(String token) {
 		if (existsTarjetaByToken(token)) {
-			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
+			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.CREATED);
 		}
-		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("La tarjeta no se encuentra registrada", HttpStatus.FORBIDDEN);
 	}
 
 	public ResponseEntity<String> verificarVencimiento(String token) {
@@ -98,9 +98,9 @@ public class TarjetaCreditoService {
 		Date fecha = this.TodayDate();
 
 		if (fecha.equals(tarjeta_encontrada.getVencimiento()) || fecha.before(tarjeta_encontrada.getVencimiento())) {
-			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.OK);
+			return new ResponseEntity<String>("La tarjeta es valida", HttpStatus.CREATED);
 		}
-		return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("La tarjeta se encuentra expirada", HttpStatus.FORBIDDEN);
 	}
 	
 	public ResponseEntity<String> verificarMontoTarjeta(Float monto, String token) {
@@ -109,10 +109,10 @@ public class TarjetaCreditoService {
 			TarjetaCredito tarjeta_encontrada = optionalTarjeta.get();
 			if (tarjeta_encontrada.getMontomaximo() < monto) {
 				return new ResponseEntity<String>("El valor maximo de la venta ha sido superado",
-						HttpStatus.BAD_REQUEST);
+						HttpStatus.FORBIDDEN);
 			}
 		}
-		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.OK);
+		return new ResponseEntity<String>("Monto valido, se puede continuar el proceso de venta", HttpStatus.CREATED);
 	}
 
 	public ResponseEntity createTarjetaCredito(TarjetaCreditoDto tarjetaDto) {
@@ -133,7 +133,7 @@ public class TarjetaCreditoService {
 					cliente_encontrado, token, true);
 			tarjetacreditoRepository.save(tarjetaCredito);
 			
-			return new ResponseEntity<>(token, HttpStatus.OK);
+			return new ResponseEntity<>(token, HttpStatus.CREATED);
 		}
 		return new ResponseEntity<>("El cliente no esta registrado", HttpStatus.BAD_REQUEST);
 	}
