@@ -30,14 +30,13 @@ public class LogController {
 
 	@GetMapping("")
 	public ResponseEntity<Log[]> getAllLog(@RequestHeader("Authorization") String jwToken) {
-		//LogService l = new LogService();
 		ResponseEntity<Log[]> allLog = logService.findAll(jwToken);
 		return new ResponseEntity<Log[]>(allLog.getBody(), allLog.getStatusCode());
 	}
 
 	@GetMapping("/{ventaId}")
-	public ResponseEntity<ResponseEntity> getLogByVentaId(@PathVariable Long venta, @RequestHeader("Authorization") String jwToken) {
-		return ResponseEntity.ok(logService.getLogByVentaId(venta,jwToken));
+	public ResponseEntity<ResponseEntity> getLogByVentaId(@PathVariable Long ventaId, @RequestHeader("Authorization") String jwToken) {
+		return ResponseEntity.ok(logService.getLogByVentaId(ventaId,jwToken));
 		// ResponseEntity<Log> log = logService.findByVentaId(ventaId);
 		// return new ResponseEntity<Log>(log);
 	}

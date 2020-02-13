@@ -92,4 +92,8 @@ public class Log {
 		this.explicacion = explicacion;
 	}
 
+	public Log() {
+		super();
+	}
+
 }

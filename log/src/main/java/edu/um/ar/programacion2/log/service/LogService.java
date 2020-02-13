@@ -1,5 +1,6 @@
 package edu.um.ar.programacion2.log.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
